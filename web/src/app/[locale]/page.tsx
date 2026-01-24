@@ -1,4 +1,5 @@
 import { getTranslations } from 'next-intl/server';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
 type Props = {
