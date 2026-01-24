@@ -1,6 +1,8 @@
 import { getTranslations } from 'next-intl/server';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+import { HeroSection } from '@/components/sections/HeroSection';
+import { HomeAboutSection } from '@/components/sections/HomeAboutSection';
+import { StatsSection } from '@/components/sections/StatsSection';
+import { EventsPreviewSection } from '@/components/sections/EventsPreviewSection';
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -8,36 +10,32 @@ type Props = {
 
 export default async function HomePage({ params }: Props) {
   const { locale } = await params;
-  const t = await getTranslations('hero');
+  const tHero = await getTranslations('home.hero');
+  const tAbout = await getTranslations('home.about');
+  const tStats = await getTranslations('home.stats');
+  const tEvents = await getTranslations('home.events');
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-8">
-      <div className="text-center max-w-2xl">
-        <h1 className="text-4xl md:text-5xl font-heading font-bold mb-4">
-          {t('title')}
-        </h1>
-        <p className="text-xl text-text-muted mb-8">
-          {t('subtitle')}
-        </p>
-        <Button size="lg" className="bg-primary hover:bg-primary-dark">
-          {t('cta')}
-        </Button>
-
-        <div className="mt-8 flex gap-4 justify-center">
-          <Link
-            href="/es"
-            className={`px-3 py-1 rounded ${locale === 'es' ? 'bg-primary text-white' : 'bg-surface'}`}
-          >
-            ES
-          </Link>
-          <Link
-            href="/en"
-            className={`px-3 py-1 rounded ${locale === 'en' ? 'bg-primary text-white' : 'bg-surface'}`}
-          >
-            EN
-          </Link>
-        </div>
-      </div>
+    <main>
+      <HeroSection
+        title={tHero('title')}
+        subtitle={tHero('subtitle')}
+        imageAlt={tHero('imageAlt')}
+      />
+      <HomeAboutSection
+        locale={locale}
+        title={tAbout('title')}
+        subtitle={tAbout('subtitle')}
+        highlights={tAbout.raw('highlights')}
+        ctaLabel={tAbout('cta')}
+        imageAlt={tAbout('imageAlt')}
+      />
+      <StatsSection stats={tStats.raw('items')} />
+      <EventsPreviewSection
+        title={tEvents('title')}
+        subtitle={tEvents('subtitle')}
+        events={tEvents.raw('items')}
+      />
     </main>
   );
 }

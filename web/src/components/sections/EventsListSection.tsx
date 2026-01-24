@@ -64,7 +64,7 @@ export function EventsListSection({ events, locale, emptyMessage }: Props) {
                     📍 {event.location}
                   </p>
                 )}
-                <div className="mt-4 prose prose-sm max-w-none text-text-muted prose-strong:text-text prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-ul:my-2 prose-li:my-0">
+                <div className="mt-4 prose prose-sm max-w-none text-text-muted prose-strong:text-text prose-a:text-primary prose-a:no-underline prose-a:hover:underline prose-ul:my-2 prose-li:my-0">
                   <ReactMarkdown>{event.description}</ReactMarkdown>
                 </div>
                 {event.capacity && (

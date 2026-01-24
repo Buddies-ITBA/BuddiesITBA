@@ -57,7 +57,7 @@ export async function Footer({ locale }: { locale: string }) {
             </h4>
             <div className="text-white/75 text-sm space-y-2">
               <p>ITBA - Instituto Tecnológico de Buenos Aires</p>
-              <p>Av. Eduardo Madero 399</p>
+              <p>Iguazú 341</p>
               <p>Buenos Aires, Argentina</p>
               <p className="mt-4">
                 <a href="mailto:buddies@itba.edu.ar" className="hover:text-white">

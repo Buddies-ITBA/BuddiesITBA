@@ -58,7 +58,7 @@ export function FaqAccordion({ faqs, title, subtitle }: Props) {
                   <AccordionTrigger className="text-left font-medium text-heading hover:text-primary hover:no-underline">
                     {faq.question}
                   </AccordionTrigger>
-                  <AccordionContent className="prose prose-sm max-w-none text-text-muted prose-strong:text-text prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-ul:my-2 prose-li:my-0">
+                  <AccordionContent className="prose prose-sm max-w-none text-text-muted prose-strong:text-text prose-a:text-primary prose-a:no-underline prose-a:hover:underline prose-ul:my-2 prose-li:my-0">
                     <ReactMarkdown>{faq.answer}</ReactMarkdown>
                   </AccordionContent>
                 </AccordionItem>
@@ -83,7 +83,7 @@ export function FaqAccordion({ faqs, title, subtitle }: Props) {
                       <AccordionTrigger className="text-left font-medium text-heading hover:text-primary hover:no-underline">
                         {faq.question}
                       </AccordionTrigger>
-                      <AccordionContent className="prose prose-sm max-w-none text-text-muted prose-strong:text-text prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-ul:my-2 prose-li:my-0">
+                      <AccordionContent className="prose prose-sm max-w-none text-text-muted prose-strong:text-text prose-a:text-primary prose-a:no-underline prose-a:hover:underline prose-ul:my-2 prose-li:my-0">
                         <ReactMarkdown>{faq.answer}</ReactMarkdown>
                       </AccordionContent>
                     </AccordionItem>

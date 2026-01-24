@@ -14,16 +14,8 @@ type PageTitleProps = {
 export function PageTitle({ title, description, breadcrumbs }: PageTitleProps) {
   return (
     <div className="bg-surface border-b">
-      <div className="container mx-auto px-4 py-12 text-center">
-        <h1 className="text-3xl md:text-4xl font-heading font-bold text-heading">
-          {title}
-        </h1>
-        {description ? (
-          <p className="mt-4 text-text-muted max-w-3xl mx-auto">{description}</p>
-        ) : null}
-      </div>
       {breadcrumbs && breadcrumbs.length > 0 ? (
-        <nav className="border-t bg-background/60">
+        <nav className="border-b bg-background/60">
           <div className="container mx-auto px-4 py-3">
             <ol className="flex flex-wrap items-center gap-2 text-sm text-text-muted">
               {breadcrumbs.map((crumb, index) => (
@@ -45,6 +37,14 @@ export function PageTitle({ title, description, breadcrumbs }: PageTitleProps) {
           </div>
         </nav>
       ) : null}
+      <div className="container mx-auto px-4 py-12 text-center">
+        <h1 className="text-3xl md:text-4xl font-heading font-bold text-heading">
+          {title}
+        </h1>
+        {description ? (
+          <p className="mt-4 text-text-muted max-w-3xl mx-auto">{description}</p>
+        ) : null}
+      </div>
     </div>
   );
 }
