@@ -1,0 +1,23 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About Us",
+    "events": "Events",
+    "faq": "FAQ",
+    "contact": "Contact"
+  },
+  "hero": {
+    "title": "Welcome to Buddies ITBA",
+    "subtitle": "Your connection with exchange students",
+    "cta": "Learn more"
+  },
+  "common": {
+    "readMore": "Read more",
+    "submit": "Submit",
+    "loading": "Loading...",
+    "error": "An error occurred"
+  },
+  "footer": {
+    "rights": "All rights reserved"
+  }
+}
