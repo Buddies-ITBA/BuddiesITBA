@@ -16,8 +16,6 @@
   --color-heading: #37423b;
   --color-text: #444444;
   --color-text-muted: #6c757d;
-  --color-accent: #5fcf80;
-
   /* Fonts */
   --font-sans: 'Open Sans', ui-sans-serif, system-ui, sans-serif;
   --font-heading: 'Raleway', ui-sans-serif, system-ui, sans-serif;
@@ -108,10 +106,9 @@ h6 {
   --muted: oklch(0.96 0.01 245);
   --muted-foreground: oklch(0.55 0.03 245);
 
-  /* Accent Green from Project Plan */
-  --accent: oklch(0.75 0.18 145);
-  /* Approx #5fcf80 converted to OKLCH */
-  --accent-foreground: oklch(0.25 0.04 250);
+  /* Accent: "Celestito" (Light Sky Blue) as requested */
+  --accent: oklch(0.85 0.12 240);
+  --accent-foreground: oklch(0.35 0.12 245);
 
   --destructive: oklch(0.6 0.18 25);
   --destructive-foreground: oklch(0.985 0 0);
