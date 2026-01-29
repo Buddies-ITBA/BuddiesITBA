@@ -10,6 +10,8 @@ jobs:
   lint-and-test:
     name: Lint & Test
     runs-on: ubuntu-latest
+    env:
+      HAS_NOTION_SECRETS: ${{ secrets.NOTION_TOKEN }}
 
     steps:
       - name: Checkout code
@@ -31,7 +33,7 @@ jobs:
         run: npm run test
 
       - name: Build (optional - requires Notion secrets)
-        if: ${{ secrets.NOTION_TOKEN != '' }}
+        if: env.HAS_NOTION_SECRETS != ''
         run: npm run build
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
