@@ -14,6 +14,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { NotionBlockRenderer } from '@/components/ui/notion-block-renderer';
 import { getEventDetails } from '@/app/actions';
 import { Loader2, Calendar, Clock, MapPin, MessageCircle } from 'lucide-react';
+import { AddToCalendar, AddToCalendarIcon } from '@/components/ui/add-to-calendar';
 
 type Translations = {
   empty: string;
@@ -136,18 +137,24 @@ export function EventsTimeline({ events, locale, translations }: Props) {
                               className="object-cover"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
-                              <h4 className="text-lg font-heading font-bold text-white md:text-xl line-clamp-2">
+                              <h4 className="text-lg font-heading font-bold text-white md:text-xl line-clamp-2 flex-1 mr-2">
                                 {event.title}
                               </h4>
+                            </div>
+                            <div className="absolute top-2 right-2">
+                              <AddToCalendarIcon event={event} className="bg-white/90 hover:bg-white text-black hover:text-primary rounded-full shadow-sm h-8 w-8" />
                             </div>
                           </div>
                         )}
 
                         <div className="p-4 md:p-5">
                           {!event.image && (
-                            <h4 className="text-lg font-heading font-bold text-card-foreground md:text-xl mb-2">
-                              {event.title}
-                            </h4>
+                            <div className="flex justify-between items-start gap-2 mb-2">
+                              <h4 className="text-lg font-heading font-bold text-card-foreground md:text-xl">
+                                {event.title}
+                              </h4>
+                              <AddToCalendarIcon event={event} className="-mt-1 -mr-1" />
+                            </div>
                           )}
 
                           {/* Date & time badge */}
@@ -228,6 +235,9 @@ export function EventsTimeline({ events, locale, translations }: Props) {
                       </span>
                     )}
                   </div>
+                  <div className="absolute top-4 right-4 sm:top-6 sm:right-6">
+                    <AddToCalendar event={selectedEvent} variant="secondary" size="sm" className="shadow-md" />
+                  </div>
                 </div>
               </div>
 
@@ -272,6 +282,6 @@ export function EventsTimeline({ events, locale, translations }: Props) {
           )}
         </DialogContent>
       </Dialog>
-    </section>
+    </section >
   );
 }
