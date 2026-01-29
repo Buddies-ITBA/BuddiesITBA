@@ -1,18 +1,12 @@
-import { Mail, MapPin } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { Mail, MapPin } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 type ContactSectionProps = {
   addressTitle: string;
   addressLines: string[];
   emailTitle: string;
   email: string;
-  formNamePlaceholder: string;
-  formEmailPlaceholder: string;
-  formSubjectPlaceholder: string;
-  formMessagePlaceholder: string;
-  formSubmitLabel: string;
+  emailButtonLabel: string;
 };
 
 export function ContactSection({
@@ -20,11 +14,7 @@ export function ContactSection({
   addressLines,
   emailTitle,
   email,
-  formNamePlaceholder,
-  formEmailPlaceholder,
-  formSubjectPlaceholder,
-  formMessagePlaceholder,
-  formSubmitLabel,
+  emailButtonLabel,
 }: ContactSectionProps) {
   return (
     <section className="bg-background">
@@ -40,68 +30,42 @@ export function ContactSection({
       </div>
 
       <div className="container mx-auto px-4 py-16">
-        <div className="grid gap-10 lg:grid-cols-[1fr_2fr]">
-          <div className="space-y-6">
-            <div className="rounded-2xl bg-surface p-6 shadow-sm">
-              <div className="flex items-start gap-3">
-                <MapPin className="h-5 w-5 text-primary" />
-                <div>
-                  <h3 className="font-heading font-semibold text-heading">
-                    {addressTitle}
-                  </h3>
-                  {addressLines.map((line) => (
-                    <p key={line} className="text-sm text-text-muted">
-                      {line}
-                    </p>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <div className="rounded-2xl bg-surface p-6 shadow-sm">
-              <div className="flex items-start gap-3">
-                <Mail className="h-5 w-5 text-primary" />
-                <div>
-                  <h3 className="font-heading font-semibold text-heading">
-                    {emailTitle}
-                  </h3>
-                  <p className="text-sm text-text-muted">{email}</p>
-                </div>
+        <div className="flex flex-col items-center gap-6 sm:flex-row sm:justify-center sm:gap-10">
+          <div className="rounded-2xl bg-surface p-6 shadow-sm">
+            <div className="flex items-start gap-3">
+              <MapPin className="h-5 w-5 shrink-0 text-primary" />
+              <div>
+                <h3 className="font-heading font-semibold text-heading">
+                  {addressTitle}
+                </h3>
+                {addressLines.map((line) => (
+                  <p key={line} className="text-sm text-text-muted">
+                    {line}
+                  </p>
+                ))}
               </div>
             </div>
           </div>
 
           <div className="rounded-2xl bg-surface p-6 shadow-sm">
-            <form
-              action="https://formspree.io/f/xwpkojll"
-              method="POST"
-              className="grid gap-4"
-            >
-              <div className="grid gap-4 md:grid-cols-2">
-                <Input name="name" placeholder={formNamePlaceholder} required />
-                <Input
-                  name="email"
-                  type="email"
-                  placeholder={formEmailPlaceholder}
-                  required
-                />
-              </div>
-              <Input name="subject" placeholder={formSubjectPlaceholder} required />
-              <Textarea
-                name="message"
-                rows={6}
-                placeholder={formMessagePlaceholder}
-                required
-              />
+            <div className="flex items-start gap-3">
+              <Mail className="h-5 w-5 shrink-0 text-primary" />
               <div>
-                <Button type="submit" className="bg-primary hover:bg-primary-dark">
-                  {formSubmitLabel}
+                <h3 className="font-heading font-semibold text-heading">
+                  {emailTitle}
+                </h3>
+                <p className="mb-3 text-sm text-text-muted">{email}</p>
+                <Button asChild className="bg-primary hover:bg-primary/90">
+                  <a href={`mailto:${email}`}>
+                    <Mail className="mr-2 h-4 w-4" />
+                    {emailButtonLabel}
+                  </a>
                 </Button>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       </div>
     </section>
   );
 }
-

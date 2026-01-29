@@ -195,13 +195,7 @@
       ],
       "emailTitle": "Escribinos",
       "email": "buddies@itba.edu.ar",
-      "form": {
-        "name": "Tu nombre",
-        "email": "Tu email",
-        "subject": "Asunto",
-        "message": "Mensaje",
-        "submit": "Enviar mensaje"
-      }
+      "emailButton": "Enviar email"
     }
   },
   "blog": {

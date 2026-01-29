@@ -27,11 +27,7 @@ export default async function ContactPage({ params }: Props) {
         addressLines={tContact.raw('addressLines')}
         emailTitle={tContact('emailTitle')}
         email={tContact('email')}
-        formNamePlaceholder={tContact('form.name')}
-        formEmailPlaceholder={tContact('form.email')}
-        formSubjectPlaceholder={tContact('form.subject')}
-        formMessagePlaceholder={tContact('form.message')}
-        formSubmitLabel={tContact('form.submit')}
+        emailButtonLabel={tContact('emailButton')}
       />
     </>
   );
