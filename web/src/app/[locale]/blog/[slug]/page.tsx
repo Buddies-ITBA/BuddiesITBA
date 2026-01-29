@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { PageTitle } from '@/components/sections/PageTitle';
-import { BlockRenderer } from '@/components/notion/BlockRenderer';
+import { NotionBlockRenderer } from '@/components/ui/notion-block-renderer';
 import { cms } from '@/lib/cms';
 import { Locale } from '@/i18n/config';
 
@@ -75,7 +75,7 @@ export default async function BlogPostPage({ params }: Props) {
 
             {/* Content */}
             <div className="prose-lg">
-              <BlockRenderer blocks={blocks} />
+              <NotionBlockRenderer blocks={blocks} />
             </div>
 
             {/* Back link */}
