@@ -30,7 +30,8 @@ jobs:
       - name: Run tests
         run: npm run test
 
-      - name: Build
+      - name: Build (optional - requires Notion secrets)
+        if: ${{ secrets.NOTION_TOKEN != '' }}
         run: npm run build
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
