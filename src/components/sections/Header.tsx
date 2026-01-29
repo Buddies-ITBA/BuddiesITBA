@@ -59,17 +59,17 @@ export function Header({ locale }: { locale: string }) {
             <NavigationMenuList>
               {navItems.map((item) => (
                 <NavigationMenuItem key={item.key}>
-                  <Link href={`/${locale}${item.href}`} legacyBehavior={false} passHref={false}>
-                    <NavigationMenuLink
-                      asChild
+                  <NavigationMenuLink asChild>
+                    <Link
+                      href={`/${locale}${item.href}`}
                       className={`${navigationMenuTriggerStyle()} ${isActive(item.href)
                         ? 'bg-primary/10 text-primary font-bold hover:bg-primary/20 hover:text-primary'
                         : 'bg-transparent hover:bg-sky-100 hover:text-primary'
                         }`}
                     >
                       <span className="cursor-pointer">{t(item.key)}</span>
-                    </NavigationMenuLink>
-                  </Link>
+                    </Link>
+                  </NavigationMenuLink>
                 </NavigationMenuItem>
               ))}
             </NavigationMenuList>

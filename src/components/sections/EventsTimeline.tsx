@@ -235,26 +235,28 @@ export function EventsTimeline({ events, locale, translations }: Props) {
                       </span>
                     )}
                   </div>
-                  <div className="absolute top-4 right-4 sm:top-6 sm:right-6">
+                  <div className="absolute top-6 left-6 z-10">
                     <AddToCalendar event={selectedEvent} variant="secondary" size="sm" className="shadow-md" />
                   </div>
                 </div>
               </div>
 
               <ScrollArea className="flex-1 p-6">
-                <DialogDescription className="text-base text-muted-foreground mb-6">
-                  {/* Fallback description if no blocks */}
-                  {(!eventDetails || eventDetails.length === 0) && !isLoading && (
-                    <p>{selectedEvent.description}</p>
-                  )}
+                <DialogDescription asChild className="text-base text-muted-foreground mb-6">
+                  <div>
+                    {/* Fallback description if no blocks */}
+                    {(!eventDetails || eventDetails.length === 0) && !isLoading && (
+                      <p>{selectedEvent.description}</p>
+                    )}
 
-                  {isLoading ? (
-                    <div className="flex items-center justify-center py-12">
-                      <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                    </div>
-                  ) : (
-                    <NotionBlockRenderer blocks={eventDetails} />
-                  )}
+                    {isLoading ? (
+                      <div className="flex items-center justify-center py-12">
+                        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                      </div>
+                    ) : (
+                      <NotionBlockRenderer blocks={eventDetails} />
+                    )}
+                  </div>
                 </DialogDescription>
 
                 {/* Registration Action */}

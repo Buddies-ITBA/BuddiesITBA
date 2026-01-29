@@ -52,7 +52,13 @@ export function AddToCalendarIcon({ event, className }: { event: Event, classNam
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className={className} title="Add to Calendar">
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    className={className}
+                    title="Add to Calendar"
+                    onClick={(e) => e.stopPropagation()}
+                >
                     <CalendarPlus className="h-4 w-4 text-muted-foreground hover:text-primary transition-colors" />
                 </Button>
             </DropdownMenuTrigger>

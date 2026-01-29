@@ -322,6 +322,12 @@
     "loading": "Loading...",
     "error": "An error occurred"
   },
+  "error": {
+    "title": "Something went wrong",
+    "description": "There was a problem loading this page. Please try again.",
+    "retry": "Try again",
+    "home": "Go to home"
+  },
   "footer": {
     "tagline": "Connecting ITBA students with exchange students since 2015.",
     "contact": "Contact",

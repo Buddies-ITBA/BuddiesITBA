@@ -346,6 +346,12 @@
     "loading": "Cargando...",
     "error": "Ha ocurrido un error"
   },
+  "error": {
+    "title": "Algo salió mal",
+    "description": "Hubo un problema al cargar esta página. Por favor, intentá de nuevo.",
+    "retry": "Reintentar",
+    "home": "Volver al inicio"
+  },
   "footer": {
     "tagline": "Conectando estudiantes del ITBA con estudiantes de intercambio desde 2015.",
     "contact": "Contacto",
