@@ -7,11 +7,6 @@
     "faq": "Preguntas Frecuentes",
     "contact": "Contacto"
   },
-  "hero": {
-    "title": "Bienvenido a Buddies ITBA",
-    "subtitle": "Tu conexion con estudiantes de intercambio",
-    "cta": "Conocer mas"
-  },
   "home": {
     "hero": {
       "title": "Bienvenido a Buddies, tu hogar lejos de casa",
@@ -23,8 +18,8 @@
       "subtitle": "En Buddies reunimos estudiantes de todo el mundo para crear un espacio donde las culturas se mezclan, las amistades crecen y cada momento se vuelve inolvidable.",
       "highlights": [
         "Conocer personas que se vuelven familia.",
-        "Explorar Buenos Aires juntos, desde gemas escondidas hasta lugares emblematicos.",
-        "Participar en actividades y eventos que hacen unica tu experiencia."
+        "Explorar Buenos Aires juntos, desde rincones escondidos hasta lugares emblemáticos.",
+        "Participar en actividades y eventos que hacen única tu experiencia."
       ],
       "cta": "Ver FAQ",
       "imageAlt": "Mateada de Buddies"
@@ -125,24 +120,6 @@
     "team": {
       "title": "Nuestro equipo",
       "subtitle": "Las personas detrás de Buddies"
-    },
-    "testimonials": {
-      "title": "Testimonios",
-      "subtitle": "Lo que dicen sobre nosotros",
-      "items": [
-        {
-          "name": "Martina Vives",
-          "role": "Codirectora de Buddies",
-          "quote": "Una forma increible de hacer amigos y vivir la esencia de Buenos Aires.",
-          "image": "/assets/img/testimonials/1.png"
-        },
-        {
-          "name": "Sofia Bouzo",
-          "role": "Codirectora de Buddies",
-          "quote": "Una comunidad que te recibe con los brazos abiertos y hace cada experiencia inolvidable.",
-          "image": "/assets/img/testimonials/2.png"
-        }
-      ]
     }
   },
   "events": {
@@ -156,28 +133,6 @@
       "capacity": "Cupos:",
       "whatsappNote": "Inscripción por el grupo de WhatsApp de Buddies",
       "register": "Inscribirse"
-    },
-    "list": {
-      "items": [
-        {
-          "title": "Tour por Buenos Aires",
-          "date": "Sabado 22 de marzo a las 10:00",
-          "description": "Descubri lugares iconicos con otros estudiantes y vivi la ciudad como un local.",
-          "image": "/assets/img/events/1.png"
-        },
-        {
-          "title": "Asado de bienvenida",
-          "date": "Domingo 6 de abril a las 13:00",
-          "description": "Buena comida, gente increible y momentos inolvidables.",
-          "image": "/assets/img/events/2.png"
-        },
-        {
-          "title": "Futbol como un local",
-          "date": "Viernes 18 de abril a las 19:30",
-          "description": "Vivi la pasion del futbol argentino y cantá con la hinchada.",
-          "image": "/assets/img/events/3.png"
-        }
-      ]
     }
   },
   "contact": {
@@ -210,8 +165,7 @@
     },
     "post": {
       "by": "Por",
-      "backToList": "Volver al blog",
-      "related": "Posts relacionados"
+      "backToList": "Volver al blog"
     }
   },
   "faq": {
@@ -219,110 +173,6 @@
       "title": "Preguntas frecuentes",
       "description": "Respuestas a dudas comunes sobre estudiar en ITBA, vivir en Buenos Aires y aprovechar la experiencia.",
       "breadcrumb": "FAQ"
-    },
-    "tabs": {
-      "items": [
-        {
-          "id": "life-itba",
-          "label": "Vida en ITBA",
-          "title": "Antes de llegar",
-          "image": "/assets/img/tabs/1.png",
-          "content": [
-            {
-              "type": "text",
-              "value": "Podes anotarte a un curso de espanol en ITBA que empieza dos semanas antes del semestre (tiene costo adicional)."
-            },
-            {
-              "type": "text",
-              "value": "Una vez que empieza el semestre, tenes dos semanas para confirmar tus materias y hacer cambios."
-            },
-            {
-              "type": "text",
-              "value": "Cuando estes aca: ITBA tiene tres sedes, una en Microcentro y dos en Parque Patricios."
-            },
-            {
-              "type": "list",
-              "value": [
-                "Sumate a grupos estudiantiles con eventos y actividades.",
-                "Hay microondas en la universidad para almorzar.",
-                "CEITBA ofrece descuentos y clases deportivas."
-              ]
-            }
-          ]
-        },
-        {
-          "id": "where-to-live",
-          "label": "Donde vivir",
-          "title": "Barrios y alojamiento",
-          "image": "/assets/img/tabs/2.png",
-          "content": [
-            {
-              "type": "list",
-              "value": [
-                "Palermo: vida nocturna, parques y cafes.",
-                "Recoleta: arquitectura elegante y zona historica.",
-                "Belgrano: barrio residencial con opciones de gastronomia."
-              ]
-            },
-            {
-              "type": "list",
-              "value": [
-                "Booking: booking.com",
-                "Zonaprop: zonaprop.com.ar",
-                "Roomgo: roomgo.com.ar",
-                "Airbnb: airbnb.com.ar"
-              ]
-            }
-          ]
-        },
-        {
-          "id": "transport",
-          "label": "Transporte",
-          "title": "Transporte publico y privado",
-          "image": "/assets/img/tabs/3.png",
-          "content": [
-            {
-              "type": "list",
-              "value": [
-                "Subte: sistema amplio y frecuente.",
-                "Colectivos: llegan a casi todos lados, menos regulares.",
-                "Tren: util para salir de la ciudad (por ejemplo Tigre)."
-              ]
-            },
-            {
-              "type": "callout",
-              "value": "SUBE CARD: necesaria para el transporte publico. Se compra y carga en kioscos o estaciones. Registrala en la app para evitar tarifas mas altas."
-            },
-            {
-              "type": "text",
-              "value": "Opciones privadas: Uber, Cabify, Didi y BA Taxi."
-            }
-          ]
-        },
-        {
-          "id": "travel",
-          "label": "Viajes",
-          "title": "Aeropuertos y salidas",
-          "image": "/assets/img/tabs/4.png",
-          "content": [
-            {
-              "type": "list",
-              "value": [
-                "Ezeiza (EZE): aeropuerto internacional, 35 km de la ciudad.",
-                "Aeroparque (AEP): vuelos nacionales y regionales, cerca del centro."
-              ]
-            },
-            {
-              "type": "text",
-              "value": "Aereolineas principales: Aerolineas Argentinas, JetSmart, FlyBondi."
-            },
-            {
-              "type": "text",
-              "value": "Buses: Plataforma 10. Trenes: Trenes Argentinos."
-            }
-          ]
-        }
-      ]
     },
     "contacts": {
       "title": "Contactos",
@@ -333,12 +183,6 @@
         "CEITBA: ceitba@itba.edu.ar (@ceitba)"
       ]
     }
-  },
-  "common": {
-    "readMore": "Leer mas",
-    "submit": "Enviar",
-    "loading": "Cargando...",
-    "error": "Ha ocurrido un error"
   },
   "error": {
     "title": "Algo salió mal",

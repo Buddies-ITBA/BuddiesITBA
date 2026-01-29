@@ -7,11 +7,6 @@
     "faq": "FAQ",
     "contact": "Contact"
   },
-  "hero": {
-    "title": "Welcome to Buddies ITBA",
-    "subtitle": "Your connection with exchange students",
-    "cta": "Learn more"
-  },
   "home": {
     "hero": {
       "title": "Welcome to Buddies, your home away from home",
@@ -68,7 +63,7 @@
         },
         {
           "title": "Pre-party and club",
-          "description": "Kick off the night with a pre-party and keep dancing at one of BA’s best clubs.",
+          "description": "Kick off the night with a pre-party and keep dancing at one of BA's best clubs.",
           "image": "/assets/img/events/6.png"
         }
       ]
@@ -101,24 +96,6 @@
     "team": {
       "title": "Our team",
       "subtitle": "The people behind Buddies"
-    },
-    "testimonials": {
-      "title": "Testimonials",
-      "subtitle": "What are they saying",
-      "items": [
-        {
-          "name": "Martina Vives",
-          "role": "Co-director at Buddies",
-          "quote": "An incredible way to make friends and experience the true essence of Buenos Aires!",
-          "image": "/assets/img/testimonials/1.png"
-        },
-        {
-          "name": "Sofia Bouzo",
-          "role": "Co-director at Buddies",
-          "quote": "A welcoming community that made every experience unforgettable.",
-          "image": "/assets/img/testimonials/2.png"
-        }
-      ]
     }
   },
   "events": {
@@ -132,28 +109,6 @@
       "capacity": "Capacity:",
       "whatsappNote": "Registration via Buddies WhatsApp group",
       "register": "Register"
-    },
-    "list": {
-      "items": [
-        {
-          "title": "Buenos Aires tour",
-          "date": "Saturday, March 22nd at 10:00 am",
-          "description": "Discover iconic sights with fellow students and experience the city like a true local.",
-          "image": "/assets/img/events/1.png"
-        },
-        {
-          "title": "Welcome asado",
-          "date": "Sunday, April 6th at 1:00 pm",
-          "description": "Great food, amazing people, and unforgettable memories await.",
-          "image": "/assets/img/events/2.png"
-        },
-        {
-          "title": "Football like a local",
-          "date": "Friday, April 18th at 7:30 pm",
-          "description": "Feel the thrill of Argentine futbol and experience the passion of local fans.",
-          "image": "/assets/img/events/3.png"
-        }
-      ]
     }
   },
   "contact": {
@@ -186,8 +141,7 @@
     },
     "post": {
       "by": "By",
-      "backToList": "Back to blog",
-      "related": "Related posts"
+      "backToList": "Back to blog"
     }
   },
   "faq": {
@@ -195,110 +149,6 @@
       "title": "Frequently asked questions",
       "description": "Find answers to common questions about studying at ITBA, exploring Buenos Aires, and making the most of your experience.",
       "breadcrumb": "FAQ"
-    },
-    "tabs": {
-      "items": [
-        {
-          "id": "life-itba",
-          "label": "Life at ITBA",
-          "title": "Before your arrival",
-          "image": "/assets/img/tabs/1.png",
-          "content": [
-            {
-              "type": "text",
-              "value": "You can sign up for a Spanish course at ITBA that starts two weeks before the semester (additional cost)."
-            },
-            {
-              "type": "text",
-              "value": "Once the semester starts, you have two weeks to confirm your course choices and make changes if needed."
-            },
-            {
-              "type": "text",
-              "value": "Once you're here: ITBA has three buildings, one in Microcentro and two in Parque Patricios."
-            },
-            {
-              "type": "list",
-              "value": [
-                "Join student groups with events and activities.",
-                "Microwaves are available on campus.",
-                "CEITBA offers discounts and sports classes."
-              ]
-            }
-          ]
-        },
-        {
-          "id": "where-to-live",
-          "label": "Where to live",
-          "title": "Neighborhoods & accommodation",
-          "image": "/assets/img/tabs/2.png",
-          "content": [
-            {
-              "type": "list",
-              "value": [
-                "Palermo: trendy vibe, nightlife, parks, cafes.",
-                "Recoleta: elegant architecture and historic charm.",
-                "Belgrano: leafy residential area with dining options."
-              ]
-            },
-            {
-              "type": "list",
-              "value": [
-                "Booking: booking.com",
-                "Zonaprop: zonaprop.com.ar",
-                "Roomgo: roomgo.com.ar",
-                "Airbnb: airbnb.com.ar"
-              ]
-            }
-          ]
-        },
-        {
-          "id": "transport",
-          "label": "Transport system",
-          "title": "Public & private transport",
-          "image": "/assets/img/tabs/3.png",
-          "content": [
-            {
-              "type": "list",
-              "value": [
-                "Subte: extensive subway system with frequent service.",
-                "Buses: cover almost every area, less regular than the Subte.",
-                "Trains: useful for trips outside the city (e.g. Tigre)."
-              ]
-            },
-            {
-              "type": "callout",
-              "value": "SUBE CARD: Required for public transport. Buy and top up at kiosks or metro stations. Register in the SUBE app to avoid higher fares."
-            },
-            {
-              "type": "text",
-              "value": "Private transport options include Uber, Cabify, Didi, and BA Taxi."
-            }
-          ]
-        },
-        {
-          "id": "travel",
-          "label": "Travelling around",
-          "title": "Airports & trips",
-          "image": "/assets/img/tabs/4.png",
-          "content": [
-            {
-              "type": "list",
-              "value": [
-                "Ezeiza (EZE): international airport, 35 km south of the city.",
-                "Aeroparque (AEP): domestic/regional flights, close to downtown."
-              ]
-            },
-            {
-              "type": "text",
-              "value": "Main airlines: Aerolineas Argentinas, JetSmart, FlyBondi."
-            },
-            {
-              "type": "text",
-              "value": "Buses: Plataforma 10. Trains: Trenes Argentinos."
-            }
-          ]
-        }
-      ]
     },
     "contacts": {
       "title": "Contacts",
@@ -309,12 +159,6 @@
         "CEITBA: ceitba@itba.edu.ar (@ceitba)"
       ]
     }
-  },
-  "common": {
-    "readMore": "Read more",
-    "submit": "Submit",
-    "loading": "Loading...",
-    "error": "An error occurred"
   },
   "error": {
     "title": "Something went wrong",
