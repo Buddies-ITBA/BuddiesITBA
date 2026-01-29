@@ -3,7 +3,6 @@ import { PageTitle } from '@/components/sections/PageTitle';
 import { AboutIntroSection } from '@/components/sections/AboutIntroSection';
 import { StatsSection } from '@/components/sections/StatsSection';
 import { TeamSection } from '@/components/sections/TeamSection';
-import { TestimonialsSection } from '@/components/sections/TestimonialsSection';
 import { cms } from '@/lib/cms';
 import { Locale } from '@/i18n/config';
 
@@ -17,10 +16,8 @@ export default async function AboutPage({ params }: Props) {
   const tIntro = await getTranslations('about.intro');
   const tStats = await getTranslations('about.stats');
   const tTeam = await getTranslations('about.team');
-  const tTestimonials = await getTranslations('about.testimonials');
   const tNav = await getTranslations('nav');
 
-  // Fetch team members from Notion CMS
   const teamMembers = await cms.getTeamMembers(locale as Locale);
 
   return (
@@ -44,11 +41,6 @@ export default async function AboutPage({ params }: Props) {
         title={tTeam('title')}
         subtitle={tTeam('subtitle')}
         members={teamMembers}
-      />
-      <TestimonialsSection
-        title={tTestimonials('title')}
-        subtitle={tTestimonials('subtitle')}
-        testimonials={tTestimonials.raw('items')}
       />
     </>
   );
