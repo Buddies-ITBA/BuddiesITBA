@@ -214,9 +214,7 @@ export function EventsTimeline({ events, locale, translations }: Props) {
                     className="object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full bg-primary/10 flex items-center justify-center">
-                    <Calendar className="h-16 w-16 text-primary/40" />
-                  </div>
+                  <div className="w-full h-full bg-gradient-to-br from-primary to-primary/70" />
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex flex-col justify-end p-6">
                   <DialogTitle className="text-2xl font-heading font-bold text-white mb-1 shadow-black drop-shadow-md">
