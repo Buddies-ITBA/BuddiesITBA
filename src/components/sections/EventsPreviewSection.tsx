@@ -1,15 +1,10 @@
 import Image from 'next/image';
-
-type EventPreview = {
-  title: string;
-  description: string;
-  image: string;
-};
+import { Event } from '@/lib/cms/types';
 
 type EventsPreviewSectionProps = {
   title: string;
   subtitle: string;
-  events: EventPreview[];
+  events: Event[];
 };
 
 export function EventsPreviewSection({
@@ -17,6 +12,10 @@ export function EventsPreviewSection({
   subtitle,
   events,
 }: EventsPreviewSectionProps) {
+  if (events.length === 0) {
+    return null;
+  }
+
   return (
     <section className="bg-background">
       <div className="container mx-auto px-4 py-16">
@@ -30,17 +29,21 @@ export function EventsPreviewSection({
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {events.map((event) => (
             <article
-              key={event.title}
+              key={event.id}
               className="overflow-hidden rounded-2xl bg-surface shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
-              <Image
-                src={event.image}
-                alt={event.title}
-                width={800}
-                height={600}
-                sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                className="h-48 w-full object-cover"
-              />
+              {event.image ? (
+                <Image
+                  src={event.image}
+                  alt={event.title}
+                  width={800}
+                  height={600}
+                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                  className="h-48 w-full object-cover"
+                />
+              ) : (
+                <div className="h-48 w-full bg-gradient-to-br from-primary to-primary/70" />
+              )}
               <div className="p-5">
                 <h3 className="text-lg font-heading font-semibold text-heading">
                   {event.title}

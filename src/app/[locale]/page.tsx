@@ -3,6 +3,8 @@ import { HeroSection } from '@/components/sections/HeroSection';
 import { HomeAboutSection } from '@/components/sections/HomeAboutSection';
 import { StatsSection } from '@/components/sections/StatsSection';
 import { EventsPreviewSection } from '@/components/sections/EventsPreviewSection';
+import { cms } from '@/lib/cms';
+import { Locale } from '@/i18n/config';
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -14,6 +16,8 @@ export default async function HomePage({ params }: Props) {
   const tAbout = await getTranslations('home.about');
   const tStats = await getTranslations('home.stats');
   const tEvents = await getTranslations('home.events');
+
+  const homeEvents = await cms.getHomeEvents(locale as Locale);
 
   return (
     <main>
@@ -34,7 +38,7 @@ export default async function HomePage({ params }: Props) {
       <EventsPreviewSection
         title={tEvents('title')}
         subtitle={tEvents('subtitle')}
-        events={tEvents.raw('items')}
+        events={homeEvents}
       />
     </main>
   );

@@ -29,6 +29,8 @@ export interface Event {
   registeredCount?: number;
   registrationType?: 'whatsapp' | 'forms' | null;
   registrationLink?: string;
+  showInHome?: boolean;
+  showInEvents?: boolean;
 }
 
 export interface BlogPost {
@@ -53,6 +55,7 @@ export interface CMSClient {
   getFAQs(locale: Locale): Promise<FAQ[]>;
   getTeamMembers(locale: Locale): Promise<TeamMember[]>;
   getUpcomingEvents(locale: Locale): Promise<Event[]>;
+  getHomeEvents(locale: Locale): Promise<Event[]>;
   getPosts(locale: Locale, limit?: number): Promise<BlogPost[]>;
   getPostBySlug(slug: string, locale: Locale): Promise<BlogPost | null>;
   getPageBlocks(pageId: string): Promise<NotionBlock[]>;

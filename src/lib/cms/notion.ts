@@ -105,29 +105,58 @@ export class NotionCMS implements CMSClient {
     const response = await this.client.dataSources.query({
       data_source_id: dataSourceId,
       filter: {
-        property: 'Date',
-        date: { on_or_after: now },
+        and: [
+          { property: 'Date', date: { on_or_after: now } },
+          { property: 'ShowInEvents', checkbox: { equals: true } },
+        ],
       },
       sorts: [{ property: 'Date', direction: 'ascending' }],
     });
 
     return response.results
       .filter((page): page is NotionPage => 'properties' in page)
-      .map((page) => {
-        const regType = this.getSelectValue(page.properties, 'RegistrationType')?.toLowerCase();
-        return {
-          id: page.id,
-          title: this.getLocalizedText(page.properties, 'Title', locale),
-          description: this.getLocalizedText(page.properties, 'Description', locale),
-          date: new Date(this.getDateValue(page.properties, 'Date') || ''),
-          location: this.getRichText(page.properties, 'Location'),
-          image: this.getFileUrl(page.properties, 'Image'),
-          capacity: this.getNumberValue(page.properties, 'Capacity'),
-          registeredCount: this.getNumberValue(page.properties, 'RegisteredCount'),
-          registrationType: (regType === 'whatsapp' || regType === 'forms') ? regType : null,
-          registrationLink: this.getUrlValue(page.properties, 'RegistrationLink'),
-        };
-      });
+      .map((page) => this.mapPageToEvent(page, locale));
+  }
+
+  async getHomeEvents(locale: Locale): Promise<Event[]> {
+    const databaseId = process.env.NOTION_EVENTS_DB;
+    if (!databaseId) {
+      console.warn('NOTION_EVENTS_DB not defined, returning empty array');
+      return [];
+    }
+
+    const dataSourceId = await this.getDataSourceId(databaseId);
+
+    const response = await this.client.dataSources.query({
+      data_source_id: dataSourceId,
+      filter: {
+        property: 'ShowInHome',
+        checkbox: { equals: true },
+      },
+      sorts: [{ property: 'Order', direction: 'ascending' }],
+    });
+
+    return response.results
+      .filter((page): page is NotionPage => 'properties' in page)
+      .map((page) => this.mapPageToEvent(page, locale));
+  }
+
+  private mapPageToEvent(page: NotionPage, locale: Locale): Event {
+    const regType = this.getSelectValue(page.properties, 'RegistrationType')?.toLowerCase();
+    return {
+      id: page.id,
+      title: this.getLocalizedText(page.properties, 'Title', locale),
+      description: this.getLocalizedText(page.properties, 'Description', locale),
+      date: new Date(this.getDateValue(page.properties, 'Date') || ''),
+      location: this.getRichText(page.properties, 'Location'),
+      image: this.getFileUrl(page.properties, 'Image'),
+      capacity: this.getNumberValue(page.properties, 'Capacity'),
+      registeredCount: this.getNumberValue(page.properties, 'RegisteredCount'),
+      registrationType: (regType === 'whatsapp' || regType === 'forms') ? regType : null,
+      registrationLink: this.getUrlValue(page.properties, 'RegistrationLink'),
+      showInHome: this.getCheckboxValue(page.properties, 'ShowInHome'),
+      showInEvents: this.getCheckboxValue(page.properties, 'ShowInEvents'),
+    };
   }
 
   async getPosts(locale: Locale, limit?: number): Promise<BlogPost[]> {
@@ -299,5 +328,13 @@ export class NotionCMS implements CMSClient {
       }
     }
     return undefined;
+  }
+
+  private getCheckboxValue(properties: NotionProperties, field: string): boolean {
+    const prop = properties[field];
+    if (prop?.type === 'checkbox') {
+      return prop.checkbox;
+    }
+    return false;
   }
 }

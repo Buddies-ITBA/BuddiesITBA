@@ -46,39 +46,7 @@
     },
     "events": {
       "title": "Nuestros eventos",
-      "subtitle": "Sumate y crea recuerdos inolvidables",
-      "items": [
-        {
-          "title": "Tour por Buenos Aires",
-          "description": "Descubri lugares iconicos con otros estudiantes y vivi la ciudad como un local.",
-          "image": "/assets/img/events/1.png"
-        },
-        {
-          "title": "Asado de bienvenida",
-          "description": "Buena comida, gente increible y momentos inolvidables.",
-          "image": "/assets/img/events/2.png"
-        },
-        {
-          "title": "Futbol como un local",
-          "description": "Vivi la pasion del futbol argentino y cantá con la hinchada.",
-          "image": "/assets/img/events/3.png"
-        },
-        {
-          "title": "Cena de los paises",
-          "description": "Trae un plato, proba sabores del mundo y comparti con amigos.",
-          "image": "/assets/img/events/4.png"
-        },
-        {
-          "title": "Noche de juegos",
-          "description": "Juegos de mesa, desafios en equipo y risas aseguradas.",
-          "image": "/assets/img/events/5.png"
-        },
-        {
-          "title": "Previa y boliche",
-          "description": "Arrancamos con una previa y seguimos bailando en uno de los mejores boliches de BA.",
-          "image": "/assets/img/events/6.png"
-        }
-      ]
+      "subtitle": "Sumate y crea recuerdos inolvidables"
     }
   },
   "about": {

@@ -34,39 +34,7 @@
     },
     "events": {
       "title": "Our events",
-      "subtitle": "Join us and create unforgettable memories",
-      "items": [
-        {
-          "title": "Buenos Aires tour",
-          "description": "Discover iconic sights with fellow students and experience the city like a true local.",
-          "image": "/assets/img/events/1.png"
-        },
-        {
-          "title": "Welcome asado",
-          "description": "Great food, amazing people, and unforgettable memories await.",
-          "image": "/assets/img/events/2.png"
-        },
-        {
-          "title": "Football like a local",
-          "description": "Feel the thrill of Argentine futbol and experience the passion of local fans.",
-          "image": "/assets/img/events/3.png"
-        },
-        {
-          "title": "Countries dinner",
-          "description": "Bring a dish, taste flavors from around the world, and enjoy a global feast with friends.",
-          "image": "/assets/img/events/4.png"
-        },
-        {
-          "title": "Game night",
-          "description": "Board games, team challenges, and laughs for a perfect night with friends.",
-          "image": "/assets/img/events/5.png"
-        },
-        {
-          "title": "Pre-party and club",
-          "description": "Kick off the night with a pre-party and keep dancing at one of BA's best clubs.",
-          "image": "/assets/img/events/6.png"
-        }
-      ]
+      "subtitle": "Join us and create unforgettable memories"
     }
   },
   "about": {
