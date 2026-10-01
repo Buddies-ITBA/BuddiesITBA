@@ -57,26 +57,6 @@
       "cta": "Conocé más sobre nosotros",
       "imageAlt": "Mateada de Buddies"
     },
-    "stats": {
-      "items": [
-        {
-          "value": 100,
-          "label": "Estudiantes por cuatrimestre"
-        },
-        {
-          "value": 34,
-          "label": "Nacionalidades"
-        },
-        {
-          "value": 120,
-          "label": "Buddies argentinos"
-        },
-        {
-          "value": 5000,
-          "label": "Mates compartidos"
-        }
-      ]
-    },
     "events": {
       "eyebrow": "Agenda",
       "title": "Nuestros eventos",
@@ -88,7 +68,23 @@
       "description": "Seguinos en Instagram para enterarte de cada evento, o escribinos con cualquier duda antes de viajar.",
       "instagram": "Seguinos en Instagram",
       "contact": "Escribinos"
-    }
+    },
+    "countries": {
+      "eyebrow": "Comunidad internacional",
+      "title": "Estudiantes de {count, plural, one {# país} other {# países}}",
+      "subtitle": "Cada cuatrimestre llegan estudiantes de todo el mundo. Estos son algunos sellos de nuestro pasaporte."
+    },
+    "testimonials": {
+      "eyebrow": "Testimonios",
+      "title": "Lo que cuentan quienes ya vinieron",
+      "subtitle": "Estudiantes de intercambio y buddies que vivieron la experiencia."
+    },
+    "gallery": {
+      "eyebrow": "Momentos",
+      "title": "Así se vive Buddies",
+      "instagram": "Más fotos en Instagram"
+    },
+    "whatsapp": "Sumate a la comunidad de WhatsApp"
   },
   "about": {
     "page": {
@@ -141,7 +137,8 @@
       "deadline": "Inscripción abierta hasta el {date}.",
       "whatsapp": "La inscripción es por el grupo de WhatsApp de Buddies.",
       "external": "Inscribirse",
-      "noRegistration": "No hace falta inscribirse: ¡te esperamos!"
+      "noRegistration": "No hace falta inscribirse: ¡te esperamos!",
+      "whatsappJoin": "Unirme al grupo de WhatsApp"
     },
     "cancel": {
       "title": "Cancelar inscripción",
@@ -150,6 +147,16 @@
       "done": "Listo, cancelamos tu inscripción. ¡Gracias por avisar!",
       "invalid": "Este link de cancelación no es válido o la inscripción ya estaba cancelada.",
       "keep": "No, mantener mi lugar"
+    },
+    "availability": {
+      "open": "Inscripción abierta",
+      "lastSpots": "{count, plural, one {¡Último lugar!} other {Últimos # lugares}}",
+      "full": "Lleno · lista de espera",
+      "closed": "Inscripción cerrada"
+    },
+    "subscribe": {
+      "label": "Suscribirse al calendario",
+      "hint": "Agregá todos los eventos de Buddies a tu Google Calendar, Apple o Outlook. Se actualiza solo."
     }
   },
   "contact": {
@@ -317,6 +324,29 @@
       "back": "Volver",
       "success": "¡Gracias! Recibimos tu inscripción. Te escribimos cuando tengamos tu match.",
       "duplicate": "Ya te inscribiste con ese email en este programa."
+    },
+    "how": {
+      "eyebrow": "El matching",
+      "title": "¿Cómo elegimos a tu buddy?",
+      "subtitle": "No es al azar: cruzamos lo que contás en el formulario para que conectes con alguien parecido a vos.",
+      "items": [
+        {
+          "title": "Gustos en común",
+          "description": "Comparamos tus intereses y lo que buscás del programa: deportes, música, salir, viajar, cultura…"
+        },
+        {
+          "title": "Personalidad y ritmo",
+          "description": "Qué tan sociable sos, cuánto te gusta salir y cuánto tiempo podés dedicarle, para que las expectativas coincidan."
+        },
+        {
+          "title": "Idiomas y preferencias",
+          "description": "Priorizamos que compartan un idioma y respetamos si preferís un buddy de tu mismo género."
+        },
+        {
+          "title": "Revisión humana",
+          "description": "El equipo revisa cada propuesta antes de presentarlos por email. ¡Después, a conocerse!"
+        }
+      ]
     }
   },
   "emails": {
@@ -336,7 +366,10 @@
       "promotedBody": "Se liberó un lugar y tu inscripción pasó a confirmada.",
       "viewEvent": "Ver el evento",
       "cancelHint": "¿No podés ir? Liberá tu lugar para que lo aproveche otra persona.",
-      "cancel": "Cancelar mi inscripción"
+      "cancel": "Cancelar mi inscripción",
+      "reminderSubject": "Recordatorio: {event} · {when}",
+      "reminderHeading": "¡Nos vemos pronto en {event}!",
+      "reminderBody": "Te recordamos que estás inscripto/a. Si al final no podés ir, avisanos respondiendo este email para liberar tu lugar."
     },
     "buddies": {
       "receivedSubject": "Recibimos tu inscripción al programa Buddies",

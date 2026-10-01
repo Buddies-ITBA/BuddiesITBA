@@ -1,10 +1,12 @@
 import 'server-only';
 import { cache } from 'react';
-import { and, asc, count, desc, eq, gte } from 'drizzle-orm';
+import { and, asc, count, desc, eq, gte, sql } from 'drizzle-orm';
 import { getDb, schema } from '@/db';
 import type { Locale } from '@/i18n/config';
 import { pick } from '@/lib/localized';
 import type { FormField } from '@/lib/forms/schema';
+import { isCountryCode } from '@/lib/countries';
+import { isRegistrationOpen } from '@/lib/registrations';
 
 /*
  * Read-only queries for the public site. Each returns view models with text
@@ -27,9 +29,13 @@ export type PublicEvent = {
   registrationUrl: string | null;
   registrationDeadline: Date | null;
   capacity: number | null;
+  /** Web-form registration is currently accepting sign-ups */
+  registrationOpen: boolean;
+  /** Remaining confirmed spots (null = unlimited or not a form event) */
+  spotsLeft: number | null;
 };
 
-function toPublicEvent(row: schema.EventRow, locale: Locale): PublicEvent {
+function toPublicEvent(row: schema.EventRow, locale: Locale, confirmed = 0): PublicEvent {
   return {
     id: row.id,
     slug: row.slug,
@@ -44,8 +50,16 @@ function toPublicEvent(row: schema.EventRow, locale: Locale): PublicEvent {
     registrationUrl: row.registrationUrl,
     registrationDeadline: row.registrationDeadline,
     capacity: row.capacity,
+    registrationOpen: isRegistrationOpen(row),
+    spotsLeft: row.registrationType === 'form' && row.capacity !== null ? Math.max(row.capacity - confirmed, 0) : null,
   };
 }
+
+/** Event columns + its confirmed registrations, in one query. */
+const withConfirmed = {
+  event: events,
+  confirmed: sql<number>`(select count(*) from ${eventRegistrations} r where r.event_id = ${events.id} and r.status = 'confirmed')`.mapWith(Number),
+};
 
 /** Events stay listed until the end of the day they happen. */
 const listedSince = () => new Date(Date.now() - 12 * 60 * 60 * 1000);
@@ -53,22 +67,23 @@ const listedSince = () => new Date(Date.now() - 12 * 60 * 60 * 1000);
 export async function listUpcomingEvents(locale: Locale): Promise<PublicEvent[]> {
   const db = await getDb();
   const rows = await db
-    .select()
+    .select(withConfirmed)
     .from(events)
     .where(and(eq(events.published, true), gte(events.startsAt, listedSince())))
     .orderBy(asc(events.startsAt));
-  return rows.map((row) => toPublicEvent(row, locale));
+  return rows.map((row) => toPublicEvent(row.event, locale, row.confirmed));
 }
 
 export async function listHomeEvents(locale: Locale): Promise<PublicEvent[]> {
   const db = await getDb();
+  // Upcoming only: the home cards now show dates and availability
   const rows = await db
-    .select()
+    .select(withConfirmed)
     .from(events)
-    .where(and(eq(events.published, true), eq(events.showInHome, true)))
+    .where(and(eq(events.published, true), eq(events.showInHome, true), gte(events.startsAt, listedSince())))
     .orderBy(asc(events.homeOrder), asc(events.startsAt))
     .limit(6);
-  return rows.map((row) => toPublicEvent(row, locale));
+  return rows.map((row) => toPublicEvent(row.event, locale, row.confirmed));
 }
 
 export type EventDetail = PublicEvent & {
@@ -88,7 +103,7 @@ export const getEventBySlug = cache(async (slug: string, locale: Locale): Promis
     .select({ value: count() })
     .from(eventRegistrations)
     .where(and(eq(eventRegistrations.eventId, row.id), eq(eventRegistrations.status, 'confirmed')));
-  return { ...toPublicEvent(row, locale), formFields: row.formFields, confirmedCount };
+  return { ...toPublicEvent(row, locale, confirmedCount), formFields: row.formFields, confirmedCount };
 });
 
 export type PublicFaq = { id: string; question: string; answer: string; category: string };
@@ -180,3 +195,69 @@ export const getActiveProgram = cache(async () => {
   const [row] = await db.select().from(buddyPrograms).where(eq(buddyPrograms.active, true)).limit(1);
   return row ?? null;
 });
+
+/** Countries exchange students came from (all programs), most frequent first. Aggregated only. */
+export const listCommunityCountries = cache(async (): Promise<{ code: string; count: number }[]> => {
+  const db = await getDb();
+  const rows = await db
+    .select({ code: schema.buddyApplicants.country, count: count() })
+    .from(schema.buddyApplicants)
+    .where(eq(schema.buddyApplicants.role, 'exchange'))
+    .groupBy(schema.buddyApplicants.country)
+    .orderBy(desc(count()));
+  return rows.filter((r) => isCountryCode(r.code));
+});
+
+export type PublicTestimonial = { id: string; name: string; countryCode: string | null; subtitle: string; quote: string; imageUrl: string | null };
+
+export async function listTestimonials(locale: Locale): Promise<PublicTestimonial[]> {
+  const db = await getDb();
+  const rows = await db
+    .select()
+    .from(schema.testimonials)
+    .where(eq(schema.testimonials.published, true))
+    .orderBy(asc(schema.testimonials.sortOrder));
+  return rows.map((r) => ({
+    id: r.id,
+    name: r.name,
+    countryCode: r.countryCode,
+    subtitle: pick(r.subtitle, locale),
+    quote: pick(r.quote, locale),
+    imageUrl: r.imageUrl,
+  }));
+}
+
+export type PublicPhoto = { id: string; imageUrl: string; caption: string };
+
+export async function listGallery(locale: Locale): Promise<PublicPhoto[]> {
+  const db = await getDb();
+  const rows = await db
+    .select()
+    .from(schema.galleryPhotos)
+    .where(eq(schema.galleryPhotos.published, true))
+    .orderBy(asc(schema.galleryPhotos.sortOrder))
+    .limit(12);
+  return rows.map((r) => ({ id: r.id, imageUrl: r.imageUrl, caption: pick(r.caption, locale) }));
+}
+
+/** Defaults used until an admin saves the settings page. */
+export const defaultSiteStats: schema.SiteStat[] = [
+  { value: 100, label: { es: 'Estudiantes por cuatrimestre', en: 'Students per semester' } },
+  { value: 34, label: { es: 'Nacionalidades', en: 'Nationalities' } },
+  { value: 120, label: { es: 'Buddies argentinos', en: 'Argentinian buddies' } },
+  { value: 5000, label: { es: 'Mates compartidos', en: 'Mates shared' } },
+];
+
+export const getSiteSettings = cache(async () => {
+  const db = await getDb();
+  const [row] = await db.select().from(schema.siteSettings).where(eq(schema.siteSettings.id, 'main')).limit(1);
+  return {
+    stats: row?.stats.length ? row.stats : defaultSiteStats,
+    whatsappUrl: row?.whatsappUrl ?? null,
+  };
+});
+
+export async function getStats(locale: Locale) {
+  const { stats } = await getSiteSettings();
+  return stats.map((s) => ({ value: s.value, label: pick(s.label, locale) }));
+}

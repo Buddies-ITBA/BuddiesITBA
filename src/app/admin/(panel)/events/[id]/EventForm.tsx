@@ -110,6 +110,11 @@ export function EventForm({ event, action }: { event: EventRow | null; action: (
             <div>
               <h3 className="mb-1 font-semibold">Preguntas del formulario</h3>
               <p className="mb-4 text-sm text-text-muted">Nombre y email se piden siempre. Agregá lo que necesites (alimentación, universidad, talle de remera…).</p>
+              <p className="mb-4 rounded-lg bg-sky/60 px-3 py-2 text-xs text-primary-dark">
+                {event?.reminderSentAt
+                  ? `Recordatorio por email enviado a los confirmados el ${event.reminderSentAt.toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' })}.`
+                  : 'Los confirmados reciben un recordatorio por email automáticamente el día antes.'}
+              </p>
               <FormBuilder name="formFields" initial={event?.formFields ?? []} mode="event" />
             </div>
           </div>

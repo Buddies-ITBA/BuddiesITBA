@@ -2,12 +2,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { CalendarX2 } from 'lucide-react';
 import { InstagramIcon as Instagram } from '@/components/brand/social-icons';
-import type { PublicEvent } from '@/lib/data/public';
+import type { EventWithAvailability } from '@/lib/data/availability';
 import { site } from '@/config/site';
 import { groupByMonth } from '@/lib/dates';
 import { Button } from '@/components/ui/button';
 import { AddToCalendar, type AddToCalendarLabels } from '@/components/ui/add-to-calendar';
-import { DateBadge, EventMeta, ExchangeOnlyBadge } from '@/components/events/badges';
+import { AvailabilityBadge, DateBadge, EventMeta, ExchangeOnlyBadge } from '@/components/events/badges';
 import { EmptyState } from '@/components/feedback/EmptyState';
 
 type Translations = {
@@ -20,7 +20,7 @@ type Translations = {
 };
 
 type Props = {
-  events: PublicEvent[];
+  events: EventWithAvailability[];
   locale: string;
   translations: Translations;
 };
@@ -72,7 +72,12 @@ export function EventsTimeline({ events, locale, translations: t }: Props) {
                     </div>
 
                     <div className="flex flex-1 flex-col p-5">
-                      {event.exchangeOnly && <ExchangeOnlyBadge label={t.exchangeOnly} className="mb-2 self-start" />}
+                      {(event.exchangeOnly || event.availability) && (
+                        <div className="mb-2 flex flex-wrap gap-1.5">
+                          {event.availability && <AvailabilityBadge state={event.availability.state} label={event.availability.label} />}
+                          {event.exchangeOnly && <ExchangeOnlyBadge label={t.exchangeOnly} />}
+                        </div>
+                      )}
                       <h3 className="text-lg font-bold leading-snug md:text-xl">
                         {/* Stretched link: the whole card is clickable */}
                         <Link href={`/events/${event.slug}`} className="after:absolute after:inset-0 focus:outline-none">

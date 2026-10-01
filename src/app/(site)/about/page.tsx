@@ -3,17 +3,14 @@ import { PageTitle } from '@/components/sections/PageTitle';
 import { AboutIntroSection } from '@/components/sections/AboutIntroSection';
 import { StatsSection } from '@/components/sections/StatsSection';
 import { TeamSection } from '@/components/sections/TeamSection';
-import { listTeam } from '@/lib/data/public';
+import { getStats, listTeam } from '@/lib/data/public';
 import { pageMetadata } from '@/lib/metadata';
 
 export const generateMetadata = () => pageMetadata('about.page');
 
 export default async function AboutPage() {
-  const [t, tStats, teamMembers] = await Promise.all([
-    getTranslations('about'),
-    getTranslations('home.stats'),
-    getLocale().then(listTeam),
-  ]);
+  const locale = await getLocale();
+  const [t, stats, teamMembers] = await Promise.all([getTranslations('about'), getStats(locale), listTeam(locale)]);
 
   return (
     <>
@@ -26,7 +23,7 @@ export default async function AboutPage() {
         closing={t('intro.closing')}
         imageAlt={t('intro.imageAlt')}
       />
-      <StatsSection stats={tStats.raw('items')} />
+      <StatsSection stats={stats} />
       <TeamSection
         eyebrow={t('team.eyebrow')}
         title={t('team.title')}

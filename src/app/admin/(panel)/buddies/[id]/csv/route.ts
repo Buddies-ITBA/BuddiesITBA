@@ -4,6 +4,7 @@ import { getProgram, getProgramData } from '@/lib/admin/buddies';
 import { formatAnswer } from '@/lib/admin/registrations';
 import { pick } from '@/lib/localized';
 import { slugify } from '@/lib/text';
+import { countryName } from '@/lib/countries';
 
 /** ?type=matches (pairs with contact info, for intros) or ?type=applicants (everything). */
 export async function GET(request: Request, { params }: RouteContext<'/admin/buddies/[id]/csv'>) {
@@ -20,7 +21,7 @@ export async function GET(request: Request, { params }: RouteContext<'/admin/bud
       ...matches.map((m) => {
         const l = byId.get(m.localId);
         const e = byId.get(m.exchangeId);
-        return [l?.name, l?.email, l?.phone, e?.name, e?.email, e?.phone, e?.country, e?.institution, `${Math.round(m.score * 100)}%`, m.locked ? 'Sí' : 'No'];
+        return [l?.name, l?.email, l?.phone, e?.name, e?.email, e?.phone, e && countryName(e.country, 'es'), e?.institution, `${Math.round(m.score * 100)}%`, m.locked ? 'Sí' : 'No'];
       }),
     ]);
   }
@@ -33,7 +34,7 @@ export async function GET(request: Request, { params }: RouteContext<'/admin/bud
       a.email,
       a.phone,
       a.institution,
-      a.country,
+      countryName(a.country, 'es'),
       a.gender,
       a.genderPreference,
       a.languages,

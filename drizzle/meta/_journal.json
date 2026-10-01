@@ -15,6 +15,13 @@
       "when": 1790817878355,
       "tag": "0001_emails_and_cancellation",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790819833809,
+      "tag": "0002_testimonials_gallery_settings",
+      "breakpoints": true
     }
   ]
 }

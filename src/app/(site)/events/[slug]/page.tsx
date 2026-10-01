@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowLeft, ArrowUpRight, CalendarClock, MessageCircle, Users } from 'lucide-react';
 import { getLocale, getTranslations } from 'next-intl/server';
-import { getEventBySlug } from '@/lib/data/public';
+import { getEventBySlug, getSiteSettings } from '@/lib/data/public';
 import { formatEventDate } from '@/lib/dates';
 import { localizeFields } from '@/lib/forms/localize';
 import { isRegistrationOpen } from '@/lib/registrations';
@@ -31,11 +31,12 @@ export default async function EventPage({ params }: Props) {
   const event = await getEventBySlug((await params).slug, locale);
   if (!event) notFound();
 
-  const [t, tTimeline, tCalendar, tForms] = await Promise.all([
+  const [t, tTimeline, tCalendar, tForms, settings] = await Promise.all([
     getTranslations('events.detail'),
     getTranslations('events.timeline'),
     getTranslations('events.calendar'),
     getTranslations('forms'),
+    getSiteSettings(),
   ]);
 
   const open = isRegistrationOpen(event);
@@ -125,10 +126,19 @@ export default async function EventPage({ params }: Props) {
             )}
 
             {event.registrationType === 'whatsapp' && (
-              <p className="mt-4 flex items-start gap-2 font-medium text-[#166534]">
-                <MessageCircle className="mt-0.5 size-5 shrink-0" aria-hidden />
-                {t('whatsapp')}
-              </p>
+              <>
+                <p className="mt-4 flex items-start gap-2 font-medium text-success">
+                  <MessageCircle className="mt-0.5 size-5 shrink-0" aria-hidden />
+                  {t('whatsapp')}
+                </p>
+                {settings.whatsappUrl && (
+                  <Button asChild size="lg" className="mt-5 w-full">
+                    <a href={settings.whatsappUrl} target="_blank" rel="noopener noreferrer">
+                      <MessageCircle /> {t('whatsappJoin')}
+                    </a>
+                  </Button>
+                )}
+              </>
             )}
 
             {event.registrationType === 'none' && <p className="mt-3 text-text-muted">{t('noRegistration')}</p>}

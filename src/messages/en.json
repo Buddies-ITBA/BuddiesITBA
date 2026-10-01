@@ -57,26 +57,6 @@
       "cta": "Learn more about us",
       "imageAlt": "Buddies mate gathering"
     },
-    "stats": {
-      "items": [
-        {
-          "value": 100,
-          "label": "Students per semester"
-        },
-        {
-          "value": 34,
-          "label": "Nationalities"
-        },
-        {
-          "value": 120,
-          "label": "Argentinian buddies"
-        },
-        {
-          "value": 5000,
-          "label": "Mates shared"
-        }
-      ]
-    },
     "events": {
       "eyebrow": "What's on",
       "title": "Our events",
@@ -88,7 +68,23 @@
       "description": "Follow us on Instagram to hear about every event, or email us with any question before you travel.",
       "instagram": "Follow us on Instagram",
       "contact": "Email us"
-    }
+    },
+    "countries": {
+      "eyebrow": "International community",
+      "title": "Students from {count, plural, one {# country} other {# countries}}",
+      "subtitle": "Every semester students arrive from all over the world. Here are some stamps in our passport."
+    },
+    "testimonials": {
+      "eyebrow": "Testimonials",
+      "title": "Stories from people who've been here",
+      "subtitle": "Exchange students and buddies who lived the experience."
+    },
+    "gallery": {
+      "eyebrow": "Moments",
+      "title": "What Buddies feels like",
+      "instagram": "More photos on Instagram"
+    },
+    "whatsapp": "Join the WhatsApp community"
   },
   "about": {
     "page": {
@@ -141,7 +137,8 @@
       "deadline": "Registration open until {date}.",
       "whatsapp": "Registration is through the Buddies WhatsApp group.",
       "external": "Register",
-      "noRegistration": "No registration needed — see you there!"
+      "noRegistration": "No registration needed — see you there!",
+      "whatsappJoin": "Join the WhatsApp group"
     },
     "cancel": {
       "title": "Cancel registration",
@@ -150,6 +147,16 @@
       "done": "Done — your registration is cancelled. Thanks for letting us know!",
       "invalid": "This cancellation link is invalid or the registration was already cancelled.",
       "keep": "No, keep my spot"
+    },
+    "availability": {
+      "open": "Registration open",
+      "lastSpots": "{count, plural, one {Last spot!} other {Last # spots}}",
+      "full": "Full · waitlist",
+      "closed": "Registration closed"
+    },
+    "subscribe": {
+      "label": "Subscribe to the calendar",
+      "hint": "Add every Buddies event to Google Calendar, Apple or Outlook. It updates automatically."
     }
   },
   "contact": {
@@ -317,6 +324,29 @@
       "back": "Back",
       "success": "Thanks! We got your application. We'll email you once we have your match.",
       "duplicate": "You've already applied to this program with this email."
+    },
+    "how": {
+      "eyebrow": "Matching",
+      "title": "How do we pick your buddy?",
+      "subtitle": "It's not random: we cross what you tell us in the form so you connect with someone like you.",
+      "items": [
+        {
+          "title": "Shared interests",
+          "description": "We compare your interests and what you want from the program: sports, music, going out, travel, culture…"
+        },
+        {
+          "title": "Personality and pace",
+          "description": "How outgoing you are, how much you like going out and how much time you have, so expectations line up."
+        },
+        {
+          "title": "Languages and preferences",
+          "description": "We prioritize a shared language and respect it if you'd prefer a buddy of your same gender."
+        },
+        {
+          "title": "Human review",
+          "description": "The team reviews every proposal before introducing you by email. Then it's time to meet!"
+        }
+      ]
     }
   },
   "emails": {
@@ -336,7 +366,10 @@
       "promotedBody": "A spot opened up and your registration is now confirmed.",
       "viewEvent": "View the event",
       "cancelHint": "Can't make it? Free up your spot so someone else can go.",
-      "cancel": "Cancel my registration"
+      "cancel": "Cancel my registration",
+      "reminderSubject": "Reminder: {event} · {when}",
+      "reminderHeading": "See you soon at {event}!",
+      "reminderBody": "Just a reminder that you're registered. If you can't make it after all, reply to this email so we can free up your spot."
     },
     "buddies": {
       "receivedSubject": "We got your Buddy program application",

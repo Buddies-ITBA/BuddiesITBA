@@ -28,7 +28,8 @@ Start over with `npm run db:reset-local`.
     full, and export to CSV.
   - **Buddy program** per semester: configurable interests/personality questionnaire,
     applicants list, **automatic matching**, manual adjustments and CSV of pairs.
-  - FAQ, blog, team, image uploads and admin users.
+  - FAQ, blog, team, testimonials, photo gallery, site settings (stats, WhatsApp community
+    link), image uploads and admin users.
   - Email log. Emails go out in each person's language: registration confirmation with a
     personal cancel link, waitlist promotion, application received and buddy introductions.
 

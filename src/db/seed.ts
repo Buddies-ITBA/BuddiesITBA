@@ -157,6 +157,50 @@ export async function seedIfEmpty(db: DB) {
     publishedAt: new Date(Date.now() - 10 * DAY),
   });
 
+  await db.insert(s.testimonials).values([
+    {
+      name: 'Emma Schneider',
+      countryCode: 'DE',
+      sortOrder: 1,
+      subtitle: { es: 'Intercambio 2025 · TU München', en: 'Exchange 2025 · TU München' },
+      quote: {
+        es: 'Mi buddy me esperó en Ezeiza y a la semana ya tenía un grupo de amigos. Buenos Aires se sintió casa desde el primer asado.',
+        en: 'My buddy picked me up at Ezeiza and within a week I had a group of friends. Buenos Aires felt like home from the first asado.',
+      },
+      imageUrl: '/assets/img/team/team-3.jpg',
+    },
+    {
+      name: 'Lucas Martin',
+      countryCode: 'FR',
+      sortOrder: 2,
+      subtitle: { es: 'Intercambio 2024 · INSA Lyon', en: 'Exchange 2024 · INSA Lyon' },
+      quote: {
+        es: 'Los city tours y las mateadas fueron lo mejor. Volví a Francia con amigos de diez países distintos.',
+        en: 'The city tours and mate afternoons were the best. I went back to France with friends from ten different countries.',
+      },
+      imageUrl: '/assets/img/team/team-2.jpg',
+    },
+    {
+      name: 'Valentina Ruiz',
+      countryCode: 'AR',
+      sortOrder: 3,
+      subtitle: { es: 'Buddy ITBA · Ing. Informática', en: 'ITBA buddy · Computer Engineering' },
+      quote: {
+        es: 'Ser buddy me dio amigos en todo el mundo y practiqué tres idiomas sin salir de Buenos Aires.',
+        en: "Being a buddy gave me friends all over the world, and I practiced three languages without leaving Buenos Aires.",
+      },
+      imageUrl: '/assets/img/team/team-5.jpg',
+    },
+  ]);
+
+  await db.insert(s.galleryPhotos).values([
+    { imageUrl: '/assets/img/tour_hero.png', caption: { es: 'City tour por el Obelisco', en: 'City tour at the Obelisco' }, sortOrder: 1 },
+    { imageUrl: '/assets/img/asado.png', caption: { es: 'Asado de bienvenida', en: 'Welcome asado' }, sortOrder: 2 },
+    { imageUrl: '/assets/img/mate_about.JPG', caption: { es: 'Mateada en el parque', en: 'Mate in the park' }, sortOrder: 3 },
+    { imageUrl: '/assets/img/teamFoto.png', caption: { es: 'El equipo Buddies', en: 'The Buddies team' }, sortOrder: 4 },
+    { imageUrl: '/assets/img/ba-tour.jpg', caption: { es: 'Recorriendo San Telmo', en: 'Exploring San Telmo' }, sortOrder: 5 },
+  ]);
+
   const [program] = await db
     .insert(s.buddyPrograms)
     .values({ name: 'Programa de ejemplo', active: true, registrationOpen: true, questions: defaultBuddyQuestions })
@@ -183,14 +227,14 @@ function sampleApplicants(programId: string) {
 
   const locals = ['Valentina Ruiz', 'Joaquín Pérez', 'Camila Torres', 'Santiago Díaz', 'Martina Gómez'];
   const exchange = [
-    ['Emma Schneider', 'Germany', 'TU München'],
-    ['Lucas Martin', 'France', 'INSA Lyon'],
-    ['Olivia Rossi', 'Italy', 'Politecnico di Milano'],
-    ['Noah Johnson', 'USA', 'Georgia Tech'],
-    ['Sofia Andersson', 'Sweden', 'KTH'],
-    ['Liam Murphy', 'Ireland', 'UCD'],
-    ['Mia Müller', 'Austria', 'TU Wien'],
-    ['Hugo García', 'Spain', 'UPM'],
+    ['Emma Schneider', 'DE', 'TU München'],
+    ['Lucas Martin', 'FR', 'INSA Lyon'],
+    ['Olivia Rossi', 'IT', 'Politecnico di Milano'],
+    ['Noah Johnson', 'US', 'Georgia Tech'],
+    ['Sofia Andersson', 'SE', 'KTH'],
+    ['Liam Murphy', 'IE', 'UCD'],
+    ['Mia Müller', 'AT', 'TU Wien'],
+    ['Hugo García', 'ES', 'UPM'],
   ];
   const genders = ['female', 'male'] as const;
   return [
@@ -200,7 +244,7 @@ function sampleApplicants(programId: string) {
       name,
       email: `local${i + 1}@itba.edu.ar`,
       institution: 'Ing. Informática',
-      country: 'Argentina',
+      country: 'AR',
       gender: genders[i % 2],
       languages: i % 2 ? ['es', 'en'] : ['es', 'en', 'pt'],
       capacity: i < 3 ? 2 : 1,

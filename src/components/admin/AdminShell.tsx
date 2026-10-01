@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { CalendarDays, ExternalLink, HeartHandshake, LayoutDashboard, LogOut, Mail, Menu, MessageCircleQuestion, Newspaper, ShieldCheck, Users } from 'lucide-react';
+import { CalendarDays, ExternalLink, HeartHandshake, Images, LayoutDashboard, LogOut, Mail, Menu, MessageCircleQuestion, MessageSquareQuote, Newspaper, Settings, ShieldCheck, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const nav = [
@@ -14,6 +14,9 @@ const nav = [
   { href: '/admin/faq', label: 'FAQ', Icon: MessageCircleQuestion },
   { href: '/admin/blog', label: 'Blog', Icon: Newspaper },
   { href: '/admin/team', label: 'Equipo', Icon: Users },
+  { href: '/admin/testimonials', label: 'Testimonios', Icon: MessageSquareQuote },
+  { href: '/admin/gallery', label: 'Galería', Icon: Images },
+  { href: '/admin/settings', label: 'Sitio', Icon: Settings },
   { href: '/admin/emails', label: 'Emails', Icon: Mail },
   { href: '/admin/admins', label: 'Administradores', Icon: ShieldCheck },
 ];

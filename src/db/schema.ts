@@ -87,6 +87,8 @@ export const events = pgTable(
     registrationDeadline: timestamp('registration_deadline', { withTimezone: true }),
     capacity: integer('capacity'),
     formFields: jsonb('form_fields').$type<FormField[]>().notNull().default([]),
+    /** Set when the day-before reminder went out, so the cron never sends twice. */
+    reminderSentAt: timestamp('reminder_sent_at', { withTimezone: true }),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },
@@ -159,6 +161,42 @@ export const posts = pgTable('posts', {
   updatedAt: updatedAt(),
 });
 
+/** Quotes from past participants, shown on the home and /buddies. */
+export const testimonials = pgTable('testimonials', {
+  id: id(),
+  name: text('name').notNull(),
+  /** ISO 3166-1 alpha-2, e.g. "DE" */
+  countryCode: text('country_code'),
+  /** e.g. "Intercambio 2025 · TU München" */
+  subtitle: localized('subtitle'),
+  quote: localized('quote'),
+  imageUrl: text('image_url'),
+  sortOrder: integer('sort_order').notNull().default(0),
+  published: boolean('published').notNull().default(true),
+  createdAt: createdAt(),
+});
+
+/** Photos for the "momentos" strip on the home page. */
+export const galleryPhotos = pgTable('gallery_photos', {
+  id: id(),
+  imageUrl: text('image_url').notNull(),
+  caption: localized('caption'),
+  sortOrder: integer('sort_order').notNull().default(0),
+  published: boolean('published').notNull().default(true),
+  createdAt: createdAt(),
+});
+
+export type SiteStat = { value: number; label: Localized };
+
+/** Single-row table (id = 'main') for small site-wide settings edited in the admin. */
+export const siteSettings = pgTable('site_settings', {
+  id: text('id').primaryKey().default('main'),
+  stats: jsonb('stats').$type<SiteStat[]>().notNull().default([]),
+  /** WhatsApp community invite link shown to exchange students */
+  whatsappUrl: text('whatsapp_url'),
+  updatedAt: updatedAt(),
+});
+
 /* ───────────────────────── Buddy program ───────────────────────── */
 
 /** One cohort, e.g. "2027 · 1er cuatrimestre". */
@@ -195,6 +233,7 @@ export const buddyApplicants = pgTable(
     phone: text('phone').notNull().default(''),
     /** Career at ITBA (locals) or home university (exchange). */
     institution: text('institution').notNull().default(''),
+    /** ISO 3166-1 alpha-2 code (older rows may hold free text) */
     country: text('country').notNull().default(''),
     gender: text('gender').$type<Gender>().notNull().default('na'),
     genderPreference: text('gender_preference').$type<GenderPreference>().notNull().default('any'),
@@ -257,6 +296,9 @@ export const emailLog = pgTable(
 );
 
 export type EventRow = typeof events.$inferSelect;
+export type TestimonialRow = typeof testimonials.$inferSelect;
+export type GalleryPhotoRow = typeof galleryPhotos.$inferSelect;
+export type SiteSettingsRow = typeof siteSettings.$inferSelect;
 export type RegistrationRow = typeof eventRegistrations.$inferSelect;
 export type FaqRow = typeof faqs.$inferSelect;
 export type TeamMemberRow = typeof teamMembers.$inferSelect;

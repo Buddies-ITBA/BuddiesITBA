@@ -9,6 +9,7 @@ import { adminInput, Badge, Card, EmptyRow, Field, PageHeader, Table, td, th, To
 import { getProgram, getProgramData, matchingQuestions, matchReasons } from '@/lib/admin/buddies';
 import { formatAnswer } from '@/lib/admin/registrations';
 import { pick } from '@/lib/localized';
+import { countryFlag, countryName } from '@/lib/countries';
 import { cn } from '@/lib/utils';
 import {
   assignManually,
@@ -154,7 +155,9 @@ function ApplicantsTab({ program, applicants, role }: { program: BuddyProgramRow
               </td>
               <td className={td}>
                 {a.institution}
-                <p className="text-xs text-text-muted">{a.country}</p>
+                <p className="text-xs text-text-muted">
+                  {countryFlag(a.country)} {countryName(a.country, 'es')}
+                </p>
               </td>
               <td className={`${td} uppercase`}>{a.languages.join(', ')}</td>
               <td className={td}>
@@ -314,7 +317,7 @@ function MatchingTab({
                     )}
                   </p>
                   <p className="text-xs text-text-muted">
-                    {exchange.country} · {exchange.institution}
+                    {countryFlag(exchange.country)} {countryName(exchange.country, 'es')} · {exchange.institution}
                   </p>
                 </td>
                 <td className={`${td} font-heading text-lg font-bold tabular-nums ${scoreTone(m.score)}`}>{Math.round(m.score * 100)}%</td>
@@ -354,7 +357,7 @@ function MatchingTab({
               {unmatched.map((e) => (
                 <li key={e.id} className="flex flex-wrap items-center justify-between gap-2 py-2.5">
                   <span className="text-sm font-semibold">
-                    {e.name} <span className="font-normal text-text-muted">· {e.country}</span>
+                    {e.name} <span className="font-normal text-text-muted">· {countryFlag(e.country)} {countryName(e.country, 'es')}</span>
                   </span>
                   <form action={assignManually.bind(null, program.id)} className="flex gap-1.5">
                     <input type="hidden" name="exchangeId" value={e.id} />

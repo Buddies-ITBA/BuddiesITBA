@@ -23,7 +23,7 @@ function validForm(email: string) {
     email,
     phone: '+49 151 1234567',
     institution: 'TU München',
-    country: 'Germany',
+    country: 'DE',
     gender: 'female',
     genderPreference: 'any',
     consent: 'on',

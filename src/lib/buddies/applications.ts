@@ -4,6 +4,7 @@ import { getDb, schema } from '@/db';
 import { genders, genderPreferences, type BuddyRole, type BuddyProgramRow } from '@/db/schema';
 import type { FormField } from '@/lib/forms/schema';
 import { parseAnswers } from '@/lib/forms/validate';
+import { isCountryCode } from '@/lib/countries';
 import { isUniqueViolation } from '@/lib/forms/state';
 import { sendEmail } from '@/lib/email/send';
 import { applicationReceivedEmail } from '@/lib/email/templates';
@@ -20,7 +21,7 @@ const core = z.object({
   email: z.email().max(200),
   phone: z.string().trim().min(6).max(40),
   institution: z.string().trim().min(2).max(160),
-  country: z.string().trim().min(2).max(80),
+  country: z.string().refine(isCountryCode, 'country'),
   gender: z.enum(genders),
   genderPreference: z.enum(genderPreferences),
   languages: z.array(z.enum(LANGUAGE_CODES)).min(1),
@@ -45,7 +46,7 @@ export async function submitApplication(
     email: formData.get('email'),
     phone: formData.get('phone'),
     institution: formData.get('institution'),
-    country: role === 'local' ? formData.get('country') || 'Argentina' : formData.get('country'),
+    country: role === 'local' ? formData.get('country') || 'AR' : formData.get('country'),
     gender: formData.get('gender'),
     genderPreference: formData.get('genderPreference') ?? 'any',
     languages: formData.getAll('languages'),

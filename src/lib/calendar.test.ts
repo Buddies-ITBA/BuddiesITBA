@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { generateGoogleCalendarUrl, generateIcsContent } from './calendar';
+import { escapeIcsText, generateGoogleCalendarUrl, generateIcsCalendar, generateIcsContent } from './calendar';
 import type { CalendarEvent } from './calendar';
 
 const mockEvent: CalendarEvent = {
@@ -90,5 +90,25 @@ describe('generateIcsContent', () => {
     expect(ics).toContain('DESCRIPTION:');
     expect(ics).toContain('LOCATION:');
     expect(ics).not.toContain('undefined');
+  });
+});
+
+
+describe('ICS escaping and feeds', () => {
+  it('escapes commas, semicolons and newlines', () => {
+    expect(escapeIcsText('Asado, mate; y\nmás')).toBe('Asado\\, mate\\; y\\nmás');
+  });
+
+  it('builds a feed with one VEVENT per event', () => {
+    const feed = generateIcsCalendar(
+      [
+        { id: 'a', title: 'Uno', summary: '', startsAt: new Date('2026-03-15T18:00:00Z'), location: '', url: 'https://x.test/events/uno' },
+        { id: 'b', title: 'Dos', summary: '', startsAt: new Date('2026-03-16T18:00:00Z'), location: '' },
+      ],
+      'Buddies ITBA'
+    );
+    expect(feed.match(/BEGIN:VEVENT/g)).toHaveLength(2);
+    expect(feed).toContain('X-WR-CALNAME:Buddies ITBA');
+    expect(feed).toContain('URL:https://x.test/events/uno');
   });
 });

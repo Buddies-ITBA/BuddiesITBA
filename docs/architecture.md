@@ -33,7 +33,8 @@ Navegador ──► Next.js (Vercel / Docker)
 
 - `events` → `event_registrations` (cupo, lista de espera, respuestas en JSON, token de cancelación hasheado)
 - `email_log`: cada email enviado, fallido o no configurado
-- `faqs`, `team_members`, `posts`, `media`
+- `faqs`, `team_members`, `posts`, `media`, `testimonials`, `gallery_photos`
+- `site_settings` (una fila: números de la home, link de la comunidad de WhatsApp)
 - `buddy_programs` (uno por cuatrimestre, con su cuestionario) → `buddy_applicants` → `buddy_matches`
 - `admins` → `sessions`
 
@@ -54,6 +55,16 @@ es agregar una clave, sin migración.
    mano. Cada par muestra el porqué (intereses e idiomas en común, etc.).
 5. **Presentaciones:** "Enviar presentaciones" les manda un email a ambos con los datos del
    otro (el reply-to es el buddy). Los pares presentados quedan fijos para siempre.
+
+### Recordatorios y calendario
+
+- **Recordatorio automático:** una vez por día, `/api/cron/reminders` les manda un email a los
+  confirmados de los eventos que empiezan en las próximas 36 horas. Cada evento se marca
+  (`reminder_sent_at`), así que nunca se envía dos veces. En Vercel lo dispara `vercel.json`
+  (cron diario, incluido en el plan gratis); en otros hosts, `.github/workflows/reminders.yml`.
+  Requiere `CRON_SECRET`: sin él, el endpoint responde 401.
+- **Feed de calendario:** `/events/calendar.ics` (`?lang=en` para inglés) se puede suscribir
+  desde Google Calendar, Apple u Outlook y se actualiza solo.
 
 ### Inscripciones y lista de espera
 
@@ -90,6 +101,7 @@ código corre con `docker compose up -d` (incluye Postgres).
 1. Crear un proyecto en [Neon](https://neon.tech) y copiar el **connection string pooled**.
 2. En Vercel, importar el repo y agregar `DATABASE_URL` (Production) y `NEXT_PUBLIC_SITE_URL`.
    Para emails: `RESEND_API_KEY` y `EMAIL_FROM`, después de verificar el dominio en Resend.
+   Para los recordatorios: `CRON_SECRET` (`openssl rand -hex 32`).
    Para las previews conviene una base aparte (por ejemplo, un *branch* de Neon).
 3. Deployar. `vercel-build` aplica las migraciones solo en producción.
 4. Crear el primer admin desde tu máquina:
@@ -113,6 +125,7 @@ Poné un proxy con HTTPS adelante (Caddy, nginx o el de la facultad).
 | `ci.yml` | PRs y pushes a `main` | Lint, typecheck, tests (con Postgres en memoria), verifica que no falten migraciones y hace el build. Un segundo job corre los tests e2e de Playwright |
 | `db-migrate.yml` | Manual | Aplica migraciones a `DATABASE_URL` (para hosts que no son Vercel) |
 | `db-backup.yml` | Lunes 03:17 (Buenos Aires) y manual | `pg_dump` cifrado con `BACKUP_PASSPHRASE`, guardado 30 días como artifact |
+| `reminders.yml` | Diario 12:07 (Buenos Aires) | Solo fuera de Vercel: llama al endpoint de recordatorios (secretos `SITE_URL`, `CRON_SECRET`) |
 | `dependabot.yml` | Semanal | PRs agrupados de actualización de dependencias |
 
 ## Próximos pasos sugeridos

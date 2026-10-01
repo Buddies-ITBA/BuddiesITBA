@@ -51,7 +51,7 @@ src/
 
 **Data:** No CMS. All content lives in Postgres and is edited from `/admin`. `getDb()` returns Drizzle on `DATABASE_URL`, or an auto-migrated, seeded PGlite when unset (never in production). Public pages read through `lib/data/public.ts`; admin pages query `getDb()` directly.
 
-**Server Components by default.** Forms use Server Actions + `useActionState`, never API routes. Route handlers only for CSV exports and `/media`.
+**Server Components by default.** Forms use Server Actions + `useActionState`, never API routes. Route handlers only for CSV exports, `/media`, `/events/calendar.ics` and `/api/cron/*` (cron requires `CRON_SECRET`).
 
 **Admin security:** Every admin page *and* server action calls `requireAdmin()`. Route handlers check `getCurrentAdmin()`.
 
@@ -74,12 +74,15 @@ src/
 <EventCard translations={{ capacity: t('capacity'), register: t('register') }} />
 ```
 
+**Countries:** store ISO 3166-1 alpha-2 codes; display with `countryName()` / `countryFlag()` from `@/lib/countries` (localized via `Intl.DisplayNames`).
+
 **Dates:** use `formatEventDate()` from `@/lib/dates` (Buenos Aires time zone). Admin `datetime-local` inputs go through `toDateTimeInput()` / `fromDateTimeInput()`.
 
 ### Design System
 
 Tokens live in `src/app/globals.css` (`:root` + `@theme inline`). Use Tailwind classes, never raw hex:
-- `primary` `#0c5781`, `primary-dark`; `sky` `#e1ecf6`; `plane` (logo blue, decorative); `sun` (warm accent / CTAs)
+- `primary` `#0c5781`, `primary-dark`; `sky` `#e1ecf6`; `plane` (logo blue, decorative); `sun` (warm accent / CTAs), `sun-ink` (sun-colored text); `success`, `destructive`
+- Visual motif: travel journal: flight paths, polaroids (`TestimonialsSection`, `GalleryStrip`), passport stamps (`PassportStamps`)
 - `heading` `#37423b`, `text` `#444444`, `text-muted`
 - Layout: `container-page`, `section`; headings via `<SectionHeading eyebrow title subtitle />`
 - Admin UI primitives: `components/admin/ui.tsx`

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { ArrowRight, GraduationCap, Plane } from 'lucide-react';
-import { getTranslations } from 'next-intl/server';
+import { getLocale, getTranslations } from 'next-intl/server';
 import { PageTitle } from '@/components/sections/PageTitle';
 import { StepsSection } from '@/components/sections/StepsSection';
 import { EmptyState } from '@/components/feedback/EmptyState';
@@ -8,17 +8,21 @@ import { Button } from '@/components/ui/button';
 import { InstagramIcon } from '@/components/brand/social-icons';
 import { SectionHeading } from '@/components/ui/section-heading';
 import { site } from '@/config/site';
-import { getActiveProgram } from '@/lib/data/public';
+import { getActiveProgram, listTestimonials } from '@/lib/data/public';
+import { MatchingExplainer } from '@/components/sections/MatchingExplainer';
+import { TestimonialsSection } from '@/components/sections/TestimonialsSection';
+import { countryFlag } from '@/lib/countries';
 import { pageMetadata } from '@/lib/metadata';
 
 export const generateMetadata = () => pageMetadata('buddies.page');
 
 export default async function BuddiesPage() {
-  const [t, tHome, tCta, program] = await Promise.all([
+  const [t, tHome, tCta, program, testimonials] = await Promise.all([
     getTranslations('buddies'),
     getTranslations('home'),
     getTranslations('home.cta'),
     getActiveProgram(),
+    getLocale().then(listTestimonials),
   ]);
   const open = program?.registrationOpen ?? false;
 
@@ -70,6 +74,13 @@ export default async function BuddiesPage() {
         </div>
       </section>
 
+      <MatchingExplainer eyebrow={t('how.eyebrow')} title={t('how.title')} subtitle={t('how.subtitle')} items={t.raw('how.items')} />
+      <TestimonialsSection
+        eyebrow={tHome('testimonials.eyebrow')}
+        title={tHome('testimonials.title')}
+        subtitle={tHome('testimonials.subtitle')}
+        testimonials={testimonials.map((x) => ({ ...x, flag: x.countryCode ? countryFlag(x.countryCode) : '' }))}
+      />
       <StepsSection
         eyebrow={tHome('steps.eyebrow')}
         title={tHome('steps.title')}

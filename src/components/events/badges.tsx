@@ -7,7 +7,7 @@ export function ExchangeOnlyBadge({ label, className }: { label: string; classNa
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1 rounded-full bg-sun/20 px-2.5 py-0.5 text-xs font-semibold text-[#6b4a00]',
+        'inline-flex items-center gap-1 rounded-full bg-sun/20 px-2.5 py-0.5 text-xs font-semibold text-sun-ink',
         className
       )}
     >
@@ -64,5 +64,35 @@ export function EventMeta({
         </span>
       ))}
     </p>
+  );
+}
+
+export type Availability = { state: 'open' | 'lastSpots' | 'full' | 'closed'; count: number };
+
+/** Registration status of a web-form event, or null when it doesn't apply. */
+export function availabilityOf(event: Pick<PublicEvent, 'registrationType' | 'registrationOpen' | 'spotsLeft' | 'capacity'>): Availability | null {
+  if (event.registrationType !== 'form') return null;
+  if (!event.registrationOpen) return { state: 'closed', count: 0 };
+  if (event.spotsLeft === null) return { state: 'open', count: 0 };
+  if (event.spotsLeft === 0) return { state: 'full', count: 0 };
+  // "Last spots" when ≤5 left, or ≤20% for big events
+  const threshold = Math.max(5, Math.ceil((event.capacity ?? 0) * 0.2));
+  return event.spotsLeft <= threshold ? { state: 'lastSpots', count: event.spotsLeft } : { state: 'open', count: 0 };
+}
+
+const availabilityTones = {
+  open: 'bg-emerald-50 text-success ring-emerald-200',
+  lastSpots: 'bg-sun/20 text-sun-ink ring-sun/50',
+  full: 'bg-white text-text-muted ring-border',
+  closed: 'bg-white text-text-muted ring-border',
+};
+const dotTones = { open: 'bg-success', lastSpots: 'bg-sun', full: 'bg-text-muted/50', closed: 'bg-text-muted/50' };
+
+export function AvailabilityBadge({ state, label, className }: { state: Availability['state']; label: string; className?: string }) {
+  return (
+    <span className={cn('inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold ring-1', availabilityTones[state], className)}>
+      <span aria-hidden className={cn('size-1.5 rounded-full', dotTones[state])} />
+      {label}
+    </span>
   );
 }

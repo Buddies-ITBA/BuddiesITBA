@@ -9,7 +9,7 @@ test('apply as an exchange student, match and send introductions', async ({ page
   await page.getByLabel('Email').fill(unique('chloe'));
   await page.getByLabel(/WhatsApp/).fill('+33 6 12 34 56 78');
   await page.getByLabel('Universidad de origen').fill('Sciences Po');
-  await page.getByLabel('País', { exact: true }).fill('Francia');
+  await page.getByLabel('País', { exact: true }).selectOption('FR');
   await page.getByLabel('Género', { exact: true }).selectOption('female');
   await page.getByText('Me da igual').click();
   for (const option of ['Inglés', 'Francés', 'Música y recitales', 'Gastronomía', 'Hacer amigos']) {

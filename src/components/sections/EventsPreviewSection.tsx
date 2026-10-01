@@ -1,17 +1,18 @@
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
-import type { PublicEvent } from '@/lib/data/public';
+import type { EventWithAvailability } from '@/lib/data/availability';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { SectionHeading } from '@/components/ui/section-heading';
-import { ExchangeOnlyBadge } from '@/components/events/badges';
+import { AvailabilityBadge, DateBadge, EventMeta, ExchangeOnlyBadge } from '@/components/events/badges';
 
 type EventsPreviewSectionProps = {
   eyebrow: string;
   title: string;
   subtitle: string;
   viewAll: string;
-  events: PublicEvent[];
+  events: EventWithAvailability[];
+  locale: string;
   exchangeOnlyLabel: string;
 };
 
@@ -21,6 +22,7 @@ export function EventsPreviewSection({
   subtitle,
   viewAll,
   events,
+  locale,
   exchangeOnlyLabel,
 }: EventsPreviewSectionProps) {
   if (events.length === 0) {
@@ -54,17 +56,22 @@ export function EventsPreviewSection({
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   )}
+                  <DateBadge date={event.startsAt} locale={locale} className="absolute left-3 top-3" />
                 </div>
                 <div className="flex flex-1 flex-col p-6">
-                  {event.exchangeOnly && (
-                    <ExchangeOnlyBadge label={exchangeOnlyLabel} className="mb-3 self-start" />
+                  {(event.exchangeOnly || event.availability) && (
+                    <div className="mb-3 flex flex-wrap gap-1.5">
+                      {event.availability && <AvailabilityBadge state={event.availability.state} label={event.availability.label} />}
+                      {event.exchangeOnly && <ExchangeOnlyBadge label={exchangeOnlyLabel} />}
+                    </div>
                   )}
                   <h3 className="text-xl font-bold">
                     <Link href={`/events/${event.slug}`} className="after:absolute after:inset-0 focus:outline-none">
                       {event.title}
                     </Link>
                   </h3>
-                  <p className="mt-2 line-clamp-3 text-text-muted">{event.summary}</p>
+                  <EventMeta event={event} locale={locale} className="mt-2" />
+                  <p className="mt-3 line-clamp-2 text-text-muted">{event.summary}</p>
                 </div>
               </article>
             </li>

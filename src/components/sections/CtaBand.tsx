@@ -1,4 +1,4 @@
-import { Mail } from 'lucide-react';
+import { Mail, MessageCircle } from 'lucide-react';
 import { InstagramIcon as Instagram } from '@/components/brand/social-icons';
 import Link from 'next/link';
 import { site } from '@/config/site';
@@ -10,9 +10,10 @@ type CtaBandProps = {
   description: string;
   instagramLabel: string;
   contactLabel: string;
+  whatsapp?: { url: string; label: string };
 };
 
-export function CtaBand({ title, description, instagramLabel, contactLabel }: CtaBandProps) {
+export function CtaBand({ title, description, instagramLabel, contactLabel, whatsapp }: CtaBandProps) {
   return (
     <section className="section">
       <div className="container-page">
@@ -27,6 +28,14 @@ export function CtaBand({ title, description, instagramLabel, contactLabel }: Ct
                 {instagramLabel}
               </a>
             </Button>
+            {whatsapp && (
+              <Button asChild size="lg" variant="glass">
+                <a href={whatsapp.url} target="_blank" rel="noopener noreferrer">
+                  <MessageCircle />
+                  {whatsapp.label}
+                </a>
+              </Button>
+            )}
             <Button asChild size="lg" variant="glass">
               <Link href="/contact">
                 <Mail />

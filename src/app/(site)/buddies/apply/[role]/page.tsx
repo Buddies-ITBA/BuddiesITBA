@@ -7,6 +7,7 @@ import { PageTitle } from '@/components/sections/PageTitle';
 import { getActiveProgram } from '@/lib/data/public';
 import { LANGUAGE_CODES, questionsFor } from '@/lib/buddies/applications';
 import { localizeFields } from '@/lib/forms/localize';
+import { countryFlag, countryOptions } from '@/lib/countries';
 import { ApplicationForm } from './ApplicationForm';
 
 export default async function ApplyPage({ params }: PageProps<'/buddies/apply/[role]'>) {
@@ -36,6 +37,7 @@ export default async function ApplyPage({ params }: PageProps<'/buddies/apply/[r
               genders={genders.map((g) => ({ value: g, label: t(`genders.${g}`) }))}
               genderPreferences={genderPreferences.map((g) => ({ value: g, label: t(`genderPreferences.${g}`) }))}
               languages={LANGUAGE_CODES.map((code) => ({ value: code, label: t(`languageNames.${code}`) }))}
+              countries={countryOptions(locale).map((c) => ({ value: c.value, label: `${countryFlag(c.value)} ${c.label}` }))}
               labels={{
                 sectionAbout: t('sectionAbout'),
                 sectionMatching: t('sectionMatching'),

@@ -17,6 +17,8 @@
   --sky: #e1ecf6;
   --plane: #5b8ff0;
   --sun: #f4b223;
+  /* Dark sun for text/ink on light backgrounds (AA contrast) */
+  --sun-ink: #7a5300;
 
   /* Surfaces & text */
   --background: #f7fafd;
@@ -28,6 +30,7 @@
 
   /* Feedback */
   --destructive: #c2410c;
+  --success: #166534;
 }
 
 @theme inline {
@@ -51,12 +54,14 @@
   --color-sky: var(--sky);
   --color-plane: var(--plane);
   --color-sun: var(--sun);
+  --color-sun-ink: var(--sun-ink);
 
   --color-heading: var(--foreground);
   --color-text: var(--text);
   --color-text-muted: var(--text-muted);
 
   --color-destructive: var(--destructive);
+  --color-success: var(--success);
   --color-border: var(--border);
   --color-input: var(--border);
   --color-ring: var(--brand);

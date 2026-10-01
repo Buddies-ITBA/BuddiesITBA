@@ -3,6 +3,7 @@ import { getTranslations } from 'next-intl/server';
 import { defaultLocale, isLocale, type Locale } from '@/i18n/config';
 import { site } from '@/config/site';
 import { formatEventDate } from '@/lib/dates';
+import { countryName } from '@/lib/countries';
 import { renderEmail, type EmailBlock } from './layout';
 import type { Email } from './send';
 
@@ -17,7 +18,7 @@ const absolute = (path: string) => new URL(path, site.url).toString();
 type EventInfo = { title: string; slug: string; startsAt: Date; location: string };
 type Person = { name: string; email: string; locale: string };
 
-export type RegistrationEmailKind = 'confirmed' | 'waitlist' | 'promoted';
+export type RegistrationEmailKind = 'confirmed' | 'waitlist' | 'promoted' | 'reminder';
 
 export async function registrationEmail(
   kind: RegistrationEmailKind,
@@ -27,7 +28,8 @@ export async function registrationEmail(
 ): Promise<Email> {
   const locale = asLocale(person.locale);
   const t = await getTranslations({ locale, namespace: 'emails' });
-  const vars = { event: event.title };
+  const when = `${formatEventDate(event.startsAt, locale, 'weekdayLong')} · ${formatEventDate(event.startsAt, locale, 'time')}`;
+  const vars = { event: event.title, when };
   const blocks: EmailBlock[] = [
     { type: 'p', text: t('greeting', { name: person.name.split(' ')[0] }) },
     { type: 'p', text: kind === 'waitlist' ? t('registration.waitlistBody', vars) : t(`registration.${kind}Body`) },
@@ -51,6 +53,8 @@ export async function registrationEmail(
     to: person.email,
     subject: t(`registration.${kind}Subject`, vars),
     kind: `registration.${kind}`,
+    // Reminders invite a reply instead of a cancel link (only the token's hash is stored)
+    ...(kind === 'reminder' && { replyTo: site.email }),
     ...renderEmail(heading, blocks, t('footer')),
   };
 }
@@ -110,7 +114,7 @@ export async function buddyIntroEmails(local: BuddyContact, exchange: BuddyConta
   const toLocal = async (): Promise<Email> => {
     const locale = asLocale(local.locale);
     const t = await getTranslations({ locale, namespace: 'emails' });
-    const origin = [exchange.institution, exchange.country].filter(Boolean).join(', ');
+    const origin = [exchange.institution, countryName(exchange.country, locale)].filter(Boolean).join(', ');
     return {
       to: local.email,
       replyTo: exchange.email,

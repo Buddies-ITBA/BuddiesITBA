@@ -36,6 +36,7 @@ export function ApplicationForm({
   genders,
   genderPreferences,
   languages,
+  countries,
 }: {
   role: BuddyRole;
   questions: LocalizedField[];
@@ -43,6 +44,7 @@ export function ApplicationForm({
   genders: Option[];
   genderPreferences: Option[];
   languages: Option[];
+  countries: Option[];
 }) {
   const [state, action] = useActionState(applyToProgram.bind(null, role), initialFormState);
   if (state.status === 'success') return <FormSuccess message={state.message ?? ''} />;
@@ -64,7 +66,20 @@ export function ApplicationForm({
           {text('email', labels.email, { type: 'email', autoComplete: 'email' })}
           {text('phone', labels.phone, { type: 'tel', autoComplete: 'tel', placeholder: '+54 9 11 …' })}
           {text('institution', labels.institution)}
-          {role === 'exchange' && text('country', labels.country, { autoComplete: 'country-name' })}
+          {role === 'exchange' && (
+            <FieldShell label={labels.country} required optionalLabel={labels.optional} htmlFor="app-country" error={err('country')}>
+              <select id="app-country" name="country" required defaultValue="" autoComplete="country" className={inputClass}>
+                <option value="" disabled>
+                  {labels.selectPlaceholder}
+                </option>
+                {countries.map((c) => (
+                  <option key={c.value} value={c.value}>
+                    {c.label}
+                  </option>
+                ))}
+              </select>
+            </FieldShell>
+          )}
           <FieldShell label={labels.gender} required optionalLabel={labels.optional} htmlFor="app-gender" error={err('gender')}>
             <select id="app-gender" name="gender" required defaultValue="" className={inputClass}>
               <option value="" disabled>
