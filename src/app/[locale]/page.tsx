@@ -1,4 +1,5 @@
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
+import { resolveLocale } from '@/i18n/server';
 import { HeroSection } from '@/components/sections/HeroSection';
 import { StepsSection } from '@/components/sections/StepsSection';
 import { HomeAboutSection } from '@/components/sections/HomeAboutSection';
@@ -9,11 +10,13 @@ import { cms } from '@/lib/cms';
 import type { Locale } from '@/i18n/config';
 
 export default async function HomePage({ params }: PageProps<'/[locale]'>) {
-  const locale = (await params).locale as Locale;
-  setRequestLocale(locale);
+  const locale = await resolveLocale(params);
 
-  const [t, homeEvents] = await Promise.all([getTranslations('home'), cms.getHomeEvents(locale)]);
-  const tTimeline = await getTranslations('events.timeline');
+  const [t, tTimeline, homeEvents] = await Promise.all([
+    getTranslations('home'),
+    getTranslations('events.timeline'),
+    cms.getHomeEvents(locale),
+  ]);
 
   return (
     <>

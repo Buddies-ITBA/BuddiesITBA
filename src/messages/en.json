@@ -59,19 +59,19 @@
     "stats": {
       "items": [
         {
-          "value": "100",
+          "value": 100,
           "label": "Students per semester"
         },
         {
-          "value": "34",
+          "value": 34,
           "label": "Nationalities"
         },
         {
-          "value": "120",
+          "value": 120,
           "label": "Argentinian buddies"
         },
         {
-          "value": "5000",
+          "value": 5000,
           "label": "Mates shared"
         }
       ]
@@ -168,10 +168,6 @@
     "post": {
       "by": "By",
       "backToList": "Back to blog"
-    },
-    "error": {
-      "title": "Couldn't load the blog",
-      "description": "There was a problem connecting to our content. Please try again."
     }
   },
   "faq": {
@@ -224,7 +220,6 @@
     "tagline": "Connecting ITBA students with exchange students since 2015.",
     "explore": "Explore",
     "contact": "Contact",
-    "follow": "Follow us",
     "rights": "All rights reserved"
   }
 }

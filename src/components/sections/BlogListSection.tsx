@@ -3,6 +3,8 @@ import { NotebookPen } from 'lucide-react';
 import { BlogPost } from '@/lib/cms/types';
 import { Link } from '@/i18n/navigation';
 import { formatEventDate } from '@/lib/dates';
+import { EmptyState } from '@/components/feedback/EmptyState';
+import { CategoryBadge } from '@/components/ui/category-badge';
 
 type Props = {
   posts: BlogPost[];
@@ -15,10 +17,7 @@ export function BlogListSection({ posts, locale, translations }: Props) {
     return (
       <section className="section pt-8">
         <div className="container-page">
-          <div className="mx-auto max-w-md rounded-3xl border border-dashed border-plane/50 bg-white p-10 text-center">
-            <NotebookPen className="mx-auto size-12 text-plane" aria-hidden />
-            <p className="mt-4 font-semibold text-heading">{translations.empty}</p>
-          </div>
+          <EmptyState Icon={NotebookPen} title={translations.empty} />
         </div>
       </section>
     );
@@ -44,9 +43,7 @@ export function BlogListSection({ posts, locale, translations }: Props) {
                 </div>
                 <div className="flex flex-1 flex-col p-6">
                   <div className="flex items-center gap-3 text-xs text-text-muted">
-                    {post.category && (
-                      <span className="rounded-full bg-sky px-2.5 py-0.5 font-semibold text-primary">{post.category}</span>
-                    )}
+                    {post.category && <CategoryBadge>{post.category}</CategoryBadge>}
                     <time dateTime={post.publishedAt.toISOString()}>
                       {formatEventDate(post.publishedAt, locale, 'long')}
                     </time>

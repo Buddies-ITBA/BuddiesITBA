@@ -1,4 +1,5 @@
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
+import { resolveLocale } from '@/i18n/server';
 import { PageTitle } from '@/components/sections/PageTitle';
 import { ContactSection } from '@/components/sections/ContactSection';
 import { pageMetadata } from '@/lib/metadata';
@@ -8,7 +9,7 @@ export const generateMetadata = ({ params }: PageProps<'/[locale]/contact'>) =>
   pageMetadata(params, 'contact.page');
 
 export default async function ContactPage({ params }: PageProps<'/[locale]/contact'>) {
-  setRequestLocale((await params).locale as Locale);
+  await resolveLocale(params);
   const t = await getTranslations('contact');
 
   return (

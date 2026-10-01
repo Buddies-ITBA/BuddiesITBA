@@ -59,19 +59,19 @@
     "stats": {
       "items": [
         {
-          "value": "100",
+          "value": 100,
           "label": "Estudiantes por cuatrimestre"
         },
         {
-          "value": "34",
+          "value": 34,
           "label": "Nacionalidades"
         },
         {
-          "value": "120",
+          "value": 120,
           "label": "Buddies argentinos"
         },
         {
-          "value": "5000",
+          "value": 5000,
           "label": "Mates compartidos"
         }
       ]
@@ -168,10 +168,6 @@
     "post": {
       "by": "Por",
       "backToList": "Volver al blog"
-    },
-    "error": {
-      "title": "No pudimos cargar el blog",
-      "description": "Hubo un problema al conectar con nuestro contenido. Por favor, intentá de nuevo."
     }
   },
   "faq": {
@@ -224,7 +220,6 @@
     "tagline": "Conectando estudiantes del ITBA con estudiantes de intercambio desde 2015.",
     "explore": "Explorá",
     "contact": "Contacto",
-    "follow": "Seguinos",
     "rights": "Todos los derechos reservados"
   }
 }

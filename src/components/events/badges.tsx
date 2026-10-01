@@ -1,6 +1,7 @@
-import { Sparkles } from 'lucide-react';
+import { Clock, MapPin, Sparkles, Users } from 'lucide-react';
+import type { Event } from '@/lib/cms/types';
 import { cn } from '@/lib/utils';
-import { eventDateParts } from '@/lib/dates';
+import { eventDateParts, formatEventDate } from '@/lib/dates';
 
 export function ExchangeOnlyBadge({ label, className }: { label: string; className?: string }) {
   return (
@@ -32,5 +33,36 @@ export function DateBadge({ date, locale, className }: { date: Date; locale: str
       <span className="font-heading text-2xl font-extrabold leading-tight text-heading">{day}</span>
       <span className="pb-1 font-nav text-xs font-medium uppercase text-text-muted">{month}</span>
     </div>
+  );
+}
+
+/** "Martes, 6 de octubre · 19:00 · Location · Capacity: 120" row with icons. */
+export function EventMeta({
+  event,
+  locale,
+  capacityLabel,
+  className,
+}: {
+  event: Event;
+  locale: string;
+  /** Shown (with the capacity) only when provided and the event has one. */
+  capacityLabel?: string;
+  className?: string;
+}) {
+  const items = [
+    { Icon: Clock, text: `${formatEventDate(event.date, locale, 'weekdayLong')} · ${formatEventDate(event.date, locale, 'time')}` },
+    event.location && { Icon: MapPin, text: event.location },
+    capacityLabel && event.capacity && { Icon: Users, text: `${capacityLabel}: ${event.capacity}` },
+  ].filter(Boolean) as Array<{ Icon: typeof Clock; text: string }>;
+
+  return (
+    <p className={cn('flex flex-wrap gap-x-4 gap-y-1 text-sm text-text-muted', className)}>
+      {items.map(({ Icon, text }) => (
+        <span key={text} className="inline-flex items-center gap-1.5">
+          <Icon className="size-3.5 text-primary" aria-hidden />
+          {text}
+        </span>
+      ))}
+    </p>
   );
 }

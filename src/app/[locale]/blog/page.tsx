@@ -1,4 +1,5 @@
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
+import { resolveLocale } from '@/i18n/server';
 import { PageTitle } from '@/components/sections/PageTitle';
 import { BlogListSection } from '@/components/sections/BlogListSection';
 import { cms } from '@/lib/cms';
@@ -9,8 +10,7 @@ export const generateMetadata = ({ params }: PageProps<'/[locale]/blog'>) =>
   pageMetadata(params, 'blog.page');
 
 export default async function BlogPage({ params }: PageProps<'/[locale]/blog'>) {
-  const locale = (await params).locale as Locale;
-  setRequestLocale(locale);
+  const locale = await resolveLocale(params);
 
   const [t, posts] = await Promise.all([getTranslations('blog'), cms.getPosts(locale)]);
 

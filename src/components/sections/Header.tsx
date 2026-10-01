@@ -43,7 +43,8 @@ export function Header() {
             alt={site.name}
             width={640}
             height={223}
-            priority
+            sizes="128px"
+            loading="eager"
             className="h-9 w-auto md:h-10"
           />
         </Link>
@@ -80,13 +81,14 @@ export function Header() {
                 <Menu className="!size-6" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" closeLabel={t('close')} className="w-[85vw] max-w-sm">
+            <SheetContent side="right" className="w-[85vw] max-w-sm">
               <SheetTitle className="sr-only">{site.name}</SheetTitle>
               <Image
                 src="/assets/img/logo.png"
                 alt=""
                 width={640}
                 height={223}
+                sizes="128px"
                 className="mb-8 h-9 w-auto"
               />
               <nav className="flex flex-col gap-1">

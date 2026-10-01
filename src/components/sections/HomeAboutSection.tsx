@@ -1,7 +1,8 @@
 import Image from 'next/image';
-import { ArrowRight, Check } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
 import { SectionHeading } from '@/components/ui/section-heading';
+import { CheckList } from '@/components/ui/check-list';
 
 type HomeAboutSectionProps = {
   eyebrow: string;
@@ -25,16 +26,7 @@ export function HomeAboutSection({
       <div className="container-page grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
         <div>
           <SectionHeading eyebrow={eyebrow} title={title} subtitle={subtitle} align="left" />
-          <ul className="mt-8 space-y-4">
-            {highlights.map((item) => (
-              <li key={item} className="flex items-start gap-3">
-                <span className="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-sky text-primary">
-                  <Check className="size-3.5" strokeWidth={3} aria-hidden />
-                </span>
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
+          <CheckList items={highlights} />
           <Link
             href="/about"
             className="group mt-8 inline-flex items-center gap-2 font-nav font-semibold text-primary hover:text-primary-dark"
@@ -51,7 +43,7 @@ export function HomeAboutSection({
             alt={imageAlt}
             width={1200}
             height={900}
-            sizes="(min-width: 1024px) 50vw, 100vw"
+            sizes="(min-width: 1152px) 544px, (min-width: 1024px) 50vw, 100vw"
             className="aspect-[4/3] w-full rounded-3xl object-cover shadow-xl"
           />
         </div>

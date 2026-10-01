@@ -5,6 +5,7 @@ import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import { CloseLabel } from "./close-label"
 
 const Dialog = DialogPrimitive.Root
 
@@ -32,7 +33,7 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & { closeLabel?: string }
->(({ className, children, closeLabel = "Close", ...props }, ref) => (
+>(({ className, children, closeLabel, ...props }, ref) => (
   <DialogPortal>
     <DialogOverlay />
     <DialogPrimitive.Content
@@ -46,7 +47,7 @@ const DialogContent = React.forwardRef<
       {children}
       <DialogPrimitive.Close className="absolute right-3 top-3 z-10 grid size-9 place-items-center rounded-full bg-white/90 text-heading shadow-md backdrop-blur transition hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:pointer-events-none">
         <X className="h-4 w-4" />
-        <span className="sr-only">{closeLabel}</span>
+        <CloseLabel override={closeLabel} />
       </DialogPrimitive.Close>
     </DialogPrimitive.Content>
   </DialogPortal>

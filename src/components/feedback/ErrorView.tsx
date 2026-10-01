@@ -10,11 +10,9 @@ import { StatusMessage } from './StatusMessage';
 type ErrorViewProps = {
   error: Error & { digest?: string };
   reset: () => void;
-  title?: string;
-  description?: string;
 };
 
-export function ErrorView({ error, reset, title, description }: ErrorViewProps) {
+export function ErrorView({ error, reset }: ErrorViewProps) {
   const t = useTranslations('error');
 
   useEffect(() => {
@@ -24,8 +22,8 @@ export function ErrorView({ error, reset, title, description }: ErrorViewProps) 
   return (
     <StatusMessage
       Icon={AlertTriangle}
-      title={title ?? t('title')}
-      description={description ?? t('description')}
+      title={t('title')}
+      description={t('description')}
       footnote={error.digest ? t('errorId', { id: error.digest }) : undefined}
     >
       <Button onClick={reset}>

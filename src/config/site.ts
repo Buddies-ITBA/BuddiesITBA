@@ -1,3 +1,6 @@
+export const mailto = (email: string) => `mailto:${email}`;
+export const instagramUrl = (handle: string) => `https://instagram.com/${handle}`;
+
 /** Non-translatable site facts. Translatable copy lives in src/messages/*.json. */
 export const site = {
   name: 'Buddies ITBA',
@@ -8,7 +11,7 @@ export const site = {
       ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
       : 'http://localhost:3000'),
   email: 'buddies@itba.edu.ar',
-  instagram: { handle: 'buddiesitba', url: 'https://instagram.com/buddiesitba' },
+  instagram: { handle: 'buddiesitba', url: instagramUrl('buddiesitba') },
   linkedin: { url: 'https://linkedin.com/company/buddiesitba' },
   mapsUrl: 'https://maps.google.com/?q=Iguaz%C3%BA+341,+CABA,+Argentina',
   mapsEmbedUrl:

@@ -1,10 +1,9 @@
 import type { Metadata, Viewport } from 'next';
-import { notFound } from 'next/navigation';
 import { Open_Sans, Raleway, Poppins } from 'next/font/google';
-import { hasLocale, NextIntlClientProvider } from 'next-intl';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { NextIntlClientProvider } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { routing } from '@/i18n/routing';
-import type { Locale } from '@/i18n/config';
+import { resolveLocale } from '@/i18n/server';
 import { site } from '@/config/site';
 import { Header } from '@/components/sections/Header';
 import { Footer } from '@/components/sections/Footer';
@@ -32,8 +31,8 @@ export const viewport: Viewport = {
 };
 
 export async function generateMetadata({ params }: LayoutProps<'/[locale]'>): Promise<Metadata> {
-  const { locale } = await params;
-  const t = await getTranslations({ locale: locale as Locale, namespace: 'meta' });
+  const locale = await resolveLocale(params);
+  const t = await getTranslations({ locale, namespace: 'meta' });
 
   return {
     metadataBase: new URL(site.url),
@@ -60,11 +59,7 @@ export async function generateMetadata({ params }: LayoutProps<'/[locale]'>): Pr
 }
 
 export default async function LocaleLayout({ children, params }: LayoutProps<'/[locale]'>) {
-  const { locale } = await params;
-  if (!hasLocale(routing.locales, locale)) {
-    notFound();
-  }
-  setRequestLocale(locale);
+  const locale = await resolveLocale(params);
   const t = await getTranslations('nav');
 
   return (

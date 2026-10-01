@@ -1,18 +1,19 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
-import { CalendarX2, Clock, Instagram, Loader2, MapPin, MessageCircle, Users } from 'lucide-react';
+import { CalendarX2, Instagram, Loader2, MessageCircle } from 'lucide-react';
 import { Event, NotionBlock } from '@/lib/cms/types';
 import { getEventDetails } from '@/app/actions';
 import { site } from '@/config/site';
-import { formatEventDate, groupByMonth } from '@/lib/dates';
+import { groupByMonth } from '@/lib/dates';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { NotionBlockRenderer } from '@/components/ui/notion-block-renderer';
 import { AddToCalendar, type AddToCalendarLabels } from '@/components/ui/add-to-calendar';
-import { DateBadge, ExchangeOnlyBadge } from '@/components/events/badges';
+import { DateBadge, EventMeta, ExchangeOnlyBadge } from '@/components/events/badges';
+import { EmptyState } from '@/components/feedback/EmptyState';
 
 type Translations = {
   empty: string;
@@ -24,7 +25,6 @@ type Translations = {
   details: string;
   loadError: string;
   instagram: string;
-  close: string;
   calendar: AddToCalendarLabels;
 };
 
@@ -41,6 +41,7 @@ export function EventsTimeline({ events, locale, translations: t }: Props) {
   const [details, setDetails] = useState<DetailsState>({ status: 'loading', blocks: [] });
   const cache = useRef(new Map<string, NotionBlock[]>());
   const latestRequest = useRef<string | null>(null);
+  const months = useMemo(() => groupByMonth(events, (event) => event.date, locale), [events, locale]);
 
   const openEvent = async (event: Event) => {
     setSelected(event);
@@ -67,23 +68,19 @@ export function EventsTimeline({ events, locale, translations: t }: Props) {
     return (
       <section className="section">
         <div className="container-page">
-          <div className="mx-auto max-w-md rounded-3xl border border-dashed border-plane/50 bg-white p-10 text-center">
-            <CalendarX2 className="mx-auto size-12 text-plane" aria-hidden />
-            <h2 className="mt-4 text-xl font-bold">{t.empty}</h2>
-            <p className="mt-2 text-text-muted">{t.emptyHint}</p>
-            <Button asChild className="mt-6">
+          <EmptyState Icon={CalendarX2} title={t.empty} hint={t.emptyHint}>
+            <Button asChild>
               <a href={site.instagram.url} target="_blank" rel="noopener noreferrer">
                 <Instagram />
                 {t.instagram}
               </a>
             </Button>
-          </div>
+          </EmptyState>
         </div>
       </section>
     );
   }
 
-  const months = groupByMonth(events, (event) => event.date, locale);
 
   return (
     <section className="section pt-10 md:pt-14">
@@ -125,18 +122,7 @@ export function EventsTimeline({ events, locale, translations: t }: Props) {
                           {event.title}
                         </button>
                       </h3>
-                      <p className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-text-muted">
-                        <span className="inline-flex items-center gap-1.5">
-                          <Clock className="size-3.5" aria-hidden />
-                          {formatEventDate(event.date, locale, 'weekdayLong')} · {formatEventDate(event.date, locale, 'time')}
-                        </span>
-                        {event.location && (
-                          <span className="inline-flex items-center gap-1.5">
-                            <MapPin className="size-3.5" aria-hidden />
-                            {event.location}
-                          </span>
-                        )}
-                      </p>
+                      <EventMeta event={event} locale={locale} className="mt-2" />
                       <p className="mt-3 line-clamp-2 text-sm text-text-muted">{event.description}</p>
 
                       <div className="mt-auto flex items-center justify-between gap-3 pt-4">
@@ -156,7 +142,7 @@ export function EventsTimeline({ events, locale, translations: t }: Props) {
       </div>
 
       <Dialog open={selected !== null} onOpenChange={(open) => !open && setSelected(null)}>
-        <DialogContent closeLabel={t.close} className="flex max-h-[90dvh] max-w-2xl flex-col gap-0 overflow-hidden p-0">
+        <DialogContent className="flex max-h-[90dvh] max-w-2xl flex-col gap-0 overflow-hidden p-0">
           {selected && (
             <>
               <div className="relative h-44 w-full shrink-0 bg-gradient-to-br from-primary to-plane sm:h-60">
@@ -170,24 +156,7 @@ export function EventsTimeline({ events, locale, translations: t }: Props) {
 
               <ScrollArea className="flex-1">
                 <div className="p-6">
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-text-muted">
-                    <span className="inline-flex items-center gap-1.5">
-                      <Clock className="size-4 text-primary" aria-hidden />
-                      {formatEventDate(selected.date, locale, 'weekdayLong')} · {formatEventDate(selected.date, locale, 'time')}
-                    </span>
-                    {selected.location && (
-                      <span className="inline-flex items-center gap-1.5">
-                        <MapPin className="size-4 text-primary" aria-hidden />
-                        {selected.location}
-                      </span>
-                    )}
-                    {selected.capacity && (
-                      <span className="inline-flex items-center gap-1.5">
-                        <Users className="size-4 text-primary" aria-hidden />
-                        {t.capacity}: {selected.capacity}
-                      </span>
-                    )}
-                  </div>
+                  <EventMeta event={selected} locale={locale} capacityLabel={t.capacity} />
                   {selected.exchangeOnly && <ExchangeOnlyBadge label={t.exchangeOnly} className="mt-4" />}
 
                   <DialogDescription asChild>

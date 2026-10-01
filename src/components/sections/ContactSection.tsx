@@ -1,5 +1,5 @@
 import { ArrowUpRight, Instagram, Mail, MapPin } from 'lucide-react';
-import { site } from '@/config/site';
+import { mailto, site } from '@/config/site';
 import { Button } from '@/components/ui/button';
 
 type ContactSectionProps = {
@@ -22,7 +22,7 @@ export function ContactSection(t: ContactSectionProps) {
       title: t.emailTitle,
       body: <p>{t.emailDescription}</p>,
       detail: site.email,
-      action: { href: `mailto:${site.email}`, label: t.emailButton, external: false },
+      action: { href: mailto(site.email), label: t.emailButton, external: false },
     },
     {
       Icon: Instagram,

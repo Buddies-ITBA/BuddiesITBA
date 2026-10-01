@@ -1,12 +1,12 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import ReactMarkdown from 'react-markdown';
+import { useDeferredValue, useMemo, useState } from 'react';
 import { Search, SearchX } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { FAQ } from '@/lib/cms/types';
-import { matchesQuery } from '@/lib/search';
+import { matchesWords, normalize, queryWords } from '@/lib/search';
 import { cn } from '@/lib/utils';
+import { EmptyState } from '@/components/feedback/EmptyState';
 
 type Translations = {
   label: string;
@@ -17,27 +17,34 @@ type Translations = {
   noResultsHint: string;
 };
 
+/** `answerNode` is the answer markdown pre-rendered on the server (keeps the parser out of the client bundle). */
+export type FaqItem = FAQ & { answerNode: React.ReactNode };
+
 type Props = {
-  faqs: FAQ[];
+  faqs: FaqItem[];
   translations: Translations;
 };
 
 export function FaqAccordion({ faqs, translations: t }: Props) {
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState<string | null>(null);
+  const deferredQuery = useDeferredValue(query);
 
   const categories = useMemo(() => [...new Set(faqs.map((faq) => faq.category))], [faqs]);
+  const searchable = useMemo(
+    () => faqs.map((faq) => ({ faq, text: normalize(`${faq.question} ${faq.answer}`) })),
+    [faqs]
+  );
 
   const groups = useMemo(() => {
-    const visible = faqs.filter(
-      (faq) =>
-        (category === null || faq.category === category) &&
-        matchesQuery(`${faq.question} ${faq.answer}`, query)
-    );
+    const words = queryWords(deferredQuery);
+    const visible = searchable
+      .filter(({ faq, text }) => (category === null || faq.category === category) && matchesWords(text, words))
+      .map(({ faq }) => faq);
     return categories
       .map((name) => ({ name, items: visible.filter((faq) => faq.category === name) }))
       .filter((group) => group.items.length > 0);
-  }, [faqs, categories, category, query]);
+  }, [searchable, categories, category, deferredQuery]);
 
   return (
     <section className="section pt-8 md:pt-12">
@@ -78,11 +85,7 @@ export function FaqAccordion({ faqs, translations: t }: Props) {
 
         <div aria-live="polite" className="mt-10 space-y-10">
           {groups.length === 0 ? (
-            <div className="rounded-3xl border border-dashed border-plane/50 bg-white p-10 text-center">
-              <SearchX className="mx-auto size-10 text-plane" aria-hidden />
-              <p className="mt-4 font-semibold text-heading">{t.noResults.replace('{query}', query)}</p>
-              <p className="mt-1 text-sm text-text-muted">{t.noResultsHint}</p>
-            </div>
+            <EmptyState Icon={SearchX} title={t.noResults.replace('{query}', query)} hint={t.noResultsHint} />
           ) : (
             groups.map((group) => (
               <div key={group.name}>
@@ -100,7 +103,7 @@ export function FaqAccordion({ faqs, translations: t }: Props) {
                         {faq.question}
                       </AccordionTrigger>
                       <AccordionContent className="prose-cms pb-5">
-                        <ReactMarkdown>{faq.answer}</ReactMarkdown>
+                        {faq.answerNode}
                       </AccordionContent>
                     </AccordionItem>
                   ))}

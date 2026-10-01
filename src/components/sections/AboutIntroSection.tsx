@@ -1,6 +1,6 @@
 import Image from 'next/image';
-import { Check } from 'lucide-react';
 import { SectionHeading } from '@/components/ui/section-heading';
+import { CheckList } from '@/components/ui/check-list';
 
 type AboutIntroSectionProps = {
   eyebrow: string;
@@ -22,23 +22,14 @@ export function AboutIntroSection({ eyebrow, title, intro, points, closing, imag
             alt={imageAlt}
             width={1342}
             height={988}
-            sizes="(min-width: 1024px) 50vw, 100vw"
+            sizes="(min-width: 1152px) 544px, (min-width: 1024px) 50vw, 100vw"
             priority
             className="w-full rounded-3xl object-cover shadow-xl"
           />
         </div>
         <div className="lg:order-1">
           <SectionHeading eyebrow={eyebrow} title={title} subtitle={intro} align="left" />
-          <ul className="mt-8 space-y-4">
-            {points.map((item) => (
-              <li key={item} className="flex items-start gap-3">
-                <span className="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-sky text-primary">
-                  <Check className="size-3.5" strokeWidth={3} aria-hidden />
-                </span>
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
+          <CheckList items={points} />
           <p className="mt-8 border-l-4 border-sun pl-4 text-text-muted">{closing}</p>
         </div>
       </div>

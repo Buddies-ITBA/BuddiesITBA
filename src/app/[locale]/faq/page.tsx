@@ -1,4 +1,6 @@
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import ReactMarkdown from 'react-markdown';
+import { getTranslations } from 'next-intl/server';
+import { resolveLocale } from '@/i18n/server';
 import { PageTitle } from '@/components/sections/PageTitle';
 import { FaqAccordion } from '@/components/sections/FaqAccordion';
 import { UsefulContactsSection } from '@/components/sections/UsefulContactsSection';
@@ -10,8 +12,7 @@ export const generateMetadata = ({ params }: PageProps<'/[locale]/faq'>) =>
   pageMetadata(params, 'faq.page');
 
 export default async function FaqPage({ params }: PageProps<'/[locale]/faq'>) {
-  const locale = (await params).locale as Locale;
-  setRequestLocale(locale);
+  const locale = await resolveLocale(params);
 
   const [t, faqs] = await Promise.all([getTranslations('faq'), cms.getFAQs(locale)]);
 
@@ -19,7 +20,7 @@ export default async function FaqPage({ params }: PageProps<'/[locale]/faq'>) {
     <>
       <PageTitle title={t('page.title')} description={t('page.description')} />
       <FaqAccordion
-        faqs={faqs}
+        faqs={faqs.map((faq) => ({ ...faq, answerNode: <ReactMarkdown>{faq.answer}</ReactMarkdown> }))}
         translations={{
           label: t('search.label'),
           placeholder: t('search.placeholder'),

@@ -3,12 +3,14 @@ import { cache } from 'react';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { ArrowLeft } from 'lucide-react';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
+import { resolveLocale } from '@/i18n/server';
 import { Link } from '@/i18n/navigation';
 import { PageTitle } from '@/components/sections/PageTitle';
 import { NotionBlockRenderer } from '@/components/ui/notion-block-renderer';
 import { cms } from '@/lib/cms';
 import { formatEventDate } from '@/lib/dates';
+import { CategoryBadge } from '@/components/ui/category-badge';
 import type { Locale } from '@/i18n/config';
 
 type Props = PageProps<'/[locale]/blog/[slug]'>;
@@ -17,8 +19,8 @@ type Props = PageProps<'/[locale]/blog/[slug]'>;
 const getPost = cache((slug: string, locale: Locale) => cms.getPostBySlug(slug, locale));
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug, locale } = await params;
-  const post = await getPost(slug, locale as Locale);
+  const [{ slug }, locale] = await Promise.all([params, resolveLocale(params)]);
+  const post = await getPost(slug, locale);
   if (!post) return {};
   return {
     title: post.title,
@@ -33,18 +35,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function BlogPostPage({ params }: Props) {
-  const { slug } = await params;
-  const locale = (await params).locale as Locale;
-  setRequestLocale(locale);
+  const [{ slug }, locale] = await Promise.all([params, resolveLocale(params)]);
 
-  const post = await getPost(slug, locale);
-  if (!post) notFound();
-
-  const [t, tPage, blocks] = await Promise.all([
+  const [post, t, tPage] = await Promise.all([
+    getPost(slug, locale),
     getTranslations('blog.post'),
     getTranslations('blog.page'),
-    cms.getPageBlocks(post.id),
   ]);
+  if (!post) notFound();
+  const blocks = await cms.getPageBlocks(post.id);
 
   return (
     <>
@@ -56,9 +55,7 @@ export default async function BlogPostPage({ params }: Props) {
       <article className="section pt-6 md:pt-10">
         <div className="container-page max-w-3xl">
           <div className="mb-8 flex flex-wrap items-center gap-3 text-sm text-text-muted">
-            {post.category && (
-              <span className="rounded-full bg-sky px-3 py-1 font-semibold text-primary">{post.category}</span>
-            )}
+            {post.category && <CategoryBadge>{post.category}</CategoryBadge>}
             <time dateTime={post.publishedAt.toISOString()}>{formatEventDate(post.publishedAt, locale, 'long')}</time>
             {post.author.name && (
               <span>

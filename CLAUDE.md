@@ -4,40 +4,45 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Buddies ITBA - Website for a student organization that connects local ITBA students with incoming exchange students. Currently migrating from static HTML/Bootstrap to Next.js 15.
+Buddies ITBA - Website for a student organization that connects local ITBA students with incoming exchange students.
 
-**Target Stack:** Next.js 15, React 19, Tailwind CSS 4, shadcn/ui, TypeScript, next-intl
+**Stack:** Next.js 16, React 19, Tailwind CSS 4, shadcn/ui, TypeScript, next-intl v4, Notion CMS
 
 ## Commands
 
 ```bash
-# Development (after migration)
-npm run dev          # Start dev server with Turbopack
+npm run dev          # Dev server (works without secrets: sample CMS content)
 npm run build        # Production build
+npm run check        # lint + typecheck + test — run before committing
 npm run lint         # ESLint
-npm run typecheck    # TypeScript check
-
-# Current state (static site)
-# No build process - open HTML files directly
+npm run typecheck    # next typegen + tsc
+npm test             # Vitest
 ```
+
+Without `NOTION_TOKEN`, `src/lib/cms/index.ts` falls back to `SampleCMS` (`src/lib/cms/sample.ts`).
 
 ## Architecture
 
-### Directory Structure (Post-Migration)
+### Directory Structure
 
 ```
 src/
 ├── app/[locale]/        # Internationalized routes (ES/EN)
 ├── components/
-│   ├── ui/              # shadcn/ui components
-│   └── sections/        # Page sections (Hero, Team, etc.)
+│   ├── ui/              # shadcn/ui components + SectionHeading
+│   ├── sections/        # Page sections (Hero, Team, etc.)
+│   ├── events/ feedback/ brand/
+├── config/site.ts       # Email, socials, nav items (non-translatable)
+├── i18n/                # config, routing, navigation (locale-aware Link)
 ├── lib/
 │   ├── cms/             # CMS abstraction layer (Strategy Pattern)
-│   │   ├── index.ts     # CMSClient interface
+│   │   ├── index.ts     # Picks Notion or Sample implementation
 │   │   ├── notion.ts    # Notion implementation
-│   │   └── types.ts     # Shared types (FAQ, Event, BlogPost)
-│   └── i18n/            # Internationalization config
-└── messages/            # Translation files (es.json, en.json)
+│   │   ├── sample.ts    # Offline sample content
+│   │   └── types.ts     # Shared types + CMSClient interface
+│   ├── dates.ts         # Date formatting (always Buenos Aires time zone)
+│   └── metadata.ts      # pageMetadata() for generateMetadata
+└── messages/            # es.json (source of truth, typed), en.json
 ```
 
 ### Key Patterns
@@ -63,7 +68,11 @@ const t = await getTranslations('events.timeline');
 - `Title_ES`, `Title_EN` → `cms.getLocalizedText(props, 'Title', locale)`
 - Works for: rich_text, title, and select field types
 
-**Date formatting:** Use `Intl.DateTimeFormat(locale, options)` directly with the locale string. Don't hardcode `'es-AR'` or `'en-US'`.
+**Date formatting:** Use `formatEventDate(date, locale, style)` from `@/lib/dates` (formats in the Buenos Aires time zone so SSR and client match). Don't hardcode `'es-AR'` or `'en-US'`.
+
+**Links:** Import `Link`/`redirect`/`usePathname` from `@/i18n/navigation` and use locale-free hrefs (`/events`).
+
+**Translations are typed** (`src/global.d.ts`) and `src/messages/messages.test.ts` enforces ES/EN key parity — add keys to both files.
 
 **Component props pattern:** Components receive translated strings as props, not locale:
 ```tsx
@@ -78,11 +87,11 @@ const t = await getTranslations('events.timeline');
 
 ### Design System
 
-Colors extracted from original Bootstrap site:
-- Primary: `#0c5781` (teal/blue)
-- Background: `#e1ecf6` (light blue)
-- Heading: `#37423b` (dark green)
-- Text: `#444444`
+Tokens are defined once in `src/app/globals.css` (`:root` + `@theme inline`). Use Tailwind classes, never raw hex:
+- `primary` `#0c5781` (brand blue), `primary-dark`
+- `sky` `#e1ecf6` (light blue surfaces), `plane` (logo paper-plane blue, decorative), `sun` (warm accent / CTAs)
+- `heading` `#37423b`, `text` `#444444`, `text-muted`
+- Layout helpers: `container-page`, `section`; headings via `<SectionHeading eyebrow title subtitle />`
 
 Fonts: Open Sans (body), Raleway (headings), Poppins (nav)
 

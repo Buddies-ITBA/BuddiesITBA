@@ -1,4 +1,5 @@
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
+import { resolveLocale } from '@/i18n/server';
 import { PageTitle } from '@/components/sections/PageTitle';
 import { EventsTimeline } from '@/components/sections/EventsTimeline';
 import { cms } from '@/lib/cms';
@@ -9,15 +10,13 @@ export const generateMetadata = ({ params }: PageProps<'/[locale]/events'>) =>
   pageMetadata(params, 'events.page');
 
 export default async function EventsPage({ params }: PageProps<'/[locale]/events'>) {
-  const locale = (await params).locale as Locale;
-  setRequestLocale(locale);
+  const locale = await resolveLocale(params);
 
-  const [tPage, t, tCalendar, tCta, tNav, events] = await Promise.all([
+  const [tPage, t, tCalendar, tCta, events] = await Promise.all([
     getTranslations('events.page'),
     getTranslations('events.timeline'),
     getTranslations('events.calendar'),
     getTranslations('home.cta'),
-    getTranslations('nav'),
     cms.getUpcomingEvents(locale),
   ]);
 
@@ -37,7 +36,6 @@ export default async function EventsPage({ params }: PageProps<'/[locale]/events
           details: t('details'),
           loadError: t('loadError'),
           instagram: tCta('instagram'),
-          close: tNav('close'),
           calendar: { add: tCalendar('add'), google: tCalendar('google'), ics: tCalendar('ics') },
         }}
       />

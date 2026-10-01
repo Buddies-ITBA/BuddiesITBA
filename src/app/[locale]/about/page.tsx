@@ -1,4 +1,5 @@
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
+import { resolveLocale } from '@/i18n/server';
 import { PageTitle } from '@/components/sections/PageTitle';
 import { AboutIntroSection } from '@/components/sections/AboutIntroSection';
 import { StatsSection } from '@/components/sections/StatsSection';
@@ -11,8 +12,7 @@ export const generateMetadata = ({ params }: PageProps<'/[locale]/about'>) =>
   pageMetadata(params, 'about.page');
 
 export default async function AboutPage({ params }: PageProps<'/[locale]/about'>) {
-  const locale = (await params).locale as Locale;
-  setRequestLocale(locale);
+  const locale = await resolveLocale(params);
 
   const [t, tStats, teamMembers] = await Promise.all([
     getTranslations('about'),
