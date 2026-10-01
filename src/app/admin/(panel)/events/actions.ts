@@ -12,12 +12,16 @@ import { formFieldsSchema } from '@/lib/forms/schema';
 import { isUniqueViolation } from '@/lib/forms/state';
 import { fromDateTimeInput } from '@/lib/dates';
 import { slugify } from '@/lib/text';
+import { fillFromWaitlist, setRegistrationStatus } from '@/lib/registrations';
 
 const eventInput = z.object({
   title: z.object({ es: z.string().min(1, 'El título en español es obligatorio'), en: z.string() }),
   summary: z.object({ es: z.string(), en: z.string() }),
   body: z.object({ es: z.string(), en: z.string() }),
-  slug: z.string().regex(/^[a-z0-9-]{2,80}$/, 'URL inválida (solo minúsculas, números y guiones)'),
+  slug: z
+    .string()
+    .regex(/^[a-z0-9-]{2,80}$/, 'URL inválida (solo minúsculas, números y guiones)')
+    .refine((s) => s !== 'cancel', 'Esa URL está reservada'),
   startsAt: z.date({ error: 'Fecha y hora obligatorias' }),
   location: z.string().max(200),
   imageUrl: z.string().max(500).nullable(),
@@ -75,8 +79,34 @@ export async function saveEvent(id: string | null, _prev: AdminState, fd: FormDa
     if (isUniqueViolation(error)) return fail('Ya existe otro evento con esa URL');
     throw error;
   }
+  // A higher (or removed) capacity frees spots for people on the waitlist
+  const promoted = id ? await fillFromWaitlist(id) : 0;
   refresh();
-  return ok('Evento guardado');
+  return ok(promoted ? `Evento guardado. ${promoted} persona(s) pasaron de la lista de espera a confirmadas (se les avisó por email).` : 'Evento guardado');
+}
+
+/** Draft copy (with its form) for recurring events; dates and copy are edited after. */
+export async function duplicateEvent(id: string) {
+  await requireAdmin();
+  const db = await getDb();
+  const [source] = await db.select().from(schema.events).where(eq(schema.events.id, id)).limit(1);
+  if (!source) return;
+  const { id: _id, createdAt: _createdAt, updatedAt: _updatedAt, slug, title, ...rest } = source;
+  let copySlug = `${slug}-copia`;
+  for (let n = 2; (await db.select({ id: schema.events.id }).from(schema.events).where(eq(schema.events.slug, copySlug))).length; n++) {
+    copySlug = `${slug}-copia-${n}`;
+  }
+  const [copy] = await db
+    .insert(schema.events)
+    .values({
+      ...rest,
+      slug: copySlug,
+      title: { es: `${title.es} (copia)`, en: title.en ? `${title.en} (copy)` : '' },
+      published: false,
+      showInHome: false,
+    })
+    .returning({ id: schema.events.id });
+  redirect(`/admin/events/${copy.id}?duplicated=1`);
 }
 
 export async function deleteEvent(id: string) {
@@ -88,12 +118,12 @@ export async function deleteEvent(id: string) {
 
 const status = z.enum(registrationStatuses);
 
-export async function setRegistrationStatus(registrationId: string, fd: FormData) {
+/** Cancelling a confirmed person automatically lets the next one in from the waitlist (and emails them). */
+export async function changeRegistrationStatus(registrationId: string, fd: FormData) {
   await requireAdmin();
   const parsed = status.safeParse(fd.get('status'));
   if (!parsed.success) return;
-  const db = await getDb();
-  await db.update(schema.eventRegistrations).set({ status: parsed.data }).where(eq(schema.eventRegistrations.id, registrationId));
+  await setRegistrationStatus(registrationId, parsed.data);
   refresh();
 }
 

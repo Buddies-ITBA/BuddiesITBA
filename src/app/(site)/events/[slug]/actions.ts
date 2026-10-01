@@ -19,7 +19,8 @@ export async function submitEventRegistration(slug: string, _prev: FormState, fo
   // Bots fill every field; people never see this one.
   if (formData.get('website')) return { status: 'success', message: t('success') };
 
-  const event = await getEventBySlug(slug, await getLocale());
+  const locale = await getLocale();
+  const event = await getEventBySlug(slug, locale);
   if (!event) return { status: 'error', message: t('genericError') };
 
   const errors: Record<string, string> = {};
@@ -44,6 +45,7 @@ export async function submitEventRegistration(slug: string, _prev: FormState, fo
     name: parsedContact.data.name,
     email: parsedContact.data.email,
     answers: parsedAnswers.answers,
+    locale,
   });
 
   switch (result) {

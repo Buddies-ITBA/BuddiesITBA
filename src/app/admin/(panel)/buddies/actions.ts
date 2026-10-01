@@ -7,7 +7,8 @@ import { refresh } from 'next/cache';
 import { getDb, schema } from '@/db';
 import { requireAdmin } from '@/lib/auth/session';
 import { fail, issuesMessage, ok, readBool, readString, type AdminState } from '@/lib/admin/state';
-import { getProgram, runMatching } from '@/lib/admin/buddies';
+import { getProgram, runMatching, sendIntroductions } from '@/lib/admin/buddies';
+import { emailEnabled } from '@/lib/email/send';
 import { defaultBuddyQuestions } from '@/lib/buddies/default-questions';
 import { formFieldsSchema, matchableTypes, type FormField } from '@/lib/forms/schema';
 import { compatibility } from '@/lib/matching';
@@ -97,6 +98,17 @@ export async function generateMatches(programId: string): Promise<AdminState> {
   return ok(
     `Propuesta generada: ${matched} matches${unassigned ? `, ${unassigned} sin buddy (falta capacidad o hay restricciones)` : ''}. Bloqueá los que te gusten antes de volver a correrlo.`
   );
+}
+
+export async function introduceMatches(programId: string): Promise<AdminState> {
+  await requireAdmin();
+  const { introduced, failed } = await sendIntroductions(programId);
+  refresh();
+  if (!introduced && !failed) return ok('No hay matches nuevos para presentar.');
+  const note = emailEnabled() ? '' : ' (emails no configurados: quedaron registrados en el log, no se enviaron)';
+  return failed
+    ? fail(`Se presentaron ${introduced} pares, pero ${failed} fallaron. Revisá el log de emails.`)
+    : ok(`Listo: se presentaron ${introduced} pares por email${note}.`);
 }
 
 export async function toggleMatchLock(matchId: string) {

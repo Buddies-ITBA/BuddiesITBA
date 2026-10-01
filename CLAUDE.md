@@ -17,6 +17,7 @@ npm run build        # Production build
 npm run db:generate  # After editing src/db/schema.ts — commit the drizzle/ output
 npm run db:migrate   # Apply migrations to DATABASE_URL
 npm test             # Vitest (DB tests use in-memory PGlite)
+npm run test:e2e     # Playwright (own dev server on :3123 + fresh DB in .data/e2e)
 ```
 
 Local admin: `/admin`, `admin@buddies.local` / `buddies-admin`.
@@ -41,7 +42,8 @@ src/
 │   ├── buddies/         # Applications, default questionnaire
 │   ├── admin/           # Admin action helpers, CSV/registration helpers
 │   ├── auth/            # scrypt passwords, DB-backed sessions, requireAdmin()
-│   └── registrations.ts # Capacity / waitlist (row-locked transaction)
+│   ├── email/           # sendEmail (Resend or console), safe layout, localized templates
+│   └── registrations.ts # Capacity, waitlist promotion, cancel tokens (row-locked transactions)
 └── messages/            # es.json (source of truth, typed), en.json
 ```
 
@@ -52,6 +54,8 @@ src/
 **Server Components by default.** Forms use Server Actions + `useActionState`, never API routes. Route handlers only for CSV exports and `/media`.
 
 **Admin security:** Every admin page *and* server action calls `requireAdmin()`. Route handlers check `getCurrentAdmin()`.
+
+**Emails:** build with `renderEmail()` blocks (values are escaped there, never pass raw HTML) and send with `sendEmail()`. Never throws, logs to `email_log`. Use the recipient's stored `locale`, not the request's. In unit tests, mock `@/lib/email/templates` and `@/lib/email/send`.
 
 **Forms built in the admin** are `FormField[]` JSON (`lib/forms/schema.ts`), used for event registration and buddy questionnaires. Public inputs are named `q_<fieldId>` and validated with `parseAnswers()`. Never change a field's `id` casually: answers are keyed by it.
 
@@ -86,3 +90,13 @@ Tokens live in `src/app/globals.css` (`:root` + `@theme inline`). Use Tailwind c
 - **Hosting:** recommended Vercel + Neon (free); Docker/compose for ITBA infrastructure
 - **i18n:** Spanish primary, English secondary, extensible
 - **Personal data:** applicants/registrations hold emails and phones. Keep exports behind auth, and keep backups encrypted
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { Download, Lock, LockOpen, Sparkles, Trash2, X } from 'lucide-react';
+import { Download, Lock, LockOpen, MailCheck, Send, Sparkles, Trash2, X } from 'lucide-react';
 import type { BuddyApplicantRow, BuddyProgramRow } from '@/db/schema';
 import { Button } from '@/components/ui/button';
 import { AdminForm, ConfirmButton, SaveButton } from '@/components/admin/AdminForm';
@@ -16,6 +16,7 @@ import {
   deleteApplicant,
   deleteProgram,
   generateMatches,
+  introduceMatches,
   removeMatch,
   saveApplicantNotes,
   saveQuestions,
@@ -214,6 +215,7 @@ function MatchingTab({
   const sorted = [...matches].sort((a, b) => (byId.get(a.localId)?.name ?? '').localeCompare(byId.get(b.localId)?.name ?? ''));
   const weighted = matchingQuestions(program);
   const average = matches.length ? matches.reduce((s, m) => s + m.score, 0) / matches.length : 0;
+  const pendingIntros = matches.filter((m) => !m.introducedAt).length;
 
   return (
     <div className="space-y-6">
@@ -232,6 +234,9 @@ function MatchingTab({
             <p className="mt-1 text-text-muted">
               Usa {weighted.length} preguntas con peso + idiomas compartidos. Respeta capacidad, preferencias de género y matches bloqueados.
             </p>
+            <p className="mt-1 text-text-muted">
+              “Enviar presentaciones” le manda un email a cada uno con los datos del otro. Los pares presentados quedan fijos.
+            </p>
           </div>
           <div className="flex flex-wrap gap-2">
             <AdminForm action={generateMatches.bind(null, program.id)} className="space-y-0">
@@ -239,6 +244,22 @@ function MatchingTab({
                 <Sparkles /> {matches.length ? 'Recalcular' : 'Generar matches'}
               </SaveButton>
             </AdminForm>
+            {/* Stays mounted after sending so its result message remains visible */}
+            {matches.length > 0 && (
+              <AdminForm action={introduceMatches.bind(null, program.id)} className="space-y-0">
+                <SaveButton variant="outline" disabled={pendingIntros === 0}>
+                  {pendingIntros > 0 ? (
+                    <>
+                      <Send /> Enviar presentaciones ({pendingIntros})
+                    </>
+                  ) : (
+                    <>
+                      <MailCheck /> Todos presentados
+                    </>
+                  )}
+                </SaveButton>
+              </AdminForm>
+            )}
             {matches.length > 0 && (
               <>
                 <Button asChild variant="outline">
@@ -284,7 +305,14 @@ function MatchingTab({
                   </p>
                 </td>
                 <td className={td}>
-                  <p className="font-semibold">{exchange.name}</p>
+                  <p className="font-semibold">
+                    {exchange.name}
+                    {m.introducedAt && (
+                      <span title="Ya se les mandó el email de presentación" className="ml-1.5 inline-flex align-middle text-emerald-700">
+                        <MailCheck className="size-4" aria-label="Presentados" />
+                      </span>
+                    )}
+                  </p>
                   <p className="text-xs text-text-muted">
                     {exchange.country} · {exchange.institution}
                   </p>

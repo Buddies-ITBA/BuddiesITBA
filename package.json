@@ -17,7 +17,8 @@
     "db:migrate": "tsx scripts/db-migrate.ts",
     "db:studio": "drizzle-kit studio",
     "db:reset-local": "rm -rf .data && echo 'Local database removed; it is recreated with sample data on next start.'",
-    "admin:create": "tsx scripts/create-admin.ts"
+    "admin:create": "tsx scripts/create-admin.ts",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.8",
@@ -44,6 +45,7 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^22.20.4",
     "@types/react": "^19.3.0",

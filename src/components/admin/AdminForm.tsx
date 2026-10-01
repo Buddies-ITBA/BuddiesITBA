@@ -37,10 +37,10 @@ export function AdminForm({ action, children, className }: { action: Action; chi
   );
 }
 
-export function SaveButton({ children = 'Guardar', ...props }: ButtonProps) {
+export function SaveButton({ children = 'Guardar', disabled, ...props }: ButtonProps) {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" disabled={pending} {...props}>
+    <Button type="submit" disabled={pending || disabled} {...props}>
       {pending && <Loader2 className="animate-spin" />}
       {children}
     </Button>

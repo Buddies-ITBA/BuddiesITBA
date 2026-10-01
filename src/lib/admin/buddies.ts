@@ -1,10 +1,12 @@
 import 'server-only';
-import { and, asc, eq } from 'drizzle-orm';
+import { and, asc, eq, isNull } from 'drizzle-orm';
 import { getDb, schema } from '@/db';
 import type { BuddyApplicantRow, BuddyProgramRow } from '@/db/schema';
 import { assignBuddies, compatibility, type Candidate, type MatchQuestion } from '@/lib/matching';
 import { matchableTypes, type FormField } from '@/lib/forms/schema';
 import { pick } from '@/lib/localized';
+import { sendEmail } from '@/lib/email/send';
+import { buddyIntroEmails } from '@/lib/email/templates';
 
 export async function getProgram(id: string) {
   const db = await getDb();
@@ -46,12 +48,15 @@ export async function runMatching(program: BuddyProgramRow) {
   const { applicants, matches } = await getProgramData(program.id);
   const locals = applicants.filter((a) => a.role === 'local').map(toCandidate);
   const exchanges = applicants.filter((a) => a.role === 'exchange').map(toCandidate);
-  const locked = matches.filter((m) => m.locked);
+  // Already-introduced pairs know each other: treat them as locked too.
+  const locked = matches.filter((m) => m.locked || m.introducedAt);
 
   const result = assignBuddies({ locals, exchanges, questions: matchingQuestions(program), locked });
 
   await db.transaction(async (tx) => {
-    await tx.delete(schema.buddyMatches).where(and(eq(schema.buddyMatches.programId, program.id), eq(schema.buddyMatches.locked, false)));
+    await tx
+      .delete(schema.buddyMatches)
+      .where(and(eq(schema.buddyMatches.programId, program.id), eq(schema.buddyMatches.locked, false), isNull(schema.buddyMatches.introducedAt)));
     const fresh = result.matches.filter((m) => !m.locked);
     if (fresh.length) {
       await tx.insert(schema.buddyMatches).values(fresh.map((m) => ({ programId: program.id, localId: m.localId, exchangeId: m.exchangeId, score: m.score })));
@@ -78,4 +83,29 @@ export function matchReasons(program: BuddyProgramRow, local: BuddyApplicantRow,
     }
   }
   return reasons.slice(0, 4);
+}
+
+/**
+ * Emails both people of every match that hasn't been introduced yet, then
+ * marks it introduced (and locked). Returns how many pairs were introduced.
+ */
+export async function sendIntroductions(programId: string) {
+  const db = await getDb();
+  const { applicants, matches } = await getProgramData(programId);
+  const byId = new Map(applicants.map((a) => [a.id, a]));
+  let introduced = 0;
+  let failed = 0;
+  for (const match of matches.filter((m) => !m.introducedAt)) {
+    const local = byId.get(match.localId);
+    const exchange = byId.get(match.exchangeId);
+    if (!local || !exchange) continue;
+    const results = await Promise.all((await buddyIntroEmails(local, exchange)).map(sendEmail));
+    if (results.every(Boolean)) {
+      await db.update(schema.buddyMatches).set({ introducedAt: new Date(), locked: true }).where(eq(schema.buddyMatches.id, match.id));
+      introduced++;
+    } else {
+      failed++;
+    }
+  }
+  return { introduced, failed };
 }

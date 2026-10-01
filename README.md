@@ -29,6 +29,8 @@ Start over with `npm run db:reset-local`.
   - **Buddy program** per semester: configurable interests/personality questionnaire,
     applicants list, **automatic matching**, manual adjustments and CSV of pairs.
   - FAQ, blog, team, image uploads and admin users.
+  - Email log. Emails go out in each person's language: registration confirmation with a
+    personal cancel link, waitlist promotion, application received and buddy introductions.
 
 ## Scripts
 
@@ -36,6 +38,7 @@ Start over with `npm run db:reset-local`.
 | --- | --- |
 | `npm run dev` | Dev server |
 | `npm run check` | Lint + typecheck + tests (run before pushing) |
+| `npm run test:e2e` | Playwright end-to-end tests (starts its own server and database) |
 | `npm run build` | Production build |
 | `npm run db:generate` | Create a migration after editing `src/db/schema.ts` |
 | `npm run db:migrate` | Apply migrations to `DATABASE_URL` |

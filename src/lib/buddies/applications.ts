@@ -5,6 +5,8 @@ import { genders, genderPreferences, type BuddyRole, type BuddyProgramRow } from
 import type { FormField } from '@/lib/forms/schema';
 import { parseAnswers } from '@/lib/forms/validate';
 import { isUniqueViolation } from '@/lib/forms/state';
+import { sendEmail } from '@/lib/email/send';
+import { applicationReceivedEmail } from '@/lib/email/templates';
 
 export const LANGUAGE_CODES = ['es', 'en', 'pt', 'fr', 'de', 'it'] as const;
 
@@ -30,7 +32,12 @@ export type ApplicationResult =
   | { ok: false; reason: 'invalid'; errors: string[] }
   | { ok: false; reason: 'duplicate' | 'closed' };
 
-export async function submitApplication(program: BuddyProgramRow, role: BuddyRole, formData: FormData): Promise<ApplicationResult> {
+export async function submitApplication(
+  program: BuddyProgramRow,
+  role: BuddyRole,
+  formData: FormData,
+  locale = 'es'
+): Promise<ApplicationResult> {
   if (!program.active || !program.registrationOpen) return { ok: false, reason: 'closed' };
 
   const parsed = core.safeParse({
@@ -63,10 +70,12 @@ export async function submitApplication(program: BuddyProgramRow, role: BuddyRol
       programId: program.id,
       role,
       answers: answers.answers,
+      locale,
     });
-    return { ok: true };
   } catch (error) {
     if (isUniqueViolation(error)) return { ok: false, reason: 'duplicate' };
     throw error;
   }
+  await sendEmail(await applicationReceivedEmail({ name: data.name, email: data.email, locale }, program.name));
+  return { ok: true };
 }

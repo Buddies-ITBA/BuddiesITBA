@@ -45,3 +45,10 @@ next-env.d.ts
 
 # embedded dev database (PGlite)
 /.data
+
+# Playwright
+/test-results
+/playwright-report
+
+# git bundles used as offline backups
+*.bundle

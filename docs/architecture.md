@@ -16,6 +16,7 @@ vive dentro de la misma app Next.js:
 | Consola de admin | Rutas `/admin/*`, sesiones guardadas en la base, contraseñas con scrypt |
 | Imágenes | Se suben desde el admin, se comprimen a WebP (sharp) y se guardan en Postgres; se sirven en `/media/<id>` |
 | Exportar datos | Endpoints CSV protegidos (inscriptos, postulantes, matches) |
+| Emails | [Resend](https://resend.com) por HTTP (`src/lib/email`), en el idioma de cada destinatario. Sin configurar se imprimen en consola. Todo queda en `/admin/emails` |
 | Desarrollo local | **PGlite** (Postgres embebido en WASM) en `.data/`: sin instalar nada, con datos de ejemplo |
 
 Una sola pieza para deployar y una sola base que respaldar.
@@ -30,7 +31,8 @@ Navegador ──► Next.js (Vercel / Docker)
 
 ### Modelo de datos
 
-- `events` → `event_registrations` (cupo, lista de espera, respuestas en JSON)
+- `events` → `event_registrations` (cupo, lista de espera, respuestas en JSON, token de cancelación hasheado)
+- `email_log`: cada email enviado, fallido o no configurado
 - `faqs`, `team_members`, `posts`, `media`
 - `buddy_programs` (uno por cuatrimestre, con su cuestionario) → `buddy_applicants` → `buddy_matches`
 - `admins` → `sessions`
@@ -50,6 +52,17 @@ es agregar una clave, sin migración.
    penalización de 25 puntos, así se reparte la carga salvo que el match sea mucho mejor.
 4. **Control humano:** los matches bloqueados se mantienen al recalcular y se puede asignar a
    mano. Cada par muestra el porqué (intereses e idiomas en común, etc.).
+5. **Presentaciones:** "Enviar presentaciones" les manda un email a ambos con los datos del
+   otro (el reply-to es el buddy). Los pares presentados quedan fijos para siempre.
+
+### Inscripciones y lista de espera
+
+- Cuando se llena el cupo, los nuevos inscriptos quedan en lista de espera.
+- Cada persona recibe un email con un link personal para cancelar (se guarda solo el hash del
+  token). El link pide confirmar antes de cancelar, porque los escáneres de email abren los links.
+- Si un confirmado cancela (por el link o desde el admin), o si el admin sube el cupo, entra el
+  primero en la lista de espera y se le avisa por email. Todo pasa dentro de una transacción con
+  la fila del evento bloqueada.
 
 Con 150 estudiantes de intercambio y 80 buddies tarda menos de un segundo (hay un test que lo cubre).
 
@@ -76,6 +89,7 @@ código corre con `docker compose up -d` (incluye Postgres).
 
 1. Crear un proyecto en [Neon](https://neon.tech) y copiar el **connection string pooled**.
 2. En Vercel, importar el repo y agregar `DATABASE_URL` (Production) y `NEXT_PUBLIC_SITE_URL`.
+   Para emails: `RESEND_API_KEY` y `EMAIL_FROM`, después de verificar el dominio en Resend.
    Para las previews conviene una base aparte (por ejemplo, un *branch* de Neon).
 3. Deployar. `vercel-build` aplica las migraciones solo en producción.
 4. Crear el primer admin desde tu máquina:
@@ -96,14 +110,12 @@ Poné un proxy con HTTPS adelante (Caddy, nginx o el de la facultad).
 
 | Workflow | Cuándo | Qué hace |
 | --- | --- | --- |
-| `ci.yml` | PRs y pushes a `main` | Lint, typecheck, tests (con Postgres en memoria), verifica que no falten migraciones y hace el build |
+| `ci.yml` | PRs y pushes a `main` | Lint, typecheck, tests (con Postgres en memoria), verifica que no falten migraciones y hace el build. Un segundo job corre los tests e2e de Playwright |
 | `db-migrate.yml` | Manual | Aplica migraciones a `DATABASE_URL` (para hosts que no son Vercel) |
 | `db-backup.yml` | Lunes 03:17 (Buenos Aires) y manual | `pg_dump` cifrado con `BACKUP_PASSPHRASE`, guardado 30 días como artifact |
 | `dependabot.yml` | Semanal | PRs agrupados de actualización de dependencias |
 
 ## Próximos pasos sugeridos
 
-- **Emails automáticos** (confirmación de inscripción, presentación de cada match) con
-  [Resend](https://resend.com) (3.000 emails/mes gratis).
 - **Login con Microsoft** (`@itba.edu.ar`) para los admins, en lugar de contraseñas.
 - **Rate limiting** de formularios públicos (hoy hay honeypot y validación del lado del servidor).

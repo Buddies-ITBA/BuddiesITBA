@@ -1,8 +1,10 @@
-import { beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { getDb, schema } from '@/db';
 import type { BuddyProgramRow } from '@/db/schema';
 import { defaultBuddyQuestions } from './default-questions';
-import { questionsFor, submitApplication } from './applications';
+vi.mock('@/lib/email/templates', () => ({ applicationReceivedEmail: async () => ({ to: '', subject: '', html: '', text: '', kind: 'x' }) }));
+vi.mock('@/lib/email/send', () => ({ sendEmail: async () => true }));
+const { questionsFor, submitApplication } = await import('./applications');
 
 let program: BuddyProgramRow;
 

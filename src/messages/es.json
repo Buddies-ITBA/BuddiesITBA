@@ -142,6 +142,14 @@
       "whatsapp": "La inscripción es por el grupo de WhatsApp de Buddies.",
       "external": "Inscribirse",
       "noRegistration": "No hace falta inscribirse: ¡te esperamos!"
+    },
+    "cancel": {
+      "title": "Cancelar inscripción",
+      "description": "¿Seguro que querés liberar tu lugar en {event}?",
+      "confirm": "Sí, cancelar mi inscripción",
+      "done": "Listo, cancelamos tu inscripción. ¡Gracias por avisar!",
+      "invalid": "Este link de cancelación no es válido o la inscripción ya estaba cancelada.",
+      "keep": "No, mantener mi lugar"
     }
   },
   "contact": {
@@ -309,6 +317,41 @@
       "back": "Volver",
       "success": "¡Gracias! Recibimos tu inscripción. Te escribimos cuando tengamos tu match.",
       "duplicate": "Ya te inscribiste con ese email en este programa."
+    }
+  },
+  "emails": {
+    "footer": "Buddies ITBA · Iguazú 341, Buenos Aires · buddies@itba.edu.ar",
+    "greeting": "Hola {name}:",
+    "when": "Cuándo",
+    "where": "Dónde",
+    "registration": {
+      "confirmedSubject": "Estás inscripto/a: {event}",
+      "confirmedHeading": "¡Te esperamos en {event}!",
+      "confirmedBody": "Tu inscripción está confirmada.",
+      "waitlistSubject": "Lista de espera: {event}",
+      "waitlistHeading": "Estás en lista de espera",
+      "waitlistBody": "El cupo de {event} está completo. Si se libera un lugar, te avisamos por este medio.",
+      "promotedSubject": "¡Se liberó un lugar! Estás inscripto/a en {event}",
+      "promotedHeading": "¡Tenés lugar en {event}!",
+      "promotedBody": "Se liberó un lugar y tu inscripción pasó a confirmada.",
+      "viewEvent": "Ver el evento",
+      "cancelHint": "¿No podés ir? Liberá tu lugar para que lo aproveche otra persona.",
+      "cancel": "Cancelar mi inscripción"
+    },
+    "buddies": {
+      "receivedSubject": "Recibimos tu inscripción al programa Buddies",
+      "receivedHeading": "¡Gracias por sumarte!",
+      "receivedBody": "Recibimos tu inscripción para {program}. Cuando tengamos tu match, te escribimos con los datos de tu buddy.",
+      "introSubjectExchange": "Conocé a tu buddy: {name}",
+      "introSubjectLocal": "Tu estudiante de intercambio: {name}",
+      "introHeadingExchange": "Te presentamos a tu buddy",
+      "introHeadingLocal": "Te presentamos a tu estudiante de intercambio",
+      "introBodyExchange": "{buddy} es tu buddy del ITBA. Escribile para presentarte: te va a ayudar a instalarte en Buenos Aires y en la facultad.",
+      "introBodyLocal": "{student} viene de {origin}. ¡Escribile para darle la bienvenida!",
+      "name": "Nombre",
+      "email": "Email",
+      "phone": "WhatsApp",
+      "replyHint": "Si respondés este email le escribís directamente a tu buddy."
     }
   }
 }

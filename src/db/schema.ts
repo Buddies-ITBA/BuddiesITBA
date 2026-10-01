@@ -107,9 +107,16 @@ export const eventRegistrations = pgTable(
     email: text('email').notNull(),
     answers: jsonb('answers').$type<Answers>().notNull().default({}),
     status: registrationStatusEnum('status').notNull().default('confirmed'),
+    /** Language the person used, for emails. */
+    locale: text('locale').notNull().default('es'),
+    /** SHA-256 of the self-service cancel token sent by email. */
+    cancelTokenHash: text('cancel_token_hash').unique(),
     createdAt: createdAt(),
   },
-  (t) => [uniqueIndex('event_registrations_event_email_idx').on(t.eventId, t.email)]
+  (t) => [
+    uniqueIndex('event_registrations_event_email_idx').on(t.eventId, t.email),
+    index('event_registrations_waitlist_idx').on(t.eventId, t.status, t.createdAt),
+  ]
 );
 
 export const faqs = pgTable('faqs', {
@@ -196,6 +203,8 @@ export const buddyApplicants = pgTable(
     capacity: integer('capacity').notNull().default(1),
     answers: jsonb('answers').$type<Answers>().notNull().default({}),
     notes: text('notes').notNull().default(''),
+    /** Language the person used, for emails. */
+    locale: text('locale').notNull().default('es'),
     createdAt: createdAt(),
   },
   (t) => [
@@ -220,9 +229,31 @@ export const buddyMatches = pgTable(
     score: real('score').notNull().default(0),
     /** Locked matches are kept as-is when the algorithm re-runs. */
     locked: boolean('locked').notNull().default(false),
+    /** When the intro email went out. Introduced matches are never re-matched. */
+    introducedAt: timestamp('introduced_at', { withTimezone: true }),
     createdAt: createdAt(),
   },
   (t) => [uniqueIndex('buddy_matches_exchange_idx').on(t.exchangeId)]
+);
+
+/* ───────────────────────── Email log ───────────────────────── */
+
+export const emailStatuses = ['sent', 'failed', 'logged'] as const;
+
+/** Every email the app tries to send, so admins can see what went out. */
+export const emailLog = pgTable(
+  'email_log',
+  {
+    id: id(),
+    to: text('to').notNull(),
+    subject: text('subject').notNull(),
+    kind: text('kind').notNull(),
+    /** sent = delivered to the provider · failed = provider error · logged = no provider configured (dev) */
+    status: text('status').$type<(typeof emailStatuses)[number]>().notNull(),
+    error: text('error'),
+    createdAt: createdAt(),
+  },
+  (t) => [index('email_log_created_idx').on(t.createdAt)]
 );
 
 export type EventRow = typeof events.$inferSelect;
