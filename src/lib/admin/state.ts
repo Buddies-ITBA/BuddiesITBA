@@ -27,3 +27,8 @@ export function readInt(fd: FormData, key: string): number | null {
   const n = Number.parseInt(value, 10);
   return Number.isFinite(n) ? n : null;
 }
+
+import { z } from 'zod';
+
+/** http(s) URLs only — keeps `javascript:` and friends out of public links. */
+export const httpUrl = (message: string) => z.url({ protocol: /^https?$/, error: message });

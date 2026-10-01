@@ -7,7 +7,7 @@ import { refresh } from 'next/cache';
 import { getDb, schema } from '@/db';
 import { registrationTypes, registrationStatuses } from '@/db/schema';
 import { requireAdmin } from '@/lib/auth/session';
-import { fail, issuesMessage, ok, readBool, readInt, readLocalized, readString, type AdminState } from '@/lib/admin/state';
+import { fail, httpUrl, issuesMessage, ok, readBool, readInt, readLocalized, readString, type AdminState } from '@/lib/admin/state';
 import { formFieldsSchema } from '@/lib/forms/schema';
 import { isUniqueViolation } from '@/lib/forms/state';
 import { fromDateTimeInput } from '@/lib/dates';
@@ -26,7 +26,7 @@ const eventInput = z.object({
   showInHome: z.boolean(),
   homeOrder: z.number().int(),
   registrationType: z.enum(registrationTypes),
-  registrationUrl: z.url('Link de inscripción inválido').nullable(),
+  registrationUrl: httpUrl('Link de inscripción inválido').nullable(),
   registrationDeadline: z.date().nullable(),
   capacity: z.number().int().positive('El cupo tiene que ser mayor a 0').nullable(),
   formFields: formFieldsSchema,

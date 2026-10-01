@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { eq } from 'drizzle-orm';
 import { refresh } from 'next/cache';
 import { getDb, schema } from '@/db';
-import { requireAdmin } from '@/lib/auth/session';
+import { createSession, requireAdmin } from '@/lib/auth/session';
 import { hashPassword } from '@/lib/auth/password';
 import { fail, issuesMessage, ok, readString, type AdminState } from '@/lib/admin/state';
 import { isUniqueViolation } from '@/lib/forms/state';
@@ -37,8 +37,12 @@ export async function changeOwnPassword(_prev: AdminState, fd: FormData): Promis
   const me = await requireAdmin();
   const password = String(fd.get('password') ?? '');
   if (password.length < 10) return fail('La contraseña tiene que tener al menos 10 caracteres');
-  await (await getDb()).update(schema.admins).set({ passwordHash: await hashPassword(password) }).where(eq(schema.admins.id, me.id));
-  return ok('Contraseña actualizada');
+  const db = await getDb();
+  await db.update(schema.admins).set({ passwordHash: await hashPassword(password) }).where(eq(schema.admins.id, me.id));
+  // Sign out every other device, keep this one signed in with a fresh session
+  await db.delete(schema.sessions).where(eq(schema.sessions.adminId, me.id));
+  await createSession(me.id);
+  return ok('Contraseña actualizada. Se cerraron tus otras sesiones.');
 }
 
 export async function deleteAdmin(id: string) {

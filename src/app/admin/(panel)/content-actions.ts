@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation';
 import { refresh } from 'next/cache';
 import { getDb, schema } from '@/db';
 import { requireAdmin } from '@/lib/auth/session';
-import { fail, issuesMessage, ok, readBool, readInt, readLocalized, readString, type AdminState } from '@/lib/admin/state';
+import { fail, httpUrl, issuesMessage, ok, readBool, readInt, readLocalized, readString, type AdminState } from '@/lib/admin/state';
 import { isUniqueViolation } from '@/lib/forms/state';
 import { slugify } from '@/lib/text';
 
@@ -55,7 +55,7 @@ const teamInput = z.object({
   career: optional,
   bio: optional,
   imageUrl: z.string().max(500).nullable(),
-  linkedinUrl: z.url('LinkedIn inválido').nullable(),
+  linkedinUrl: httpUrl('LinkedIn inválido').nullable(),
   sortOrder: z.number().int(),
   active: z.boolean(),
 });
