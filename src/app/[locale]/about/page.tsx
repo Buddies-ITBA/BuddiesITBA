@@ -1,46 +1,45 @@
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { PageTitle } from '@/components/sections/PageTitle';
 import { AboutIntroSection } from '@/components/sections/AboutIntroSection';
 import { StatsSection } from '@/components/sections/StatsSection';
 import { TeamSection } from '@/components/sections/TeamSection';
 import { cms } from '@/lib/cms';
-import { Locale } from '@/i18n/config';
+import { pageMetadata } from '@/lib/metadata';
+import type { Locale } from '@/i18n/config';
 
-type Props = {
-  params: Promise<{ locale: string }>;
-};
+export const generateMetadata = ({ params }: PageProps<'/[locale]/about'>) =>
+  pageMetadata(params, 'about.page');
 
-export default async function AboutPage({ params }: Props) {
-  const { locale } = await params;
-  const tPage = await getTranslations('about.page');
-  const tIntro = await getTranslations('about.intro');
-  const tStats = await getTranslations('about.stats');
-  const tTeam = await getTranslations('about.team');
-  const tNav = await getTranslations('nav');
+export default async function AboutPage({ params }: PageProps<'/[locale]/about'>) {
+  const locale = (await params).locale as Locale;
+  setRequestLocale(locale);
 
-  const teamMembers = await cms.getTeamMembers(locale as Locale);
+  const [t, tStats, teamMembers] = await Promise.all([
+    getTranslations('about'),
+    getTranslations('home.stats'),
+    cms.getTeamMembers(locale),
+  ]);
 
   return (
     <>
-      <PageTitle
-        title={tPage('title')}
-        description={tPage('description')}
-        breadcrumbs={[
-          { label: tNav('home'), href: `/${locale}` },
-          { label: tPage('breadcrumb') },
-        ]}
-      />
+      <PageTitle title={t('page.title')} description={t('page.description')} />
       <AboutIntroSection
-        intro={tIntro('intro')}
-        points={tIntro.raw('points')}
-        closing={tIntro('closing')}
-        imageAlt={tIntro('imageAlt')}
+        eyebrow={t('intro.eyebrow')}
+        title={t('intro.title')}
+        intro={t('intro.intro')}
+        points={t.raw('intro.points')}
+        closing={t('intro.closing')}
+        imageAlt={t('intro.imageAlt')}
       />
       <StatsSection stats={tStats.raw('items')} />
       <TeamSection
-        title={tTeam('title')}
-        subtitle={tTeam('subtitle')}
-        members={teamMembers}
+        eyebrow={t('team.eyebrow')}
+        title={t('team.title')}
+        subtitle={t('team.subtitle')}
+        members={teamMembers.map((member) => ({
+          ...member,
+          linkedinLabel: t('team.linkedin', { name: member.name }),
+        }))}
       />
     </>
   );

@@ -1,92 +1,92 @@
-import { getTranslations } from 'next-intl/server';
+import type { Metadata } from 'next';
+import { cache } from 'react';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { Link } from '@/i18n/navigation';
 import { PageTitle } from '@/components/sections/PageTitle';
 import { NotionBlockRenderer } from '@/components/ui/notion-block-renderer';
 import { cms } from '@/lib/cms';
-import { Locale } from '@/i18n/config';
+import { formatEventDate } from '@/lib/dates';
+import type { Locale } from '@/i18n/config';
 
-type Props = {
-  params: Promise<{ locale: string; slug: string }>;
-};
+type Props = PageProps<'/[locale]/blog/[slug]'>;
+
+// Shared between generateMetadata and the page so Notion is queried once per request
+const getPost = cache((slug: string, locale: Locale) => cms.getPostBySlug(slug, locale));
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug, locale } = await params;
+  const post = await getPost(slug, locale as Locale);
+  if (!post) return {};
+  return {
+    title: post.title,
+    description: post.excerpt,
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      type: 'article',
+      ...(post.coverImage && { images: [post.coverImage] }),
+    },
+  };
+}
 
 export default async function BlogPostPage({ params }: Props) {
-  const { locale, slug } = await params;
-  const tPost = await getTranslations('blog.post');
-  const tPage = await getTranslations('blog.page');
-  const tNav = await getTranslations('nav');
+  const { slug } = await params;
+  const locale = (await params).locale as Locale;
+  setRequestLocale(locale);
 
-  const post = await cms.getPostBySlug(slug, locale as Locale);
+  const post = await getPost(slug, locale);
   if (!post) notFound();
 
-  const blocks = await cms.getPageBlocks(post.id);
-
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat(locale, {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-    }).format(date);
-  };
+  const [t, tPage, blocks] = await Promise.all([
+    getTranslations('blog.post'),
+    getTranslations('blog.page'),
+    cms.getPageBlocks(post.id),
+  ]);
 
   return (
     <>
       <PageTitle
         title={post.title}
-        breadcrumbs={[
-          { label: tNav('home'), href: `/${locale}` },
-          { label: tPage('breadcrumb'), href: `/${locale}/blog` },
-          { label: post.title },
-        ]}
+        breadcrumbs={[{ label: tPage('title'), href: '/blog' }, { label: post.title }]}
       />
 
-      <article className="bg-background">
-        <div className="container mx-auto px-4 py-8 md:py-12">
-          <div className="mx-auto max-w-3xl">
-            {/* Cover image */}
-            {post.coverImage && (
-              <div className="relative mb-8 h-64 overflow-hidden rounded-2xl md:h-96">
-                <Image
-                  src={post.coverImage}
-                  alt={post.title}
-                  fill
-                  priority
-                  sizes="(min-width: 768px) 800px, 100vw"
-                  className="object-cover"
-                />
-              </div>
+      <article className="section pt-6 md:pt-10">
+        <div className="container-page max-w-3xl">
+          <div className="mb-8 flex flex-wrap items-center gap-3 text-sm text-text-muted">
+            {post.category && (
+              <span className="rounded-full bg-sky px-3 py-1 font-semibold text-primary">{post.category}</span>
             )}
+            <time dateTime={post.publishedAt.toISOString()}>{formatEventDate(post.publishedAt, locale, 'long')}</time>
+            {post.author.name && (
+              <span>
+                {t('by')} <strong className="text-text">{post.author.name}</strong>
+              </span>
+            )}
+          </div>
 
-            {/* Meta */}
-            <div className="mb-8 flex flex-wrap items-center gap-4 text-sm text-text-muted">
-              {post.category && (
-                <span className="rounded-full bg-primary/10 px-3 py-1 font-medium text-primary">
-                  {post.category}
-                </span>
-              )}
-              <span>{formatDate(post.publishedAt)}</span>
-              {post.author.name && (
-                <span>
-                  {tPost('by')} <strong className="text-text">{post.author.name}</strong>
-                </span>
-              )}
+          {post.coverImage && (
+            <div className="relative mb-10 aspect-[16/9] overflow-hidden rounded-3xl shadow-lg">
+              <Image
+                src={post.coverImage}
+                alt=""
+                fill
+                priority
+                sizes="(min-width: 768px) 768px, 100vw"
+                className="object-cover"
+              />
             </div>
+          )}
 
-            {/* Content */}
-            <div className="prose-lg">
-              <NotionBlockRenderer blocks={blocks} />
-            </div>
+          <NotionBlockRenderer blocks={blocks} />
 
-            {/* Back link */}
-            <div className="mt-12 border-t pt-8">
-              <Link
-                href={`/${locale}/blog`}
-                className="inline-flex items-center gap-2 text-primary hover:underline"
-              >
-                ← {tPost('backToList')}
-              </Link>
-            </div>
+          <div className="mt-14 border-t pt-8">
+            <Link href="/blog" className="group inline-flex items-center gap-2 font-nav font-semibold text-primary">
+              <ArrowLeft className="size-4 transition-transform group-hover:-translate-x-1" aria-hidden />
+              {t('backToList')}
+            </Link>
           </div>
         </div>
       </article>

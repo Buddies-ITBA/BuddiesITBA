@@ -1,38 +1,38 @@
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { PageTitle } from '@/components/sections/PageTitle';
 import { FaqAccordion } from '@/components/sections/FaqAccordion';
 import { UsefulContactsSection } from '@/components/sections/UsefulContactsSection';
 import { cms } from '@/lib/cms';
-import { Locale } from '@/i18n/config';
+import { pageMetadata } from '@/lib/metadata';
+import type { Locale } from '@/i18n/config';
 
-type Props = {
-  params: Promise<{ locale: string }>;
-};
+export const generateMetadata = ({ params }: PageProps<'/[locale]/faq'>) =>
+  pageMetadata(params, 'faq.page');
 
-export default async function FaqPage({ params }: Props) {
-  const { locale } = await params;
-  const tPage = await getTranslations('faq.page');
-  const tContacts = await getTranslations('faq.contacts');
-  const tNav = await getTranslations('nav');
+export default async function FaqPage({ params }: PageProps<'/[locale]/faq'>) {
+  const locale = (await params).locale as Locale;
+  setRequestLocale(locale);
 
-  // Fetch FAQs from Notion CMS
-  const faqs = await cms.getFAQs(locale as Locale);
+  const [t, faqs] = await Promise.all([getTranslations('faq'), cms.getFAQs(locale)]);
 
   return (
     <>
-      <PageTitle
-        title={tPage('title')}
-        description={tPage('description')}
-        breadcrumbs={[
-          { label: tNav('home'), href: `/${locale}` },
-          { label: tPage('breadcrumb') },
-        ]}
+      <PageTitle title={t('page.title')} description={t('page.description')} />
+      <FaqAccordion
+        faqs={faqs}
+        translations={{
+          label: t('search.label'),
+          placeholder: t('search.placeholder'),
+          all: t('search.all'),
+          noResults: t.raw('search.noResults'),
+          noResultsHint: t('search.noResultsHint'),
+        }}
       />
-      <FaqAccordion faqs={faqs} />
       <UsefulContactsSection
-        title={tContacts('title')}
-        subtitle={tContacts('subtitle')}
-        contacts={tContacts.raw('items')}
+        eyebrow={t('contacts.eyebrow')}
+        title={t('contacts.title')}
+        subtitle={t('contacts.subtitle')}
+        contacts={t.raw('contacts.items')}
       />
     </>
   );

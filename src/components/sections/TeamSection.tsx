@@ -1,67 +1,55 @@
 import Image from 'next/image';
+import { Linkedin } from 'lucide-react';
 import { TeamMember } from '@/lib/cms/types';
+import { SectionHeading } from '@/components/ui/section-heading';
 
 type Props = {
+  eyebrow: string;
   title: string;
   subtitle?: string;
-  members: TeamMember[];
+  members: Array<TeamMember & { linkedinLabel: string }>;
 };
 
-export function TeamSection({ title, subtitle, members }: Props) {
+export function TeamSection({ eyebrow, title, subtitle, members }: Props) {
   if (members.length === 0) {
     return null;
   }
 
   return (
-    <section className="bg-surface">
-      <div className="container mx-auto px-4 py-16">
-        <div className="mb-12 text-center">
-          <h2 className="text-3xl font-heading font-bold text-heading">{title}</h2>
-          {subtitle && <p className="mt-2 text-text-muted">{subtitle}</p>}
-        </div>
+    <section className="section bg-white">
+      <div className="container-page">
+        <SectionHeading eyebrow={eyebrow} title={title} subtitle={subtitle} />
 
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <ul className="mt-14 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-3 lg:grid-cols-4">
           {members.map((member) => (
-            <div
-              key={member.id}
-              className="group rounded-2xl bg-background p-6 text-center transition hover:shadow-md"
-            >
-              {member.image ? (
-                <Image
-                  src={member.image}
-                  alt={member.name}
-                  width={160}
-                  height={160}
-                  className="mx-auto h-32 w-32 rounded-full object-cover"
-                />
-              ) : (
-                <div className="mx-auto flex h-32 w-32 items-center justify-center rounded-full bg-primary/10 text-4xl font-bold text-primary">
-                  {member.name.charAt(0)}
-                </div>
-              )}
-              <h3 className="mt-4 font-heading font-semibold text-heading">
-                {member.name}
-              </h3>
-              <p className="text-sm font-medium text-primary">{member.role}</p>
-              {member.career && (
-                <p className="text-sm text-text-muted">{member.career}</p>
-              )}
-              {member.bio && (
-                <p className="mt-2 text-sm text-text-muted">{member.bio}</p>
-              )}
+            <li key={member.id} className="text-center">
+              <div className="relative mx-auto aspect-square w-full max-w-44 overflow-hidden rounded-full bg-sky ring-4 ring-white shadow-md">
+                {member.image ? (
+                  <Image src={member.image} alt="" fill sizes="176px" className="object-cover" />
+                ) : (
+                  <span aria-hidden className="grid h-full place-items-center font-heading text-5xl font-bold text-primary">
+                    {member.name.charAt(0)}
+                  </span>
+                )}
+              </div>
+              <h3 className="mt-4 text-lg font-bold">{member.name}</h3>
+              <p className="font-nav text-sm font-semibold text-primary">{member.role}</p>
+              {member.career && <p className="text-sm text-text-muted">{member.career}</p>}
+              {member.bio && <p className="mx-auto mt-2 max-w-xs text-sm text-text-muted">{member.bio}</p>}
               {member.linkedin && (
                 <a
                   href={member.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-3 inline-block text-sm text-primary hover:underline"
+                  aria-label={member.linkedinLabel}
+                  className="mt-3 inline-grid size-9 place-items-center rounded-full bg-sky text-primary transition-colors hover:bg-primary hover:text-white"
                 >
-                  LinkedIn
+                  <Linkedin className="size-4" />
                 </a>
               )}
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   );

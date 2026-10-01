@@ -1,183 +1,81 @@
 @import "tailwindcss";
-
-@plugin "tailwindcss-animate";
-@plugin "@tailwindcss/typography";
 @import "tw-animate-css";
+@plugin "@tailwindcss/typography";
 
-@custom-variant dark (&:is(.dark *));
+/*
+ * Design tokens — single source of truth.
+ * Brand colors come from the original Buddies site + logo (paper-plane blue).
+ * shadcn/ui names (primary, muted, card…) and legacy names (surface, heading,
+ * text) both map to these, so every component speaks the same palette.
+ */
+:root {
+  --radius: 0.75rem;
 
-@theme {
-  /* Colors from original Buddies ITBA site */
-  --color-primary: #0c5781;
-  --color-primary-light: #1a6d99;
-  --color-primary-dark: #094569;
-  --color-background: #e1ecf6;
-  --color-surface: #ffffff;
-  --color-heading: #37423b;
-  --color-text: #444444;
-  --color-text-muted: #6c757d;
-  /* Fonts */
-  --font-sans: 'Open Sans', ui-sans-serif, system-ui, sans-serif;
-  --font-heading: 'Raleway', ui-sans-serif, system-ui, sans-serif;
-  --font-nav: 'Poppins', ui-sans-serif, system-ui, sans-serif;
-}
+  /* Brand */
+  --brand: #0c5781;
+  --brand-dark: #083f5e;
+  --brand-light: #1a6d99;
+  --sky: #e1ecf6;
+  --plane: #5b8ff0;
+  --sun: #f4b223;
 
-body {
-  background-color: var(--color-background);
-  color: var(--color-text);
-  font-family: var(--font-sans);
-}
+  /* Surfaces & text */
+  --background: #f7fafd;
+  --foreground: #37423b;
+  --text: #444444;
+  --text-muted: #5f6b76;
+  --card: #ffffff;
+  --border: #dbe6f0;
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--font-heading);
+  /* Feedback */
+  --destructive: #c2410c;
 }
 
 @theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--card);
+  --color-card: var(--card);
+  --color-card-foreground: var(--text);
+  --color-popover: var(--card);
+  --color-popover-foreground: var(--text);
+
+  --color-primary: var(--brand);
+  --color-primary-dark: var(--brand-dark);
+  --color-primary-light: var(--brand-light);
+  --color-primary-foreground: #ffffff;
+
+  --color-secondary: var(--sky);
+  --color-secondary-foreground: var(--brand-dark);
+  --color-muted: var(--sky);
+  --color-muted-foreground: var(--text-muted);
+  --color-accent: var(--sky);
+  --color-accent-foreground: var(--brand-dark);
+
+  --color-sky: var(--sky);
+  --color-plane: var(--plane);
+  --color-sun: var(--sun);
+
+  --color-heading: var(--foreground);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--border);
+  --color-ring: var(--brand);
+
+  --radius-sm: calc(var(--radius) - 6px);
+  --radius-md: calc(var(--radius) - 4px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
-}
+  --radius-3xl: calc(var(--radius) + 16px);
 
-:root {
-  --radius: 0.5rem;
-
-  /* Deep Ocean Blue & Vibrant Coral Palette */
-
-  /* Light Mode */
-  --background: oklch(0.985 0.002 247.839);
-  /* Very light blue/white */
-  --foreground: oklch(0.25 0.04 250);
-  /* Dark blue-grey text */
-
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.25 0.04 250);
-
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.25 0.04 250);
-
-  --primary: oklch(0.35 0.12 245);
-  /* Deep Ocean Blue */
-  --primary-foreground: oklch(0.985 0 0);
-
-  --secondary: oklch(0.95 0.02 245);
-  /* Light blue tint */
-  --secondary-foreground: oklch(0.35 0.12 245);
-
-  --muted: oklch(0.96 0.01 245);
-  --muted-foreground: oklch(0.55 0.03 245);
-
-  /* Accent: "Celestito" (Light Sky Blue) as requested */
-  --accent: oklch(0.85 0.12 240);
-  --accent-foreground: oklch(0.35 0.12 245);
-
-  --destructive: oklch(0.6 0.18 25);
-  --destructive-foreground: oklch(0.985 0 0);
-
-  --border: oklch(0.92 0.02 245);
-  --input: oklch(0.92 0.02 245);
-  --ring: oklch(0.35 0.12 245);
-
-  --chart-1: oklch(0.35 0.12 245);
-  --chart-2: oklch(0.65 0.22 30);
-  --chart-3: oklch(0.5 0.1 245);
-  --chart-4: oklch(0.8 0.1 30);
-  --chart-5: oklch(0.7 0.05 245);
-
-  --sidebar: oklch(0.985 0.002 247.839);
-  --sidebar-foreground: oklch(0.25 0.04 250);
-  --sidebar-primary: oklch(0.35 0.12 245);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.95 0.02 245);
-  --sidebar-accent-foreground: oklch(0.35 0.12 245);
-  --sidebar-border: oklch(0.92 0.02 245);
-  --sidebar-ring: oklch(0.35 0.12 245);
-}
-
-.dark {
-  /* Dark Mode */
-  --background: oklch(0.12 0.03 250);
-  /* Deep dark blue */
-  --foreground: oklch(0.96 0.01 245);
-
-  --card: oklch(0.15 0.03 250);
-  --card-foreground: oklch(0.96 0.01 245);
-
-  --popover: oklch(0.15 0.03 250);
-  --popover-foreground: oklch(0.96 0.01 245);
-
-  --primary: oklch(0.45 0.12 245);
-  /* Slightly lighter ocean blue for dark mode */
-  --primary-foreground: oklch(0.985 0 0);
-
-  --secondary: oklch(0.2 0.04 250);
-  --secondary-foreground: oklch(0.96 0.01 245);
-
-  --muted: oklch(0.2 0.04 250);
-  --accent: oklch(0.80 0.12 240);
-  /* Light Blue for dark mode */
-  --accent-foreground: oklch(0.35 0.12 245);
-
-  --destructive: oklch(0.5 0.18 25);
-  --destructive-foreground: oklch(0.985 0 0);
-
-  --border: oklch(0.25 0.04 250);
-  --input: oklch(0.25 0.04 250);
-  --ring: oklch(0.45 0.12 245);
-
-  --chart-1: oklch(0.45 0.12 245);
-  --chart-2: oklch(0.65 0.22 30);
-  --chart-3: oklch(0.55 0.1 245);
-  --chart-4: oklch(0.75 0.1 30);
-  --chart-5: oklch(0.65 0.05 245);
-
-  --sidebar: oklch(0.15 0.03 250);
-  --sidebar-foreground: oklch(0.96 0.01 245);
-  --sidebar-primary: oklch(0.45 0.12 245);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.2 0.04 250);
-  --sidebar-accent-foreground: oklch(0.96 0.01 245);
-  --sidebar-border: oklch(0.25 0.04 250);
-  --sidebar-ring: oklch(0.45 0.12 245);
+  /* next/font variables are set on <html> in app/[locale]/layout.tsx */
+  --font-sans: var(--font-open-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-raleway), ui-sans-serif, system-ui, sans-serif;
+  --font-nav: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
 }
 
 @layer base {
@@ -185,7 +83,59 @@ h6 {
     @apply border-border outline-ring/50;
   }
 
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background font-sans text-text antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading text-heading;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background-color: color-mix(in srgb, var(--plane) 30%, transparent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* Shared page gutter + max width */
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6;
+  }
+
+  /* Consistent vertical rhythm between page sections */
+  .section {
+    @apply py-16 md:py-24;
+  }
+
+  /* Prose styling for CMS markdown (FAQ answers, event descriptions) */
+  .prose-cms {
+    @apply prose prose-sm max-w-none text-text-muted prose-strong:text-text prose-a:font-medium prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-ul:my-2 prose-li:my-0;
   }
 }

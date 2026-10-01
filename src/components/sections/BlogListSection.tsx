@@ -1,34 +1,23 @@
 import Image from 'next/image';
-import Link from 'next/link';
+import { NotebookPen } from 'lucide-react';
 import { BlogPost } from '@/lib/cms/types';
-
-type Translations = {
-  empty: string;
-  readMore: string;
-};
+import { Link } from '@/i18n/navigation';
+import { formatEventDate } from '@/lib/dates';
 
 type Props = {
   posts: BlogPost[];
   locale: string;
-  translations: Translations;
+  translations: { empty: string; readMore: string };
 };
 
 export function BlogListSection({ posts, locale, translations }: Props) {
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat(locale, {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-    }).format(date);
-  };
-
   if (posts.length === 0) {
     return (
-      <section className="bg-background">
-        <div className="container mx-auto px-4 py-16 text-center">
-          <div className="mx-auto max-w-md rounded-2xl bg-surface p-8">
-            <div className="text-4xl">📝</div>
-            <p className="mt-4 text-text-muted">{translations.empty}</p>
+      <section className="section pt-8">
+        <div className="container-page">
+          <div className="mx-auto max-w-md rounded-3xl border border-dashed border-plane/50 bg-white p-10 text-center">
+            <NotebookPen className="mx-auto size-12 text-plane" aria-hidden />
+            <p className="mt-4 font-semibold text-heading">{translations.empty}</p>
           </div>
         </div>
       </section>
@@ -36,49 +25,46 @@ export function BlogListSection({ posts, locale, translations }: Props) {
   }
 
   return (
-    <section className="bg-background">
-      <div className="container mx-auto px-4 py-8 md:py-16">
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+    <section className="section pt-8 md:pt-12">
+      <div className="container-page">
+        <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {posts.map((post) => (
-            <article
-              key={post.id}
-              className="group overflow-hidden rounded-2xl bg-surface shadow-sm transition-shadow hover:shadow-md"
-            >
-              <Link href={`/${locale}/blog/${post.slug}`}>
-                {post.coverImage && (
-                  <div className="relative h-48 overflow-hidden">
+            <li key={post.id}>
+              <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border bg-white shadow-sm transition duration-300 focus-within:ring-2 focus-within:ring-primary hover:-translate-y-1 hover:shadow-xl">
+                <div className="relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-primary to-plane">
+                  {post.coverImage && (
                     <Image
                       src={post.coverImage}
-                      alt={post.title}
+                      alt=""
                       fill
                       sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-                      className="object-cover transition-transform group-hover:scale-105"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
-                  </div>
-                )}
-                <div className="p-5">
-                  {post.category && (
-                    <span className="inline-block rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
-                      {post.category}
-                    </span>
                   )}
-                  <h3 className="mt-2 text-lg font-heading font-semibold text-heading group-hover:text-primary">
-                    {post.title}
-                  </h3>
-                  <p className="mt-2 line-clamp-2 text-sm text-text-muted">
-                    {post.excerpt}
-                  </p>
-                  <div className="mt-4 flex items-center justify-between text-xs text-text-muted">
-                    <span>{formatDate(post.publishedAt)}</span>
-                    <span className="font-medium text-primary">
-                      {translations.readMore} →
-                    </span>
-                  </div>
                 </div>
-              </Link>
-            </article>
+                <div className="flex flex-1 flex-col p-6">
+                  <div className="flex items-center gap-3 text-xs text-text-muted">
+                    {post.category && (
+                      <span className="rounded-full bg-sky px-2.5 py-0.5 font-semibold text-primary">{post.category}</span>
+                    )}
+                    <time dateTime={post.publishedAt.toISOString()}>
+                      {formatEventDate(post.publishedAt, locale, 'long')}
+                    </time>
+                  </div>
+                  <h2 className="mt-3 text-xl font-bold leading-snug group-hover:text-primary">
+                    <Link href={`/blog/${post.slug}`} className="after:absolute after:inset-0 focus:outline-none">
+                      {post.title}
+                    </Link>
+                  </h2>
+                  <p className="mt-2 line-clamp-3 text-text-muted">{post.excerpt}</p>
+                  <span aria-hidden className="mt-auto pt-4 font-nav text-sm font-semibold text-primary">
+                    {translations.readMore} →
+                  </span>
+                </div>
+              </article>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   );

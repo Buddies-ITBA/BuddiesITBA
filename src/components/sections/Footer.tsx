@@ -1,91 +1,81 @@
-import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
-import { Separator } from '@/components/ui/separator';
+import { Instagram, Linkedin, Mail, MapPin } from 'lucide-react';
+import { Link } from '@/i18n/navigation';
+import { navItems, site } from '@/config/site';
+import { FlightPath } from '@/components/brand/flight-path';
 
-const socialLinks = [
-  { name: 'Instagram', href: 'https://instagram.com/buddiesitba', icon: 'instagram' },
-  { name: 'LinkedIn', href: 'https://linkedin.com/company/buddiesitba', icon: 'linkedin' },
-];
-
-const footerLinks = [
-  { key: 'about', href: '/about' },
-  { key: 'events', href: '/events' },
-  { key: 'faq', href: '/faq' },
-  { key: 'contact', href: '/contact' },
-];
-
-export async function Footer({ locale }: { locale: string }) {
+export async function Footer() {
   const t = await getTranslations('nav');
   const tFooter = await getTranslations('footer');
+  const tContact = await getTranslations('contact.section');
+
+  const socials = [
+    { name: 'Instagram', href: site.instagram.url, Icon: Instagram },
+    { name: 'LinkedIn', href: site.linkedin.url, Icon: Linkedin },
+  ];
 
   return (
-    <footer className="bg-primary-dark text-white">
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Brand */}
+    <footer className="relative overflow-hidden bg-primary-dark text-white">
+      <FlightPath className="absolute -right-10 top-6 w-80 text-white/15 md:w-[28rem]" />
+      <div className="container-page relative py-14">
+        <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
           <div>
-            <h3 className="text-2xl font-heading font-bold mb-4 text-white">
-              Buddies ITBA
-            </h3>
-            <p className="text-white/85 text-sm">
-              {tFooter('tagline')}
-            </p>
-          </div>
-
-          {/* Links */}
-          <div>
-            <h4 className="font-heading font-semibold mb-4 text-white">Links</h4>
-            <nav className="flex flex-col gap-2">
-              {footerLinks.map((link) => (
-                <Link
-                  key={link.key}
-                  href={`/${locale}${link.href}`}
-                  className="text-white/75 hover:text-white transition-colors text-sm"
+            <p className="font-heading text-2xl font-bold">{site.name}</p>
+            <p className="mt-3 max-w-xs text-sm text-white/80">{tFooter('tagline')}</p>
+            <div className="mt-6 flex gap-2">
+              {socials.map(({ name, href, Icon }) => (
+                <a
+                  key={name}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={name}
+                  className="grid size-10 place-items-center rounded-full bg-white/10 transition-colors hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                 >
-                  {t(link.key)}
-                </Link>
+                  <Icon className="size-5" />
+                </a>
               ))}
-            </nav>
+            </div>
           </div>
 
-          {/* Contact */}
+          <nav aria-labelledby="footer-explore">
+            <h2 id="footer-explore" className="font-nav text-xs font-semibold uppercase tracking-[0.18em] text-white/60">
+              {tFooter('explore')}
+            </h2>
+            <ul className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-sm md:grid-cols-1">
+              {navItems.map((item) => (
+                <li key={item.key}>
+                  <Link href={item.href} className="text-white/85 transition-colors hover:text-white hover:underline">
+                    {t(item.key)}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
           <div>
-            <h4 className="font-heading font-semibold mb-4 text-white">
+            <h2 className="font-nav text-xs font-semibold uppercase tracking-[0.18em] text-white/60">
               {tFooter('contact')}
-            </h4>
-            <div className="text-white/75 text-sm space-y-2">
-              <p>ITBA - Instituto Tecnológico de Buenos Aires</p>
-              <p>Iguazú 341</p>
-              <p>Buenos Aires, Argentina</p>
-              <p className="mt-4">
-                <a href="mailto:buddies@itba.edu.ar" className="hover:text-white">
-                  buddies@itba.edu.ar
+            </h2>
+            <ul className="mt-4 space-y-3 text-sm text-white/85">
+              <li>
+                <a href={`mailto:${site.email}`} className="inline-flex items-center gap-2 hover:text-white hover:underline">
+                  <Mail className="size-4 shrink-0" />
+                  {site.email}
                 </a>
-              </p>
-            </div>
+              </li>
+              <li>
+                <a href={site.mapsUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-start gap-2 hover:text-white hover:underline">
+                  <MapPin className="mt-0.5 size-4 shrink-0" />
+                  <span>{tContact.raw('addressLines').slice(0, 2).join(', ')}</span>
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
 
-        <Separator className="my-8 bg-white/25" />
-
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-white/65 text-sm">
-            © {new Date().getFullYear()} Buddies ITBA. {tFooter('rights')}.
-          </p>
-          <div className="flex gap-4">
-            {socialLinks.map((social) => (
-              <a
-                key={social.name}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-white/70 hover:text-white transition-colors"
-                aria-label={social.name}
-              >
-                {social.name}
-              </a>
-            ))}
-          </div>
+        <div className="mt-12 border-t border-white/15 pt-6 text-xs text-white/65">
+          © {new Date().getFullYear()} {site.name}. {tFooter('rights')}.
         </div>
       </div>
     </footer>

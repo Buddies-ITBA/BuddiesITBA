@@ -1,38 +1,26 @@
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { PageTitle } from '@/components/sections/PageTitle';
 import { BlogListSection } from '@/components/sections/BlogListSection';
 import { cms } from '@/lib/cms';
-import { Locale } from '@/i18n/config';
+import { pageMetadata } from '@/lib/metadata';
+import type { Locale } from '@/i18n/config';
 
-type Props = {
-  params: Promise<{ locale: string }>;
-};
+export const generateMetadata = ({ params }: PageProps<'/[locale]/blog'>) =>
+  pageMetadata(params, 'blog.page');
 
-export default async function BlogPage({ params }: Props) {
-  const { locale } = await params;
-  const tPage = await getTranslations('blog.page');
-  const tList = await getTranslations('blog.list');
-  const tNav = await getTranslations('nav');
+export default async function BlogPage({ params }: PageProps<'/[locale]/blog'>) {
+  const locale = (await params).locale as Locale;
+  setRequestLocale(locale);
 
-  const posts = await cms.getPosts(locale as Locale);
+  const [t, posts] = await Promise.all([getTranslations('blog'), cms.getPosts(locale)]);
 
   return (
     <>
-      <PageTitle
-        title={tPage('title')}
-        description={tPage('description')}
-        breadcrumbs={[
-          { label: tNav('home'), href: `/${locale}` },
-          { label: tPage('breadcrumb') },
-        ]}
-      />
+      <PageTitle title={t('page.title')} description={t('page.description')} />
       <BlogListSection
         posts={posts}
         locale={locale}
-        translations={{
-          empty: tList('empty'),
-          readMore: tList('readMore'),
-        }}
+        translations={{ empty: t('list.empty'), readMore: t('list.readMore') }}
       />
     </>
   );

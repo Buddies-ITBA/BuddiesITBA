@@ -13,14 +13,21 @@ export function NotionBlockRenderer({ blocks, className }: NotionBlockRendererPr
 
     return (
         <div className={cn('space-y-4', className)}>
-            {blocks.map((block) => (
-                <Block key={block.id} block={block} />
+            {blocks.map((block, index) => (
+                <Block key={block.id} block={block} listNumber={listNumberAt(blocks, index)} />
             ))}
         </div>
     );
 }
 
-function Block({ block }: { block: NotionBlock }) {
+/** 1-based position of a numbered_list_item within its run of consecutive items. */
+function listNumberAt(blocks: NotionBlock[], index: number): number {
+    let n = 1;
+    while (index - n >= 0 && blocks[index - n].type === 'numbered_list_item') n++;
+    return n;
+}
+
+function Block({ block, listNumber }: { block: NotionBlock; listNumber: number }) {
     const { type } = block;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const content = (block as any)[type];
@@ -62,7 +69,7 @@ function Block({ block }: { block: NotionBlock }) {
     switch (type) {
         case 'paragraph':
             return (
-                <p className="text-base leading-relaxed text-muted-foreground">
+                <p className="text-base leading-relaxed text-text">
                     {renderRichText(content.rich_text, block.id)}
                 </p>
             );
@@ -88,7 +95,7 @@ function Block({ block }: { block: NotionBlock }) {
             return (
                 <div className="flex items-start gap-2 ml-4">
                     <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-                    <p className="text-base text-muted-foreground">
+                    <p className="text-base text-text">
                         {renderRichText(content.rich_text, block.id)}
                     </p>
                 </div>
@@ -96,15 +103,15 @@ function Block({ block }: { block: NotionBlock }) {
         case 'numbered_list_item':
             return (
                 <div className="flex items-start gap-2 ml-4">
-                    <span className="font-mono text-primary font-bold">1.</span>
-                    <p className="text-base text-muted-foreground">
+                    <span className="font-mono text-primary font-bold">{listNumber}.</span>
+                    <p className="text-base text-text">
                         {renderRichText(content.rich_text, block.id)}
                     </p>
                 </div>
             );
         case 'image':
             const imageUrl = content.type === 'external' ? content.external.url : content.file.url;
-            const caption = content.caption?.[0]?.plain_text || 'Event image';
+            const caption = content.caption?.[0]?.plain_text || '';
             return (
                 <div className="my-6 overflow-hidden rounded-lg border bg-muted">
                     <div className="relative aspect-video w-full">
@@ -117,7 +124,7 @@ function Block({ block }: { block: NotionBlock }) {
                         />
                     </div>
                     {content.caption?.length > 0 && (
-                        <p className="p-2 text-center text-xs text-muted-foreground">
+                        <p className="p-2 text-center text-xs text-text">
                             {renderRichText(content.caption, block.id)}
                         </p>
                     )}
@@ -125,7 +132,7 @@ function Block({ block }: { block: NotionBlock }) {
             );
         case 'quote':
             return (
-                <blockquote className="my-4 border-l-4 border-primary pl-4 italic text-muted-foreground">
+                <blockquote className="my-4 border-l-4 border-primary pl-4 italic text-text">
                     {renderRichText(content.rich_text, block.id)}
                 </blockquote>
             );

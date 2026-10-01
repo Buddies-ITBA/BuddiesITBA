@@ -1,33 +1,30 @@
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { PageTitle } from '@/components/sections/PageTitle';
 import { ContactSection } from '@/components/sections/ContactSection';
+import { pageMetadata } from '@/lib/metadata';
+import type { Locale } from '@/i18n/config';
 
-type Props = {
-  params: Promise<{ locale: string }>;
-};
+export const generateMetadata = ({ params }: PageProps<'/[locale]/contact'>) =>
+  pageMetadata(params, 'contact.page');
 
-export default async function ContactPage({ params }: Props) {
-  const { locale } = await params;
-  const tPage = await getTranslations('contact.page');
-  const tContact = await getTranslations('contact.section');
-  const tNav = await getTranslations('nav');
+export default async function ContactPage({ params }: PageProps<'/[locale]/contact'>) {
+  setRequestLocale((await params).locale as Locale);
+  const t = await getTranslations('contact');
 
   return (
     <>
-      <PageTitle
-        title={tPage('title')}
-        description={tPage('description')}
-        breadcrumbs={[
-          { label: tNav('home'), href: `/${locale}` },
-          { label: tPage('breadcrumb') },
-        ]}
-      />
+      <PageTitle title={t('page.title')} description={t('page.description')} />
       <ContactSection
-        addressTitle={tContact('addressTitle')}
-        addressLines={tContact.raw('addressLines')}
-        emailTitle={tContact('emailTitle')}
-        email={tContact('email')}
-        emailButtonLabel={tContact('emailButton')}
+        addressTitle={t('section.addressTitle')}
+        addressLines={t.raw('section.addressLines')}
+        directions={t('section.directions')}
+        emailTitle={t('section.emailTitle')}
+        emailDescription={t('section.emailDescription')}
+        emailButton={t('section.emailButton')}
+        instagramTitle={t('section.instagramTitle')}
+        instagramDescription={t('section.instagramDescription')}
+        instagramButton={t('section.instagramButton')}
+        mapTitle={t('section.mapTitle')}
       />
     </>
   );

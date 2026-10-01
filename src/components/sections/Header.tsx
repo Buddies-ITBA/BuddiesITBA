@@ -1,112 +1,112 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Menu } from 'lucide-react';
-import { useState } from 'react';
+import { Link, usePathname } from '@/i18n/navigation';
+import { navItems, site } from '@/config/site';
+import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-  SheetTitle,
-} from '@/components/ui/sheet';
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  navigationMenuTriggerStyle,
-} from '@/components/ui/navigation-menu';
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { LanguageSwitcher } from './LanguageSwitcher';
 
-const navItems = [
-  { key: 'home', href: '' },
-  { key: 'about', href: '/about' },
-  { key: 'events', href: '/events' },
-  { key: 'blog', href: '/blog' },
-  { key: 'faq', href: '/faq' },
-  { key: 'contact', href: '/contact' },
-];
-
-export function Header({ locale }: { locale: string }) {
+export function Header() {
   const t = useTranslations('nav');
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
-  const isActive = (href: string) => {
-    const fullPath = `/${locale}${href}`;
-    if (href === '') {
-      return pathname === `/${locale}` || pathname === `/${locale}/`;
-    }
-    return pathname.startsWith(fullPath);
-  };
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const isActive = (href: string) =>
+    href === '/' ? pathname === '/' : pathname.startsWith(href);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        {/* Logo */}
-        <Link href={`/${locale}`} className="flex items-center gap-2">
-          <span className="text-2xl font-heading font-extrabold text-primary tracking-tight">
-            Buddies ITBA
-          </span>
+    <header
+      className={cn(
+        'sticky top-0 z-50 w-full border-b transition-[background-color,box-shadow,border-color] duration-300',
+        scrolled
+          ? 'border-border bg-white/85 shadow-sm backdrop-blur-md'
+          : 'border-transparent bg-white'
+      )}
+    >
+      <div className="container-page flex h-16 items-center justify-between gap-4 md:h-[72px]">
+        <Link href="/" className="shrink-0 rounded-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">
+          <Image
+            src="/assets/img/logo.png"
+            alt={site.name}
+            width={640}
+            height={223}
+            priority
+            className="h-9 w-auto md:h-10"
+          />
         </Link>
 
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-6">
-          <NavigationMenu>
-            <NavigationMenuList>
-              {navItems.map((item) => (
-                <NavigationMenuItem key={item.key}>
-                  <NavigationMenuLink asChild>
-                    <Link
-                      href={`/${locale}${item.href}`}
-                      className={`${navigationMenuTriggerStyle()} ${isActive(item.href)
-                        ? 'bg-primary/10 text-primary font-bold hover:bg-primary/20 hover:text-primary'
-                        : 'bg-transparent hover:bg-sky-100 hover:text-primary'
-                        }`}
-                    >
-                      <span className="cursor-pointer">{t(item.key)}</span>
-                    </Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-              ))}
-            </NavigationMenuList>
-          </NavigationMenu>
-          <div className="ml-4">
-            <LanguageSwitcher locale={locale} />
-          </div>
-        </div>
+        {/* Desktop navigation */}
+        <nav className="hidden items-center gap-1 lg:flex">
+          {navItems.map((item) => {
+            const active = isActive(item.href);
+            return (
+              <Link
+                key={item.key}
+                href={item.href}
+                aria-current={active ? 'page' : undefined}
+                className={cn(
+                  'relative rounded-full px-3.5 py-2 font-nav text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-primary',
+                  active
+                    ? 'bg-sky text-primary'
+                    : 'text-text hover:bg-sky/60 hover:text-primary'
+                )}
+              >
+                {t(item.key)}
+              </Link>
+            );
+          })}
+          <LanguageSwitcher className="ml-3" />
+        </nav>
 
-        {/* Mobile Menu */}
-        <div className="flex md:hidden items-center gap-2">
-          <LanguageSwitcher locale={locale} />
+        {/* Mobile navigation */}
+        <div className="flex items-center gap-2 lg:hidden">
+          <LanguageSwitcher />
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <Menu className="h-5 w-5" />
-                <span className="sr-only">Toggle menu</span>
+              <Button variant="ghost" size="icon" aria-label={t('menu')}>
+                <Menu className="!size-6" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[300px] sm:w-[400px]">
-              <SheetTitle className="text-primary font-heading text-2xl font-bold mb-6 text-left">
-                Buddies ITBA
-              </SheetTitle>
-              <nav className="flex flex-col gap-4">
-                {navItems.map((item) => (
-                  <Link
-                    key={item.key}
-                    href={`/${locale}${item.href}`}
-                    onClick={() => setOpen(false)}
-                    className={`block py-2 text-lg font-nav transition-colors hover:text-primary ${isActive(item.href)
-                      ? 'text-primary font-semibold'
-                      : 'text-muted-foreground'
-                      }`}
-                  >
-                    {t(item.key)}
-                  </Link>
-                ))}
+            <SheetContent side="right" closeLabel={t('close')} className="w-[85vw] max-w-sm">
+              <SheetTitle className="sr-only">{site.name}</SheetTitle>
+              <Image
+                src="/assets/img/logo.png"
+                alt=""
+                width={640}
+                height={223}
+                className="mb-8 h-9 w-auto"
+              />
+              <nav className="flex flex-col gap-1">
+                {navItems.map((item) => {
+                  const active = isActive(item.href);
+                  return (
+                    <Link
+                      key={item.key}
+                      href={item.href}
+                      onClick={() => setOpen(false)}
+                      aria-current={active ? 'page' : undefined}
+                      className={cn(
+                        'rounded-xl px-4 py-3 font-nav text-lg font-medium transition-colors',
+                        active ? 'bg-sky text-primary' : 'text-text hover:bg-sky/60'
+                      )}
+                    >
+                      {t(item.key)}
+                    </Link>
+                  );
+                })}
               </nav>
             </SheetContent>
           </Sheet>

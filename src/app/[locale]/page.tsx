@@ -1,47 +1,59 @@
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { HeroSection } from '@/components/sections/HeroSection';
+import { StepsSection } from '@/components/sections/StepsSection';
 import { HomeAboutSection } from '@/components/sections/HomeAboutSection';
 import { StatsSection } from '@/components/sections/StatsSection';
 import { EventsPreviewSection } from '@/components/sections/EventsPreviewSection';
+import { CtaBand } from '@/components/sections/CtaBand';
 import { cms } from '@/lib/cms';
-import { Locale } from '@/i18n/config';
+import type { Locale } from '@/i18n/config';
 
-type Props = {
-  params: Promise<{ locale: string }>;
-};
+export default async function HomePage({ params }: PageProps<'/[locale]'>) {
+  const locale = (await params).locale as Locale;
+  setRequestLocale(locale);
 
-export default async function HomePage({ params }: Props) {
-  const { locale } = await params;
-  const tHero = await getTranslations('home.hero');
-  const tAbout = await getTranslations('home.about');
-  const tStats = await getTranslations('home.stats');
-  const tEvents = await getTranslations('home.events');
+  const [t, homeEvents] = await Promise.all([getTranslations('home'), cms.getHomeEvents(locale)]);
   const tTimeline = await getTranslations('events.timeline');
 
-  const homeEvents = await cms.getHomeEvents(locale as Locale);
-
   return (
-    <main>
+    <>
       <HeroSection
-        title={tHero('title')}
-        subtitle={tHero('subtitle')}
-        imageAlt={tHero('imageAlt')}
+        eyebrow={t('hero.eyebrow')}
+        title={t('hero.title')}
+        subtitle={t('hero.subtitle')}
+        primaryCta={t('hero.primaryCta')}
+        secondaryCta={t('hero.secondaryCta')}
+        imageAlt={t('hero.imageAlt')}
       />
+      <StepsSection
+        eyebrow={t('steps.eyebrow')}
+        title={t('steps.title')}
+        subtitle={t('steps.subtitle')}
+        steps={t.raw('steps.items')}
+      />
+      <StatsSection stats={t.raw('stats.items')} />
       <HomeAboutSection
-        locale={locale}
-        title={tAbout('title')}
-        subtitle={tAbout('subtitle')}
-        highlights={tAbout.raw('highlights')}
-        ctaLabel={tAbout('cta')}
-        imageAlt={tAbout('imageAlt')}
+        eyebrow={t('about.eyebrow')}
+        title={t('about.title')}
+        subtitle={t('about.subtitle')}
+        highlights={t.raw('about.highlights')}
+        ctaLabel={t('about.cta')}
+        imageAlt={t('about.imageAlt')}
       />
-      <StatsSection stats={tStats.raw('items')} />
       <EventsPreviewSection
-        title={tEvents('title')}
-        subtitle={tEvents('subtitle')}
+        eyebrow={t('events.eyebrow')}
+        title={t('events.title')}
+        subtitle={t('events.subtitle')}
+        viewAll={t('events.viewAll')}
         events={homeEvents}
         exchangeOnlyLabel={tTimeline('exchangeOnly')}
       />
-    </main>
+      <CtaBand
+        title={t('cta.title')}
+        description={t('cta.description')}
+        instagramLabel={t('cta.instagram')}
+        contactLabel={t('cta.contact')}
+      />
+    </>
   );
 }

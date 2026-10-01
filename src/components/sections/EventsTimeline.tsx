@@ -1,27 +1,31 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import Image from 'next/image';
+import { CalendarX2, Clock, Instagram, Loader2, MapPin, MessageCircle, Users } from 'lucide-react';
 import { Event, NotionBlock } from '@/lib/cms/types';
+import { getEventDetails } from '@/app/actions';
+import { site } from '@/config/site';
+import { formatEventDate, groupByMonth } from '@/lib/dates';
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogDescription,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { NotionBlockRenderer } from '@/components/ui/notion-block-renderer';
-import { getEventDetails } from '@/app/actions';
-import { Loader2, Calendar, Clock, MapPin, MessageCircle, AlertTriangle } from 'lucide-react';
-import { AddToCalendar, AddToCalendarIcon } from '@/components/ui/add-to-calendar';
+import { AddToCalendar, type AddToCalendarLabels } from '@/components/ui/add-to-calendar';
+import { DateBadge, ExchangeOnlyBadge } from '@/components/events/badges';
 
 type Translations = {
   empty: string;
+  emptyHint: string;
   capacity: string;
   whatsappNote: string;
   register: string;
   exchangeOnly: string;
+  details: string;
+  loadError: string;
+  instagram: string;
+  close: string;
+  calendar: AddToCalendarLabels;
 };
 
 type Props = {
@@ -30,271 +34,201 @@ type Props = {
   translations: Translations;
 };
 
-export function EventsTimeline({ events, locale, translations }: Props) {
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-  const [eventDetails, setEventDetails] = useState<NotionBlock[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+type DetailsState = { status: 'loading' | 'ready' | 'error'; blocks: NotionBlock[] };
 
-  const handleOpenEvent = async (event: Event) => {
-    setSelectedEvent(event);
-    setIsModalOpen(true);
-    setIsLoading(true);
+export function EventsTimeline({ events, locale, translations: t }: Props) {
+  const [selected, setSelected] = useState<Event | null>(null);
+  const [details, setDetails] = useState<DetailsState>({ status: 'loading', blocks: [] });
+  const cache = useRef(new Map<string, NotionBlock[]>());
+  const latestRequest = useRef<string | null>(null);
 
+  const openEvent = async (event: Event) => {
+    setSelected(event);
+    latestRequest.current = event.id;
+
+    const cached = cache.current.get(event.id);
+    if (cached) {
+      setDetails({ status: 'ready', blocks: cached });
+      return;
+    }
+
+    setDetails({ status: 'loading', blocks: [] });
     try {
       const blocks = await getEventDetails(event.id);
-      setEventDetails(blocks);
-    } catch (error) {
-      console.error('Failed to load event details', error);
-    } finally {
-      setIsLoading(false);
+      cache.current.set(event.id, blocks);
+      // Ignore responses for an event the user already navigated away from
+      if (latestRequest.current === event.id) setDetails({ status: 'ready', blocks });
+    } catch {
+      if (latestRequest.current === event.id) setDetails({ status: 'error', blocks: [] });
     }
   };
 
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat(locale, {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long',
-    }).format(date);
-  };
-
-  const formatTime = (date: Date) => {
-    return new Intl.DateTimeFormat(locale, {
-      hour: '2-digit',
-      minute: '2-digit',
-    }).format(date);
-  };
-
-  // Group events by month/year
-  const eventsByMonth = events.reduce(
-    (acc, event) => {
-      const monthKey = new Intl.DateTimeFormat(locale, {
-        month: 'long',
-        year: 'numeric',
-      }).format(event.date);
-
-      if (!acc[monthKey]) {
-        acc[monthKey] = [];
-      }
-      acc[monthKey].push(event);
-      return acc;
-    },
-    {} as Record<string, Event[]>
-  );
-
   if (events.length === 0) {
     return (
-      <section className="bg-background">
-        <div className="container mx-auto px-4 py-16 text-center">
-          <div className="mx-auto max-w-md rounded-2xl bg-surface p-8">
-            <div className="text-4xl text-muted-foreground">
-              <Calendar className="h-16 w-16 mx-auto mb-4 opacity-50" />
-            </div>
-            <p className="mt-4 text-text-muted">
-              {translations.empty}
-            </p>
+      <section className="section">
+        <div className="container-page">
+          <div className="mx-auto max-w-md rounded-3xl border border-dashed border-plane/50 bg-white p-10 text-center">
+            <CalendarX2 className="mx-auto size-12 text-plane" aria-hidden />
+            <h2 className="mt-4 text-xl font-bold">{t.empty}</h2>
+            <p className="mt-2 text-text-muted">{t.emptyHint}</p>
+            <Button asChild className="mt-6">
+              <a href={site.instagram.url} target="_blank" rel="noopener noreferrer">
+                <Instagram />
+                {t.instagram}
+              </a>
+            </Button>
           </div>
         </div>
       </section>
     );
   }
 
+  const months = groupByMonth(events, (event) => event.date, locale);
+
   return (
-    <section className="bg-background">
-      <div className="container mx-auto px-4 py-8 md:py-16">
-        <div className="mx-auto max-w-2xl">
-          {Object.entries(eventsByMonth).map(([month, monthEvents]) => (
-            <div key={month} className="mb-8">
-              {/* Month header */}
-              <h3 className="mb-6 text-xl font-heading font-bold capitalize text-primary border-b pb-2">
-                {month}
-              </h3>
+    <section className="section pt-10 md:pt-14">
+      <div className="container-page max-w-4xl">
+        {months.map(({ month, entries }) => (
+          <section key={month} aria-label={month} className="mb-12 last:mb-0">
+            <h2 className="sticky top-16 z-10 -mx-4 mb-6 bg-background/90 px-4 py-2 text-lg font-bold text-primary backdrop-blur md:top-[72px]">
+              {month}
+            </h2>
 
-              {/* Timeline */}
-              <div className="relative">
-                {/* Vertical line */}
-                <div className="absolute left-3 top-2 bottom-2 w-0.5 bg-border md:left-4" />
+            <ol className="space-y-5">
+              {entries.map((event) => (
+                <li key={event.id} id={event.id} className="flex gap-3 sm:gap-5">
+                  <DateBadge date={event.date} locale={locale} className="mt-1 hidden sm:flex" />
 
-                {/* Events */}
-                <div className="space-y-8">
-                  {monthEvents.map((event) => (
-                    <div key={event.id} className="relative pl-10 md:pl-12 group">
-                      {/* Timeline dot */}
-                      <div className="absolute left-1.5 top-1.5 h-4 w-4 rounded-full border-4 border-background bg-primary shadow-sm md:left-2 transition-transform group-hover:scale-125" />
+                  <article className="group relative flex flex-1 flex-col overflow-hidden rounded-2xl border bg-white shadow-sm transition-shadow focus-within:ring-2 focus-within:ring-primary hover:shadow-lg sm:flex-row">
+                    <div className="relative aspect-[16/9] shrink-0 overflow-hidden bg-gradient-to-br from-primary to-plane sm:aspect-auto sm:w-56">
+                      {event.image && (
+                        <Image
+                          src={event.image}
+                          alt=""
+                          fill
+                          sizes="(min-width: 640px) 224px, 100vw"
+                          className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      )}
+                      <DateBadge date={event.date} locale={locale} className="absolute left-3 top-3 sm:hidden" />
+                    </div>
 
-                      {/* Event card */}
-                      <div
-                        className="overflow-hidden rounded-xl bg-card border shadow-sm hover:shadow-md transition-all cursor-pointer"
-                        onClick={() => handleOpenEvent(event)}
-                      >
-                        {/* Flyer image */}
-                        {event.image && (
-                          <div className="relative h-48 w-full md:h-56">
-                            <Image
-                              src={event.image}
-                              alt={event.title}
-                              fill
-                              className="object-cover"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
-                              <h4 className="text-lg font-heading font-bold text-white md:text-xl line-clamp-2 flex-1 mr-2">
-                                {event.title}
-                              </h4>
-                            </div>
-                            <div className="absolute top-2 right-2">
-                              <AddToCalendarIcon event={event} className="bg-white/90 hover:bg-white text-black hover:text-primary rounded-full shadow-sm h-8 w-8" />
-                            </div>
-                          </div>
+                    <div className="flex flex-1 flex-col p-5">
+                      {event.exchangeOnly && <ExchangeOnlyBadge label={t.exchangeOnly} className="mb-2 self-start" />}
+                      <h3 className="text-lg font-bold leading-snug md:text-xl">
+                        {/* Stretched button: the whole card is clickable, but it's one real control */}
+                        <button
+                          type="button"
+                          onClick={() => openEvent(event)}
+                          className="text-left after:absolute after:inset-0 after:content-[''] focus:outline-none"
+                        >
+                          {event.title}
+                        </button>
+                      </h3>
+                      <p className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-text-muted">
+                        <span className="inline-flex items-center gap-1.5">
+                          <Clock className="size-3.5" aria-hidden />
+                          {formatEventDate(event.date, locale, 'weekdayLong')} · {formatEventDate(event.date, locale, 'time')}
+                        </span>
+                        {event.location && (
+                          <span className="inline-flex items-center gap-1.5">
+                            <MapPin className="size-3.5" aria-hidden />
+                            {event.location}
+                          </span>
                         )}
+                      </p>
+                      <p className="mt-3 line-clamp-2 text-sm text-text-muted">{event.description}</p>
 
-                        <div className="p-4 md:p-5">
-                          {!event.image && (
-                            <div className="flex justify-between items-start gap-2 mb-2">
-                              <h4 className="text-lg font-heading font-bold text-card-foreground md:text-xl">
-                                {event.title}
-                              </h4>
-                              <AddToCalendarIcon event={event} className="-mt-1 -mr-1" />
-                            </div>
-                          )}
-
-                          {/* Date & time badge */}
-                          <div className="mb-3 flex flex-wrap items-center gap-2">
-                            {event.exchangeOnly && (
-                              <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800">
-                                <AlertTriangle className="h-3 w-3" />
-                                {translations.exchangeOnly}
-                              </span>
-                            )}
-                            <span className="inline-flex items-center rounded-full bg-secondary px-3 py-1 text-xs font-medium capitalize text-secondary-foreground">
-                              {formatDate(event.date)}
-                            </span>
-                            <span className="text-sm text-muted-foreground flex items-center gap-1">
-                              <Clock className="w-3 h-3" /> {formatTime(event.date)}
-                            </span>
-                          </div>
-
-                          {/* Location */}
-                          {event.location && (
-                            <p className="mt-1 flex items-center gap-1 text-sm text-muted-foreground">
-                              <MapPin className="w-3 h-3" /> {event.location}
-                            </p>
-                          )}
-
-                          {/* Teaser Description */}
-                          <p className="mt-2 text-sm text-muted-foreground line-clamp-2">
-                            {event.description}
-                          </p>
-
-                          {/* Capacity */}
-                          {event.capacity && (
-                            <p className="mt-3 text-xs text-muted-foreground/80">
-                              {translations.capacity} {event.capacity}
-                            </p>
-                          )}
-
-                          <Button variant="link" className="mt-2 h-auto p-0 text-primary">
-                            Read more →
-                          </Button>
-                        </div>
+                      <div className="mt-auto flex items-center justify-between gap-3 pt-4">
+                        <span className="font-nav text-sm font-semibold text-primary group-hover:underline">
+                          {t.details} →
+                        </span>
+                        {/* Sits above the stretched button so it stays independently clickable */}
+                        <AddToCalendar event={event} labels={t.calendar} iconOnly variant="ghost" className="relative z-10 -my-2 -mr-2" />
                       </div>
                     </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+                  </article>
+                </li>
+              ))}
+            </ol>
+          </section>
+        ))}
       </div>
 
-      {/* Event Details Modal */}
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col p-0 gap-0 overflow-hidden">
-          {selectedEvent && (
+      <Dialog open={selected !== null} onOpenChange={(open) => !open && setSelected(null)}>
+        <DialogContent closeLabel={t.close} className="flex max-h-[90dvh] max-w-2xl flex-col gap-0 overflow-hidden p-0">
+          {selected && (
             <>
-              <div className="relative h-40 sm:h-56 w-full shrink-0">
-                {selectedEvent.image ? (
-                  <Image
-                    src={selectedEvent.image}
-                    alt={selectedEvent.title}
-                    fill
-                    className="object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-primary to-primary/70" />
+              <div className="relative h-44 w-full shrink-0 bg-gradient-to-br from-primary to-plane sm:h-60">
+                {selected.image && (
+                  <Image src={selected.image} alt="" fill sizes="672px" className="object-cover" />
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex flex-col justify-end p-6">
-                  <DialogTitle className="text-2xl font-heading font-bold text-white mb-1 shadow-black drop-shadow-md">
-                    {selectedEvent.title}
-                  </DialogTitle>
-                  <div className="flex flex-wrap items-center gap-3 text-white/90 text-sm font-medium">
-                    <span className="bg-white/20 backdrop-blur-sm px-2 py-1 rounded-md">
-                      {formatDate(selectedEvent.date)}
+                <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/80 via-black/30 to-transparent p-6">
+                  <DialogTitle className="text-2xl font-bold text-white drop-shadow">{selected.title}</DialogTitle>
+                </div>
+              </div>
+
+              <ScrollArea className="flex-1">
+                <div className="p-6">
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-text-muted">
+                    <span className="inline-flex items-center gap-1.5">
+                      <Clock className="size-4 text-primary" aria-hidden />
+                      {formatEventDate(selected.date, locale, 'weekdayLong')} · {formatEventDate(selected.date, locale, 'time')}
                     </span>
-                    <span className="bg-white/20 backdrop-blur-sm px-2 py-1 rounded-md">
-                      {formatTime(selectedEvent.date)}
-                    </span>
-                    {selectedEvent.location && (
-                      <span className="flex items-center gap-1">
-                        <MapPin className="w-4 h-4" /> {selectedEvent.location}
+                    {selected.location && (
+                      <span className="inline-flex items-center gap-1.5">
+                        <MapPin className="size-4 text-primary" aria-hidden />
+                        {selected.location}
+                      </span>
+                    )}
+                    {selected.capacity && (
+                      <span className="inline-flex items-center gap-1.5">
+                        <Users className="size-4 text-primary" aria-hidden />
+                        {t.capacity}: {selected.capacity}
                       </span>
                     )}
                   </div>
-                  <div className="absolute top-6 left-6 z-10">
-                    <AddToCalendar event={selectedEvent} variant="secondary" size="sm" className="shadow-md" />
-                  </div>
-                </div>
-              </div>
+                  {selected.exchangeOnly && <ExchangeOnlyBadge label={t.exchangeOnly} className="mt-4" />}
 
-              <ScrollArea className="flex-1 p-6">
-                {selectedEvent.exchangeOnly && (
-                  <div className="mb-4 inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1.5 text-sm font-medium text-amber-800">
-                    <AlertTriangle className="h-4 w-4" />
-                    {translations.exchangeOnly}
-                  </div>
-                )}
-                <DialogDescription asChild className="text-base text-muted-foreground mb-6">
-                  <div>
-                    {/* Fallback description if no blocks */}
-                    {(!eventDetails || eventDetails.length === 0) && !isLoading && (
-                      <p>{selectedEvent.description}</p>
-                    )}
-
-                    {isLoading ? (
-                      <div className="flex items-center justify-center py-12">
-                        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                      </div>
-                    ) : (
-                      <NotionBlockRenderer blocks={eventDetails} />
-                    )}
-                  </div>
-                </DialogDescription>
-
-                {/* Registration Action */}
-                <div className="mt-8 pt-4 border-t">
-                  {selectedEvent.registrationType === 'whatsapp' && (
-                    <div className="rounded-lg bg-green-50 dark:bg-green-900/20 p-4 text-sm text-green-700 dark:text-green-300 border border-green-200 dark:border-green-900 flex items-center gap-2">
-                      <MessageCircle className="h-5 w-5" />
-                      {translations.whatsappNote}
+                  <DialogDescription asChild>
+                    <div className="mt-6">
+                      {details.status === 'loading' && (
+                        <div className="flex justify-center py-10">
+                          <Loader2 className="size-7 animate-spin text-primary" aria-hidden />
+                        </div>
+                      )}
+                      {details.status === 'error' && <p className="mb-3 text-sm italic">{t.loadError}</p>}
+                      {details.status !== 'loading' &&
+                        (details.blocks.length > 0 ? (
+                          <NotionBlockRenderer blocks={details.blocks} />
+                        ) : (
+                          <p className="text-base leading-relaxed text-text-muted">{selected.description}</p>
+                        ))}
                     </div>
-                  )}
-                  {selectedEvent.registrationType === 'forms' && selectedEvent.registrationLink && (
-                    <Button asChild className="w-full text-lg py-6 shadow-lg shadow-primary/20">
-                      <a
-                        href={selectedEvent.registrationLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {translations.register}
-                      </a>
-                    </Button>
-                  )}
+                  </DialogDescription>
                 </div>
               </ScrollArea>
+
+              <div className="flex shrink-0 flex-col gap-3 border-t bg-background p-4 sm:flex-row sm:items-center">
+                {selected.registrationType === 'whatsapp' && (
+                  <p className="flex flex-1 items-center gap-2 text-sm font-medium text-[#166534]">
+                    <MessageCircle className="size-5 shrink-0" aria-hidden />
+                    {t.whatsappNote}
+                  </p>
+                )}
+                {selected.registrationType === 'forms' && selected.registrationLink && (
+                  <Button asChild size="lg" className="flex-1">
+                    <a href={selected.registrationLink} target="_blank" rel="noopener noreferrer">
+                      {t.register}
+                    </a>
+                  </Button>
+                )}
+                <AddToCalendar event={selected} labels={t.calendar} className={selected.registrationType ? '' : 'flex-1'} />
+              </div>
             </>
           )}
         </DialogContent>
       </Dialog>
-    </section >
+    </section>
   );
 }

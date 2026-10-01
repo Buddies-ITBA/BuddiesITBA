@@ -1,79 +1,63 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
-import { motion, useInView, useSpring, useTransform } from "framer-motion";
+import { useEffect, useRef, useState } from 'react';
+import { animate, useInView, useReducedMotion } from 'framer-motion';
+import { useLocale } from 'next-intl';
 
-type StatItem = {
-  value: string;
-  label: string;
-};
-
-function AnimatedNumber({ value, inView }: { value: number; inView: boolean }) {
-  const spring = useSpring(0, { duration: 2000, bounce: 0 });
-  const rounded = useTransform(spring, (latest) => Math.round(latest));
-  const [displayValue, setDisplayValue] = useState(0);
-
-  useEffect(() => {
-    if (inView) {
-      spring.set(value);
-    }
-  }, [inView, spring, value]);
-
-  useEffect(() => {
-    const unsubscribe = rounded.on("change", (latest) => {
-      setDisplayValue(latest);
-    });
-    return () => unsubscribe();
-  }, [rounded]);
-
-  return <>{displayValue}</>;
-}
+type StatItem = { value: string; label: string };
 
 function parseStatValue(value: string): { number: number; suffix: string } {
   const match = value.match(/^(\d+)(.*)$/);
-  if (match) {
-    return { number: parseInt(match[1], 10), suffix: match[2] };
-  }
-  return { number: 0, suffix: value };
+  return match ? { number: parseInt(match[1], 10), suffix: match[2] } : { number: 0, suffix: value };
+}
+
+/**
+ * Renders the real number on the server (so no-JS and screenshots never show 0)
+ * and counts up from 0 once the band scrolls into view.
+ */
+function CountUp({ to, start }: { to: number; start: boolean }) {
+  const locale = useLocale();
+  const reduceMotion = useReducedMotion();
+  const [value, setValue] = useState(to);
+
+  useEffect(() => {
+    if (!start || reduceMotion) return;
+    const controls = animate(0, to, {
+      duration: 1.6,
+      ease: 'easeOut',
+      onUpdate: (latest) => setValue(Math.round(latest)),
+    });
+    return () => controls.stop();
+  }, [start, to, reduceMotion]);
+
+  return <>{new Intl.NumberFormat(locale).format(value)}</>;
 }
 
 export function StatsSection({ stats }: { stats: StatItem[] }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const ref = useRef<HTMLDListElement>(null);
+  const inView = useInView(ref, { once: true, margin: '-80px' });
 
   return (
-    <section className="bg-background/80">
-      <div className="container mx-auto px-4 py-16">
-        <div
-          ref={ref}
-          className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
-        >
-          {stats.map((stat, index) => {
+    <section className="bg-primary text-white">
+      <div className="container-page py-14 md:py-16">
+        <dl ref={ref} className="grid grid-cols-2 gap-y-10 md:grid-cols-4">
+          {stats.map((stat) => {
             const { number, suffix } = parseStatValue(stat.value);
-
             return (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, y: 20 }}
-                animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                transition={{
-                  duration: 0.5,
-                  delay: index * 0.1,
-                  ease: "easeOut",
-                }}
-                className="rounded-2xl bg-surface px-6 py-8 text-center shadow-sm"
-              >
-                <p className="text-3xl font-heading font-bold text-primary">
-                  <AnimatedNumber value={number} inView={isInView} />
-                  {suffix}
-                </p>
-                <p className="mt-2 text-sm font-medium text-text-muted">
-                  {stat.label}
-                </p>
-              </motion.div>
+              <div key={stat.label} className="flex flex-col-reverse items-center text-center">
+                <dt className="mt-1 text-sm font-medium text-white/80">{stat.label}</dt>
+                <dd className="font-heading text-4xl font-extrabold tabular-nums md:text-5xl">
+                  {/* Screen readers get the final value; the count-up is visual only */}
+                  <span className="sr-only">{stat.value}</span>
+                  <span aria-hidden>
+                    <CountUp to={number} start={inView} />
+                    {suffix}
+                  </span>
+                </dd>
+              </div>
             );
           })}
-        </div>
+        </dl>
       </div>
     </section>
   );

@@ -1,19 +1,51 @@
 {
+  "meta": {
+    "title": "Buddies ITBA",
+    "description": "Conectamos a estudiantes del ITBA con estudiantes de intercambio en Buenos Aires: eventos, tours y un buddy que te acompaña desde antes de llegar."
+  },
   "nav": {
     "home": "Inicio",
     "about": "Nosotros",
     "events": "Eventos",
     "blog": "Blog",
-    "faq": "Preguntas Frecuentes",
-    "contact": "Contacto"
+    "faq": "Preguntas frecuentes",
+    "contact": "Contacto",
+    "menu": "Abrir menú",
+    "skipToContent": "Saltar al contenido",
+    "language": "Idioma",
+    "breadcrumb": "Ruta de navegación",
+    "close": "Cerrar"
   },
   "home": {
     "hero": {
+      "eyebrow": "Intercambio en el ITBA · Buenos Aires",
       "title": "Bienvenido a Buddies, tu hogar lejos de casa",
       "subtitle": "Te ayudamos a conectar, explorar y crear amistades para toda la vida en Buenos Aires.",
-      "imageAlt": "Grupo de Buddies en tour"
+      "primaryCta": "Ver próximos eventos",
+      "secondaryCta": "Cómo funciona",
+      "imageAlt": "Grupo de Buddies en el Obelisco"
+    },
+    "steps": {
+      "eyebrow": "Cómo funciona",
+      "title": "Tu buddy, desde antes de que aterrices",
+      "subtitle": "Tres pasos para que tu intercambio arranque con el pie derecho.",
+      "items": [
+        {
+          "title": "Te asignamos un buddy",
+          "description": "Antes de que llegues te emparejamos con un estudiante del ITBA que te escribe, te responde dudas y te espera."
+        },
+        {
+          "title": "Sumate a los eventos",
+          "description": "Asados, city tours, mateadas y viajes para conocer a todos los estudiantes de intercambio del cuatrimestre."
+        },
+        {
+          "title": "Viví Buenos Aires",
+          "description": "Con tu buddy y la comunidad descubrís la ciudad como un local, desde los clásicos hasta los rincones escondidos."
+        }
+      ]
     },
     "about": {
+      "eyebrow": "Comunidad",
       "title": "Sumate a Buddies. Sentite en casa, estés donde estés",
       "subtitle": "En Buddies reunimos estudiantes de todo el mundo para crear un espacio donde las culturas se mezclan, las amistades crecen y cada momento se vuelve inolvidable.",
       "highlights": [
@@ -21,14 +53,14 @@
         "Explorar Buenos Aires juntos, desde rincones escondidos hasta lugares emblemáticos.",
         "Participar en actividades y eventos que hacen única tu experiencia."
       ],
-      "cta": "Ver FAQ",
+      "cta": "Conocé más sobre nosotros",
       "imageAlt": "Mateada de Buddies"
     },
     "stats": {
       "items": [
         {
           "value": "100",
-          "label": "Estudiantes por semestre"
+          "label": "Estudiantes por cuatrimestre"
         },
         {
           "value": "34",
@@ -40,23 +72,32 @@
         },
         {
           "value": "5000",
-          "label": "Mates!"
+          "label": "Mates compartidos"
         }
       ]
     },
     "events": {
+      "eyebrow": "Agenda",
       "title": "Nuestros eventos",
-      "subtitle": "Sumate y crea recuerdos inolvidables"
+      "subtitle": "Sumate y creá recuerdos inolvidables",
+      "viewAll": "Ver todos los eventos"
+    },
+    "cta": {
+      "title": "¿Llegás este cuatrimestre?",
+      "description": "Seguinos en Instagram para enterarte de cada evento, o escribinos con cualquier duda antes de viajar.",
+      "instagram": "Seguinos en Instagram",
+      "contact": "Escribinos"
     }
   },
   "about": {
     "page": {
       "title": "Nosotros",
-      "description": "Buddies se trata de hacer amigos, explorar Buenos Aires y pasarla bien juntos. Estamos para ayudarte a sentirte como en casa y crear recuerdos inolvidables.",
-      "breadcrumb": "Nosotros"
+      "description": "Buddies se trata de hacer amigos, explorar Buenos Aires y pasarla bien juntos. Estamos para ayudarte a sentirte como en casa y crear recuerdos inolvidables."
     },
     "intro": {
-      "intro": "Buddies es una organizacion estudiantil del ITBA que ayuda a los estudiantes de intercambio a adaptarse a la universidad y a Buenos Aires. Cada estudiante es asignado a un buddy argentino para guiarlo y acompañarlo durante su estadia.",
+      "eyebrow": "Quiénes somos",
+      "title": "Una organización estudiantil del ITBA",
+      "intro": "Buddies ayuda a los estudiantes de intercambio a adaptarse a la universidad y a Buenos Aires. Cada estudiante es asignado a un buddy argentino para guiarlo y acompañarlo durante su estadía.",
       "points": [
         "Crear amistades duraderas entre estudiantes locales e internacionales.",
         "Ofrecer eventos culturales, tours por la ciudad y oportunidades de networking.",
@@ -65,68 +106,60 @@
       "closing": "El programa brinda a estudiantes argentinos y de intercambio la oportunidad de conocer personas de todo el mundo, fomentando el intercambio cultural y el crecimiento mutuo.",
       "imageAlt": "Foto grupal de Buddies"
     },
-    "stats": {
-      "items": [
-        {
-          "value": "100",
-          "label": "Estudiantes por semestre"
-        },
-        {
-          "value": "34",
-          "label": "Nacionalidades"
-        },
-        {
-          "value": "120",
-          "label": "Buddies argentinos"
-        },
-        {
-          "value": "5000",
-          "label": "Mates!"
-        }
-      ]
-    },
     "team": {
+      "eyebrow": "Equipo",
       "title": "Nuestro equipo",
-      "subtitle": "Las personas detrás de Buddies"
+      "subtitle": "Las personas detrás de Buddies",
+      "linkedin": "LinkedIn de {name}"
     }
   },
   "events": {
     "page": {
       "title": "Eventos y actividades",
-      "description": "Sumate a actividades culturales y sociales para hacer amigos y descubrir Buenos Aires juntos.",
-      "breadcrumb": "Eventos"
+      "description": "Sumate a actividades culturales y sociales para hacer amigos y descubrir Buenos Aires juntos."
     },
     "timeline": {
       "empty": "No hay eventos próximos",
-      "capacity": "Cupos:",
+      "emptyHint": "Seguinos en Instagram para enterarte apenas anunciemos el próximo.",
+      "capacity": "Cupos",
       "whatsappNote": "Inscripción por el grupo de WhatsApp de Buddies",
       "register": "Inscribirse",
-      "exchangeOnly": "Exclusivo alumnos de intercambio"
+      "exchangeOnly": "Exclusivo alumnos de intercambio",
+      "details": "Ver detalles",
+      "loadError": "No pudimos cargar los detalles. Esto es lo que sabemos:"
+    },
+    "calendar": {
+      "add": "Agregar al calendario",
+      "google": "Google Calendar",
+      "ics": "Descargar .ics"
     }
   },
   "contact": {
     "page": {
       "title": "Estamos para ayudarte",
-      "description": "Si necesitas informacion sobre eventos, actividades o vivir en Buenos Aires, escribinos.",
-      "breadcrumb": "Contacto"
+      "description": "Si necesitás información sobre eventos, actividades o vivir en Buenos Aires, escribinos."
     },
     "section": {
-      "addressTitle": "Direccion",
+      "addressTitle": "Dónde estamos",
       "addressLines": [
-        "Iguazu 341",
+        "Iguazú 341",
         "Parque Patricios, Buenos Aires",
         "Argentina"
       ],
+      "directions": "Cómo llegar",
       "emailTitle": "Escribinos",
-      "email": "buddies@itba.edu.ar",
-      "emailButton": "Enviar email"
+      "emailDescription": "Respondemos en uno o dos días hábiles.",
+      "emailButton": "Enviar email",
+      "instagramTitle": "Instagram",
+      "instagramDescription": "La forma más rápida de enterarte de los eventos.",
+      "instagramButton": "Ir a Instagram",
+      "mapTitle": "Mapa del campus ITBA en Parque Patricios"
     }
   },
   "blog": {
     "page": {
       "title": "Blog",
-      "description": "Historias, tips y novedades de la comunidad Buddies.",
-      "breadcrumb": "Blog"
+      "description": "Historias, tips y novedades de la comunidad Buddies."
     },
     "list": {
       "empty": "No hay publicaciones todavía",
@@ -135,21 +168,43 @@
     "post": {
       "by": "Por",
       "backToList": "Volver al blog"
+    },
+    "error": {
+      "title": "No pudimos cargar el blog",
+      "description": "Hubo un problema al conectar con nuestro contenido. Por favor, intentá de nuevo."
     }
   },
   "faq": {
     "page": {
       "title": "Preguntas frecuentes",
-      "description": "Respuestas a dudas comunes sobre estudiar en ITBA, vivir en Buenos Aires y aprovechar la experiencia.",
-      "breadcrumb": "FAQ"
+      "description": "Respuestas a dudas comunes sobre estudiar en ITBA, vivir en Buenos Aires y aprovechar la experiencia."
+    },
+    "search": {
+      "label": "Buscar en las preguntas frecuentes",
+      "placeholder": "Buscá una pregunta… (ej. SUBE, visa, mate)",
+      "all": "Todas",
+      "noResults": "No encontramos preguntas para “{query}”.",
+      "noResultsHint": "Probá con otra palabra o escribinos directamente."
     },
     "contacts": {
-      "title": "Contactos",
-      "subtitle": "Informacion util",
+      "eyebrow": "Contactos útiles",
+      "title": "¿No encontraste tu respuesta?",
+      "subtitle": "Estas áreas del ITBA también pueden ayudarte.",
       "items": [
-        "Vida Universitaria: experiencia@itba.edu.ar",
-        "ITBA exchange organization: relacionesinternacionales@itba.edu.ar (@itbaglobal)",
-        "CEITBA: ceitba@itba.edu.ar (@ceitba)"
+        {
+          "name": "Vida Universitaria",
+          "email": "experiencia@itba.edu.ar"
+        },
+        {
+          "name": "Relaciones Internacionales",
+          "email": "relacionesinternacionales@itba.edu.ar",
+          "instagram": "itbaglobal"
+        },
+        {
+          "name": "CEITBA",
+          "email": "ceitba@itba.edu.ar",
+          "instagram": "ceitba"
+        }
       ]
     }
   },
@@ -157,11 +212,19 @@
     "title": "Algo salió mal",
     "description": "Hubo un problema al cargar esta página. Por favor, intentá de nuevo.",
     "retry": "Reintentar",
+    "home": "Volver al inicio",
+    "errorId": "ID del error: {id}"
+  },
+  "notFound": {
+    "title": "Esta página se perdió en el viaje",
+    "description": "No encontramos lo que buscabas. Puede que el enlace esté roto o que la página se haya movido.",
     "home": "Volver al inicio"
   },
   "footer": {
     "tagline": "Conectando estudiantes del ITBA con estudiantes de intercambio desde 2015.",
+    "explore": "Explorá",
     "contact": "Contacto",
+    "follow": "Seguinos",
     "rights": "Todos los derechos reservados"
   }
 }

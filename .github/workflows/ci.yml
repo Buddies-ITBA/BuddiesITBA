@@ -6,12 +6,14 @@ on:
   push:
     branches: [main]
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  lint-and-test:
-    name: Lint & Test
+  check:
+    name: Lint, typecheck, test & build
     runs-on: ubuntu-latest
-    env:
-      HAS_NOTION_SECRETS: ${{ secrets.NOTION_TOKEN }}
 
     steps:
       - name: Checkout code
@@ -20,20 +22,24 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Run linter
+      - name: Lint
         run: npm run lint
 
-      - name: Run tests
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
         run: npm run test
 
-      - name: Build (optional - requires Notion secrets)
-        if: env.HAS_NOTION_SECRETS != ''
+      # Uses Notion when secrets are available (pushes to main), otherwise the
+      # bundled sample content — so forks and PRs still get a full build check.
+      - name: Build
         run: npm run build
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}

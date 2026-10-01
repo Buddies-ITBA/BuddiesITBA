@@ -10,8 +10,8 @@ const mockEvent: Event = {
   location: 'ITBA Campus',
   capacity: 50,
   registeredCount: 20,
-  registrationType: 'form',
-  registrationUrl: 'https://example.com/register',
+  registrationType: 'forms',
+  registrationLink: 'https://example.com/register',
 };
 
 describe('generateGoogleCalendarUrl', () => {
@@ -37,8 +37,8 @@ describe('generateGoogleCalendarUrl', () => {
   it('handles events without description or location', () => {
     const minimalEvent: Event = {
       ...mockEvent,
-      description: undefined,
-      location: undefined,
+      description: '',
+      location: '',
     };
 
     const url = generateGoogleCalendarUrl(minimalEvent);
@@ -85,8 +85,8 @@ describe('generateIcsContent', () => {
   it('handles events without optional fields', () => {
     const minimalEvent: Event = {
       ...mockEvent,
-      description: undefined,
-      location: undefined,
+      description: '',
+      location: '',
     };
 
     const ics = generateIcsContent(minimalEvent);

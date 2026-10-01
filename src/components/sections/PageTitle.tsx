@@ -1,51 +1,49 @@
-import Link from 'next/link';
+import { ChevronRight } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
+import { Link } from '@/i18n/navigation';
+import { FlightPath } from '@/components/brand/flight-path';
 
-type Breadcrumb = {
-  label: string;
-  href?: string;
-};
+type Breadcrumb = { label: string; href?: string };
 
 type PageTitleProps = {
   title: string;
   description?: string;
+  /** Trail after "Home"; the last item is the current page. */
   breadcrumbs?: Breadcrumb[];
 };
 
-export function PageTitle({ title, description, breadcrumbs }: PageTitleProps) {
+export async function PageTitle({ title, description, breadcrumbs }: PageTitleProps) {
+  const t = await getTranslations('nav');
+  const trail: Breadcrumb[] = [{ label: t('home'), href: '/' }, ...(breadcrumbs ?? [{ label: title }])];
+
   return (
-    <div className="bg-surface border-b">
-      {breadcrumbs && breadcrumbs.length > 0 ? (
-        <nav className="border-b bg-background/60">
-          <div className="container mx-auto px-4 py-3">
-            <ol className="flex flex-wrap items-center gap-2 text-sm text-text-muted">
-              {breadcrumbs.map((crumb, index) => (
-                <li key={`${crumb.label}-${index}`} className="flex items-center gap-2">
-                  {crumb.href ? (
-                    <Link
-                      href={crumb.href}
-                      className="hover:text-primary transition-colors"
-                    >
+    <div className="relative isolate overflow-hidden bg-gradient-to-b from-sky to-background">
+      <FlightPath className="absolute -right-16 top-4 -z-10 w-[26rem] opacity-60 md:right-4" />
+      <div className="container-page pb-10 pt-8 md:pb-14 md:pt-10">
+        <nav aria-label={t('breadcrumb')}>
+          <ol className="flex flex-wrap items-center gap-1 text-sm text-text-muted">
+            {trail.map((crumb, index) => {
+              const isLast = index === trail.length - 1;
+              return (
+                <li key={`${crumb.label}-${index}`} className="flex items-center gap-1">
+                  {crumb.href && !isLast ? (
+                    <Link href={crumb.href} className="rounded hover:text-primary hover:underline">
                       {crumb.label}
                     </Link>
                   ) : (
-                    <span className="text-heading">{crumb.label}</span>
+                    <span aria-current="page" className="line-clamp-1 font-medium text-heading">
+                      {crumb.label}
+                    </span>
                   )}
-                  {index < breadcrumbs.length - 1 ? <span>/</span> : null}
+                  {!isLast && <ChevronRight className="size-3.5 opacity-60" aria-hidden />}
                 </li>
-              ))}
-            </ol>
-          </div>
+              );
+            })}
+          </ol>
         </nav>
-      ) : null}
-      <div className="container mx-auto px-4 py-12 text-center">
-        <h1 className="text-3xl md:text-4xl font-heading font-bold text-heading">
-          {title}
-        </h1>
-        {description ? (
-          <p className="mt-4 text-text-muted max-w-3xl mx-auto">{description}</p>
-        ) : null}
+        <h1 className="mt-6 max-w-3xl text-4xl font-extrabold tracking-tight md:text-5xl">{title}</h1>
+        {description && <p className="mt-4 max-w-2xl text-lg text-text-muted">{description}</p>}
       </div>
     </div>
   );
 }
-

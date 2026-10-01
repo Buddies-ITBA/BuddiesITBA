@@ -1,9 +1,10 @@
-import { CheckCircle } from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link';
+import { ArrowRight, Check } from 'lucide-react';
+import { Link } from '@/i18n/navigation';
+import { SectionHeading } from '@/components/ui/section-heading';
 
 type HomeAboutSectionProps = {
-  locale: string;
+  eyebrow: string;
   title: string;
   subtitle: string;
   highlights: string[];
@@ -12,7 +13,7 @@ type HomeAboutSectionProps = {
 };
 
 export function HomeAboutSection({
-  locale,
+  eyebrow,
   title,
   subtitle,
   highlights,
@@ -20,43 +21,41 @@ export function HomeAboutSection({
   imageAlt,
 }: HomeAboutSectionProps) {
   return (
-    <section className="bg-background">
-      <div className="container mx-auto px-4 py-16">
-        <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
-          <div className="order-2 lg:order-1">
-            <h3 className="text-3xl md:text-4xl font-heading font-bold text-heading">
-              {title}
-            </h3>
-            <p className="mt-4 italic text-text-muted">{subtitle}</p>
-            <ul className="mt-6 space-y-3">
-              {highlights.map((item) => (
-                <li key={item} className="flex items-start gap-3">
-                  <CheckCircle className="mt-0.5 h-5 w-5 text-accent" />
-                  <span className="text-text">{item}</span>
-                </li>
-              ))}
-            </ul>
-            <Link
-              href={`/${locale}/faq`}
-              className="mt-6 inline-flex items-center gap-2 text-primary font-medium hover:text-primary-dark"
-            >
-              {ctaLabel}
-              <span aria-hidden>→</span>
-            </Link>
-          </div>
-          <div className="order-1 lg:order-2">
-            <Image
-              src="/assets/img/mate_about.JPG"
-              alt={imageAlt}
-              width={1200}
-              height={900}
-              sizes="(min-width: 1024px) 50vw, 100vw"
-              className="w-full rounded-2xl object-cover shadow-md"
-            />
-          </div>
+    <section className="section">
+      <div className="container-page grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+        <div>
+          <SectionHeading eyebrow={eyebrow} title={title} subtitle={subtitle} align="left" />
+          <ul className="mt-8 space-y-4">
+            {highlights.map((item) => (
+              <li key={item} className="flex items-start gap-3">
+                <span className="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-sky text-primary">
+                  <Check className="size-3.5" strokeWidth={3} aria-hidden />
+                </span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+          <Link
+            href="/about"
+            className="group mt-8 inline-flex items-center gap-2 font-nav font-semibold text-primary hover:text-primary-dark"
+          >
+            {ctaLabel}
+            <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" aria-hidden />
+          </Link>
+        </div>
+
+        <div className="relative">
+          <div aria-hidden className="absolute -inset-3 -z-10 rotate-2 rounded-3xl bg-sky" />
+          <Image
+            src="/assets/img/mate_about.JPG"
+            alt={imageAlt}
+            width={1200}
+            height={900}
+            sizes="(min-width: 1024px) 50vw, 100vw"
+            className="aspect-[4/3] w-full rounded-3xl object-cover shadow-xl"
+          />
         </div>
       </div>
     </section>
   );
 }
-

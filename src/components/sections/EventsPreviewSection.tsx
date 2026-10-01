@@ -1,17 +1,25 @@
 import Image from 'next/image';
-import { AlertTriangle } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Event } from '@/lib/cms/types';
+import { Link } from '@/i18n/navigation';
+import { Button } from '@/components/ui/button';
+import { SectionHeading } from '@/components/ui/section-heading';
+import { ExchangeOnlyBadge } from '@/components/events/badges';
 
 type EventsPreviewSectionProps = {
+  eyebrow: string;
   title: string;
   subtitle: string;
+  viewAll: string;
   events: Event[];
   exchangeOnlyLabel: string;
 };
 
 export function EventsPreviewSection({
+  eyebrow,
   title,
   subtitle,
+  viewAll,
   events,
   exchangeOnlyLabel,
 }: EventsPreviewSectionProps) {
@@ -20,50 +28,45 @@ export function EventsPreviewSection({
   }
 
   return (
-    <section className="bg-background">
-      <div className="container mx-auto px-4 py-16">
-        <div className="text-center">
-          <h2 className="text-2xl md:text-3xl font-heading font-bold text-heading">
-            {title}
-          </h2>
-          <p className="mt-2 text-text-muted">{subtitle}</p>
+    <section className="section bg-sky/60">
+      <div className="container-page">
+        <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
+          <SectionHeading eyebrow={eyebrow} title={title} subtitle={subtitle} align="left" />
+          <Button asChild variant="outline" className="shrink-0">
+            <Link href="/events">
+              {viewAll}
+              <ArrowRight />
+            </Link>
+          </Button>
         </div>
 
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {events.map((event) => (
-            <article
-              key={event.id}
-              className="overflow-hidden rounded-2xl bg-surface shadow-sm transition hover:-translate-y-1 hover:shadow-md"
-            >
-              {event.image ? (
-                <Image
-                  src={event.image}
-                  alt={event.title}
-                  width={800}
-                  height={600}
-                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                  className="h-48 w-full object-cover"
-                />
-              ) : (
-                <div className="h-48 w-full bg-gradient-to-br from-primary to-primary/70" />
-              )}
-              <div className="p-5">
-                {event.exchangeOnly && (
-                  <span className="mb-2 inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800">
-                    <AlertTriangle className="h-3 w-3" />
-                    {exchangeOnlyLabel}
-                  </span>
-                )}
-                <h3 className="text-lg font-heading font-semibold text-heading">
-                  {event.title}
-                </h3>
-                <p className="mt-2 text-sm text-text-muted">{event.description}</p>
-              </div>
-            </article>
+            <li key={event.id}>
+              <article className="group flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-border/60 transition duration-300 hover:-translate-y-1 hover:shadow-xl">
+                <div className="relative aspect-[3/2] overflow-hidden bg-gradient-to-br from-primary to-plane">
+                  {event.image && (
+                    <Image
+                      src={event.image}
+                      alt=""
+                      fill
+                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  )}
+                </div>
+                <div className="flex flex-1 flex-col p-6">
+                  {event.exchangeOnly && (
+                    <ExchangeOnlyBadge label={exchangeOnlyLabel} className="mb-3 self-start" />
+                  )}
+                  <h3 className="text-xl font-bold">{event.title}</h3>
+                  <p className="mt-2 line-clamp-3 text-text-muted">{event.description}</p>
+                </div>
+              </article>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   );
 }
-

@@ -1,41 +1,44 @@
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { PageTitle } from '@/components/sections/PageTitle';
 import { EventsTimeline } from '@/components/sections/EventsTimeline';
 import { cms } from '@/lib/cms';
-import { Locale } from '@/i18n/config';
+import { pageMetadata } from '@/lib/metadata';
+import type { Locale } from '@/i18n/config';
 
-type Props = {
-  params: Promise<{ locale: string }>;
-};
+export const generateMetadata = ({ params }: PageProps<'/[locale]/events'>) =>
+  pageMetadata(params, 'events.page');
 
-export default async function EventsPage({ params }: Props) {
-  const { locale } = await params;
-  const tPage = await getTranslations('events.page');
-  const tTimeline = await getTranslations('events.timeline');
-  const tNav = await getTranslations('nav');
+export default async function EventsPage({ params }: PageProps<'/[locale]/events'>) {
+  const locale = (await params).locale as Locale;
+  setRequestLocale(locale);
 
-  // Fetch upcoming events from Notion CMS
-  const events = await cms.getUpcomingEvents(locale as Locale);
+  const [tPage, t, tCalendar, tCta, tNav, events] = await Promise.all([
+    getTranslations('events.page'),
+    getTranslations('events.timeline'),
+    getTranslations('events.calendar'),
+    getTranslations('home.cta'),
+    getTranslations('nav'),
+    cms.getUpcomingEvents(locale),
+  ]);
 
   return (
     <>
-      <PageTitle
-        title={tPage('title')}
-        description={tPage('description')}
-        breadcrumbs={[
-          { label: tNav('home'), href: `/${locale}` },
-          { label: tPage('breadcrumb') },
-        ]}
-      />
+      <PageTitle title={tPage('title')} description={tPage('description')} />
       <EventsTimeline
         events={events}
         locale={locale}
         translations={{
-          empty: tTimeline('empty'),
-          capacity: tTimeline('capacity'),
-          whatsappNote: tTimeline('whatsappNote'),
-          register: tTimeline('register'),
-          exchangeOnly: tTimeline('exchangeOnly'),
+          empty: t('empty'),
+          emptyHint: t('emptyHint'),
+          capacity: t('capacity'),
+          whatsappNote: t('whatsappNote'),
+          register: t('register'),
+          exchangeOnly: t('exchangeOnly'),
+          details: t('details'),
+          loadError: t('loadError'),
+          instagram: tCta('instagram'),
+          close: tNav('close'),
+          calendar: { add: tCalendar('add'), google: tCalendar('google'), ics: tCalendar('ics') },
         }}
       />
     </>
