@@ -50,3 +50,33 @@ export function groupByMonth<T>(items: T[], getDate: (item: T) => Date, locale: 
   }
   return [...groups.entries()].map(([month, entries]) => ({ month, entries }));
 }
+
+/*
+ * Admin forms use <input type="datetime-local">, which has no time zone.
+ * Values are always Buenos Aires time (UTC-3; Argentina has no DST).
+ */
+const BA_OFFSET = '-03:00';
+
+export function toDateTimeInput(date: Date | null | undefined): string {
+  if (!date) return '';
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat('en-CA', {
+      timeZone: TIME_ZONE,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hourCycle: 'h23',
+    })
+      .formatToParts(date)
+      .map((p) => [p.type, p.value])
+  );
+  return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`;
+}
+
+export function fromDateTimeInput(value: string | null | undefined): Date | null {
+  if (!value || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(value)) return null;
+  const date = new Date(`${value}:00${BA_OFFSET}`);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
