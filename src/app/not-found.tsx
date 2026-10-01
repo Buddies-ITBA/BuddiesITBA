@@ -1,15 +1,11 @@
-'use client';
+import { NotFoundView } from '@/components/feedback/NotFoundView';
+import { SiteChrome } from '@/components/sections/SiteChrome';
 
-import NextError from 'next/error';
-
-// Only reached for requests outside the [locale] segment (the proxy normally
-// redirects those). Must render its own <html> since the root layout doesn't.
+// Unmatched URLs render outside the (site) group, so add the site frame here.
 export default function GlobalNotFound() {
   return (
-    <html lang="es">
-      <body>
-        <NextError statusCode={404} />
-      </body>
-    </html>
+    <SiteChrome>
+      <NotFoundView />
+    </SiteChrome>
   );
 }

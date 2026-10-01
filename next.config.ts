@@ -1,24 +1,18 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
 
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
 const nextConfig: NextConfig = {
+  // Self-contained server bundle for Docker / ITBA infrastructure (ignored by Vercel)
+  output: 'standalone',
+  // Embedded Postgres (WASM) must not be bundled
+  serverExternalPackages: ['@electric-sql/pglite'],
+  // Bundle SQL migrations so the standalone server can migrate the embedded database
+  outputFileTracingIncludes: { '/**': ['./drizzle/**/*'] },
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'prod-files-secure.s3.us-west-2.amazonaws.com',
-      },
-      {
-        protocol: 'https',
-        hostname: '*.notion.so',
-      },
-      {
-        protocol: 'https',
-        hostname: 'www.notion.so',
-      },
-    ],
+    // Uploaded images are served from the database at /media/<id>
+    localPatterns: [{ pathname: '/media/**' }, { pathname: '/assets/**' }],
   },
 };
 

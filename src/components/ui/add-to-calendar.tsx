@@ -8,7 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Event } from '@/lib/cms/types';
+import type { CalendarEvent as Event } from '@/lib/calendar';
 import { generateGoogleCalendarUrl, downloadIcs } from '@/lib/calendar';
 
 export type AddToCalendarLabels = { add: string; google: string; ics: string };

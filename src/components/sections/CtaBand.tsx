@@ -1,5 +1,6 @@
-import { Instagram, Mail } from 'lucide-react';
-import { Link } from '@/i18n/navigation';
+import { Mail } from 'lucide-react';
+import { InstagramIcon as Instagram } from '@/components/brand/social-icons';
+import Link from 'next/link';
 import { site } from '@/config/site';
 import { Button } from '@/components/ui/button';
 import { FlightPath } from '@/components/brand/flight-path';

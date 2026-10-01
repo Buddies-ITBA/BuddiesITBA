@@ -1,6 +1,6 @@
 import { ChevronRight } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
-import { Link } from '@/i18n/navigation';
+import Link from 'next/link';
 import { FlightPath } from '@/components/brand/flight-path';
 
 type Breadcrumb = { label: string; href?: string };

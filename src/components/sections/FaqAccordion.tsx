@@ -3,7 +3,7 @@
 import { useDeferredValue, useMemo, useState } from 'react';
 import { Search, SearchX } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { FAQ } from '@/lib/cms/types';
+import type { PublicFaq } from '@/lib/data/public';
 import { matchesWords, normalize, queryWords } from '@/lib/search';
 import { cn } from '@/lib/utils';
 import { EmptyState } from '@/components/feedback/EmptyState';
@@ -19,7 +19,7 @@ type Translations = {
 };
 
 /** `answerNode` is the answer markdown pre-rendered on the server (keeps the parser out of the client bundle). */
-export type FaqItem = FAQ & { answerNode: React.ReactNode };
+export type FaqItem = PublicFaq & { answerNode: React.ReactNode };
 
 type Props = {
   faqs: FaqItem[];

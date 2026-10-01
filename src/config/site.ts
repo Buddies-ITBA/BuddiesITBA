@@ -20,8 +20,9 @@ export const site = {
 
 export const navItems = [
   { key: 'home', href: '/' },
-  { key: 'about', href: '/about' },
+  { key: 'buddies', href: '/buddies' },
   { key: 'events', href: '/events' },
+  { key: 'about', href: '/about' },
   { key: 'blog', href: '/blog' },
   { key: 'faq', href: '/faq' },
   { key: 'contact', href: '/contact' },

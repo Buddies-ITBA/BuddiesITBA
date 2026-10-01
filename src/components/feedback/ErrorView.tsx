@@ -3,16 +3,16 @@
 import { useEffect } from 'react';
 import { AlertTriangle, Home, RefreshCw } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { Link } from '@/i18n/navigation';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { StatusMessage } from './StatusMessage';
 
 type ErrorViewProps = {
   error: Error & { digest?: string };
-  reset: () => void;
+  retry: () => void;
 };
 
-export function ErrorView({ error, reset }: ErrorViewProps) {
+export function ErrorView({ error, retry }: ErrorViewProps) {
   const t = useTranslations('error');
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export function ErrorView({ error, reset }: ErrorViewProps) {
       description={t('description')}
       footnote={error.digest ? t('errorId', { id: error.digest }) : undefined}
     >
-      <Button onClick={reset}>
+      <Button onClick={retry}>
         <RefreshCw />
         {t('retry')}
       </Button>

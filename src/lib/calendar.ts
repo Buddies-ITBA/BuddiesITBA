@@ -1,28 +1,29 @@
-import { Event } from './cms/types';
+/** The fields a calendar entry needs (PublicEvent satisfies this). */
+export type CalendarEvent = { id: string; title: string; summary: string; startsAt: Date; location: string };
 
 function formatDate(date: Date): string {
     return date.toISOString().replace(/-|:|\.\d+/g, '');
 }
 
-export function generateGoogleCalendarUrl(event: Event): string {
-    const startDate = formatDate(event.date);
+export function generateGoogleCalendarUrl(event: CalendarEvent): string {
+    const startDate = formatDate(event.startsAt);
     // Assuming 2 hours duration by default if no end date provided
-    const endDate = formatDate(new Date(event.date.getTime() + 2 * 60 * 60 * 1000));
+    const endDate = formatDate(new Date(event.startsAt.getTime() + 2 * 60 * 60 * 1000));
 
     const params = new URLSearchParams({
         action: 'TEMPLATE',
         text: event.title,
         dates: `${startDate}/${endDate}`,
-        details: event.description || '',
+        details: event.summary || '',
         location: event.location || '',
     });
 
     return `https://calendar.google.com/calendar/render?${params.toString()}`;
 }
 
-export function generateIcsContent(event: Event): string {
-    const startDate = formatDate(event.date);
-    const endDate = formatDate(new Date(event.date.getTime() + 2 * 60 * 60 * 1000));
+export function generateIcsContent(event: CalendarEvent): string {
+    const startDate = formatDate(event.startsAt);
+    const endDate = formatDate(new Date(event.startsAt.getTime() + 2 * 60 * 60 * 1000));
 
     return `BEGIN:VCALENDAR
 VERSION:2.0
@@ -33,13 +34,13 @@ DTSTAMP:${startDate}
 DTSTART:${startDate}
 DTEND:${endDate}
 SUMMARY:${event.title}
-DESCRIPTION:${event.description || ''}
+DESCRIPTION:${event.summary || ''}
 LOCATION:${event.location || ''}
 END:VEVENT
 END:VCALENDAR`.replace(/\n/g, '\r\n');
 }
 
-export function downloadIcs(event: Event) {
+export function downloadIcs(event: CalendarEvent) {
     const content = generateIcsContent(event);
     const blob = new Blob([content], { type: 'text/calendar;charset=utf-8' });
     const url = window.URL.createObjectURL(blob);

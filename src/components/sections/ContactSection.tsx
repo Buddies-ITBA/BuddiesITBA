@@ -1,4 +1,5 @@
-import { ArrowUpRight, Instagram, Mail, MapPin } from 'lucide-react';
+import { ArrowUpRight, Mail, MapPin } from 'lucide-react';
+import { InstagramIcon as Instagram } from '@/components/brand/social-icons';
 import { mailto, site } from '@/config/site';
 import { Button } from '@/components/ui/button';
 

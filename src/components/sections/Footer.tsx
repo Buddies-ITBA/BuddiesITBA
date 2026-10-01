@@ -1,6 +1,7 @@
 import { getTranslations } from 'next-intl/server';
-import { Instagram, Linkedin, Mail, MapPin } from 'lucide-react';
-import { Link } from '@/i18n/navigation';
+import { Mail, MapPin } from 'lucide-react';
+import { InstagramIcon as Instagram, LinkedinIcon as Linkedin } from '@/components/brand/social-icons';
+import Link from 'next/link';
 import { mailto, navItems, site } from '@/config/site';
 import { FlightPath } from '@/components/brand/flight-path';
 import { Eyebrow } from '@/components/ui/section-heading';

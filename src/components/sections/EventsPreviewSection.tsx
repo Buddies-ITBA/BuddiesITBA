@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
-import { Event } from '@/lib/cms/types';
-import { Link } from '@/i18n/navigation';
+import type { PublicEvent } from '@/lib/data/public';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { SectionHeading } from '@/components/ui/section-heading';
 import { ExchangeOnlyBadge } from '@/components/events/badges';
@@ -11,7 +11,7 @@ type EventsPreviewSectionProps = {
   title: string;
   subtitle: string;
   viewAll: string;
-  events: Event[];
+  events: PublicEvent[];
   exchangeOnlyLabel: string;
 };
 
@@ -43,11 +43,11 @@ export function EventsPreviewSection({
         <ul className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {events.map((event) => (
             <li key={event.id}>
-              <article className="group flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-border/60 transition duration-300 hover:-translate-y-1 hover:shadow-xl">
+              <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-border/60 transition duration-300 hover:-translate-y-1 hover:shadow-xl">
                 <div className="relative aspect-[3/2] overflow-hidden bg-gradient-to-br from-primary to-plane">
-                  {event.image && (
+                  {event.imageUrl && (
                     <Image
-                      src={event.image}
+                      src={event.imageUrl}
                       alt=""
                       fill
                       sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
@@ -59,8 +59,12 @@ export function EventsPreviewSection({
                   {event.exchangeOnly && (
                     <ExchangeOnlyBadge label={exchangeOnlyLabel} className="mb-3 self-start" />
                   )}
-                  <h3 className="text-xl font-bold">{event.title}</h3>
-                  <p className="mt-2 line-clamp-3 text-text-muted">{event.description}</p>
+                  <h3 className="text-xl font-bold">
+                    <Link href={`/events/${event.slug}`} className="after:absolute after:inset-0 focus:outline-none">
+                      {event.title}
+                    </Link>
+                  </h3>
+                  <p className="mt-2 line-clamp-3 text-text-muted">{event.summary}</p>
                 </div>
               </article>
             </li>

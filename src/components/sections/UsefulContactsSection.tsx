@@ -1,4 +1,5 @@
-import { Instagram, Mail } from 'lucide-react';
+import { Mail } from 'lucide-react';
+import { InstagramIcon as Instagram } from '@/components/brand/social-icons';
 import { SectionHeading } from '@/components/ui/section-heading';
 import { instagramUrl, mailto } from '@/config/site';
 

@@ -8,13 +8,14 @@
     "about": "Nosotros",
     "events": "Eventos",
     "blog": "Blog",
-    "faq": "Preguntas frecuentes",
+    "faq": "FAQ",
     "contact": "Contacto",
     "menu": "Abrir menú",
     "skipToContent": "Saltar al contenido",
     "language": "Idioma",
     "breadcrumb": "Ruta de navegación",
-    "close": "Cerrar"
+    "close": "Cerrar",
+    "buddies": "Programa Buddies"
   },
   "home": {
     "hero": {
@@ -122,16 +123,25 @@
       "empty": "No hay eventos próximos",
       "emptyHint": "Seguinos en Instagram para enterarte apenas anunciemos el próximo.",
       "capacity": "Cupos",
-      "whatsappNote": "Inscripción por el grupo de WhatsApp de Buddies",
       "register": "Inscribirse",
       "exchangeOnly": "Exclusivo alumnos de intercambio",
-      "details": "Ver detalles",
-      "loadError": "No pudimos cargar los detalles. Esto es lo que sabemos:"
+      "details": "Ver detalles"
     },
     "calendar": {
       "add": "Agregar al calendario",
       "google": "Google Calendar",
       "ics": "Descargar .ics"
+    },
+    "detail": {
+      "back": "Volver a eventos",
+      "registration": "Inscripción",
+      "spotsLeft": "{count, plural, one {Queda # lugar} other {Quedan # lugares}}",
+      "full": "Cupo completo: si te anotás quedás en lista de espera.",
+      "closed": "La inscripción para este evento está cerrada.",
+      "deadline": "Inscripción abierta hasta el {date}.",
+      "whatsapp": "La inscripción es por el grupo de WhatsApp de Buddies.",
+      "external": "Inscribirse",
+      "noRegistration": "No hace falta inscribirse: ¡te esperamos!"
     }
   },
   "contact": {
@@ -222,5 +232,83 @@
     "explore": "Explorá",
     "contact": "Contacto",
     "rights": "Todos los derechos reservados"
+  },
+  "forms": {
+    "name": "Nombre y apellido",
+    "email": "Email",
+    "submit": "Enviar",
+    "submitting": "Enviando…",
+    "required": "Obligatorio",
+    "optional": "opcional",
+    "invalid": "Revisá este campo",
+    "errorSummary": "Revisá los campos marcados.",
+    "duplicate": "Ya hay una inscripción con ese email.",
+    "success": "¡Listo! Ya estás inscripto/a.",
+    "successWaitlist": "El cupo está completo: quedaste en lista de espera. Te avisamos si se libera un lugar.",
+    "genericError": "No pudimos guardar tu respuesta. Probá de nuevo.",
+    "selectPlaceholder": "Elegí una opción",
+    "consent": "Acepto que Buddies ITBA use estos datos para organizar sus actividades."
+  },
+  "buddies": {
+    "page": {
+      "title": "Programa Buddies",
+      "description": "Te emparejamos con un estudiante del ITBA según tus gustos y personalidad, para que tu intercambio arranque con alguien que te entienda."
+    },
+    "closed": {
+      "title": "Las inscripciones están cerradas",
+      "description": "Abrimos la inscripción unas semanas antes de cada cuatrimestre. Seguinos en Instagram para enterarte."
+    },
+    "choose": {
+      "title": "¿Cómo querés participar?",
+      "subtitle": "Elegí tu perfil para completar la inscripción."
+    },
+    "roles": {
+      "local": {
+        "title": "Soy estudiante del ITBA",
+        "description": "Quiero ser buddy y acompañar a estudiantes de intercambio.",
+        "cta": "Quiero ser buddy"
+      },
+      "exchange": {
+        "title": "Vengo de intercambio",
+        "description": "Quiero un buddy que me ayude a instalarme en Buenos Aires.",
+        "cta": "Quiero un buddy"
+      }
+    },
+    "apply": {
+      "titleLocal": "Inscripción para buddies del ITBA",
+      "titleExchange": "Inscripción para estudiantes de intercambio",
+      "intro": "Tus respuestas sobre gustos y personalidad nos ayudan a encontrar el mejor match. Lleva unos 3 minutos.",
+      "sectionAbout": "Sobre vos",
+      "sectionMatching": "Gustos y personalidad",
+      "phone": "WhatsApp (con código de país)",
+      "institutionLocal": "Carrera en el ITBA",
+      "institutionExchange": "Universidad de origen",
+      "country": "País",
+      "gender": "Género",
+      "genders": {
+        "female": "Mujer",
+        "male": "Hombre",
+        "nonbinary": "No binario",
+        "na": "Prefiero no decir"
+      },
+      "genderPreference": "Preferencia sobre el género de tu buddy",
+      "genderPreferences": {
+        "any": "Me da igual",
+        "same": "Prefiero mi mismo género"
+      },
+      "languages": "Idiomas que hablás",
+      "languageNames": {
+        "es": "Español",
+        "en": "Inglés",
+        "pt": "Portugués",
+        "fr": "Francés",
+        "de": "Alemán",
+        "it": "Italiano"
+      },
+      "capacity": "¿A cuántos estudiantes de intercambio podés acompañar?",
+      "back": "Volver",
+      "success": "¡Gracias! Recibimos tu inscripción. Te escribimos cuando tengamos tu match.",
+      "duplicate": "Ya te inscribiste con ese email en este programa."
+    }
   }
 }

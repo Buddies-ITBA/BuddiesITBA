@@ -14,7 +14,8 @@
     "skipToContent": "Skip to content",
     "language": "Language",
     "breadcrumb": "Breadcrumb",
-    "close": "Close"
+    "close": "Close",
+    "buddies": "Buddy program"
   },
   "home": {
     "hero": {
@@ -122,16 +123,25 @@
       "empty": "No upcoming events",
       "emptyHint": "Follow us on Instagram to hear as soon as we announce the next one.",
       "capacity": "Capacity",
-      "whatsappNote": "Registration via the Buddies WhatsApp group",
       "register": "Register",
       "exchangeOnly": "Exchange students only",
-      "details": "See details",
-      "loadError": "We couldn't load the full details. Here's what we know:"
+      "details": "See details"
     },
     "calendar": {
       "add": "Add to calendar",
       "google": "Google Calendar",
       "ics": "Download .ics"
+    },
+    "detail": {
+      "back": "Back to events",
+      "registration": "Registration",
+      "spotsLeft": "{count, plural, one {# spot left} other {# spots left}}",
+      "full": "This event is full: if you sign up you'll be on the waitlist.",
+      "closed": "Registration for this event is closed.",
+      "deadline": "Registration open until {date}.",
+      "whatsapp": "Registration is through the Buddies WhatsApp group.",
+      "external": "Register",
+      "noRegistration": "No registration needed — see you there!"
     }
   },
   "contact": {
@@ -222,5 +232,83 @@
     "explore": "Explore",
     "contact": "Contact",
     "rights": "All rights reserved"
+  },
+  "forms": {
+    "name": "Full name",
+    "email": "Email",
+    "submit": "Submit",
+    "submitting": "Sending…",
+    "required": "Required",
+    "optional": "optional",
+    "invalid": "Please check this field",
+    "errorSummary": "Please check the highlighted fields.",
+    "duplicate": "There's already a registration with this email.",
+    "success": "Done! You're registered.",
+    "successWaitlist": "The event is full: you're on the waitlist. We'll let you know if a spot opens up.",
+    "genericError": "We couldn't save your answer. Please try again.",
+    "selectPlaceholder": "Choose an option",
+    "consent": "I agree that Buddies ITBA may use this data to organize its activities."
+  },
+  "buddies": {
+    "page": {
+      "title": "Buddy program",
+      "description": "We pair you with an ITBA student based on your interests and personality, so your exchange starts with someone who gets you."
+    },
+    "closed": {
+      "title": "Applications are closed",
+      "description": "We open applications a few weeks before each semester. Follow us on Instagram to hear about it."
+    },
+    "choose": {
+      "title": "How do you want to take part?",
+      "subtitle": "Choose your profile to fill in the application."
+    },
+    "roles": {
+      "local": {
+        "title": "I'm an ITBA student",
+        "description": "I want to be a buddy and welcome exchange students.",
+        "cta": "Become a buddy"
+      },
+      "exchange": {
+        "title": "I'm an exchange student",
+        "description": "I want a buddy to help me settle in Buenos Aires.",
+        "cta": "Get a buddy"
+      }
+    },
+    "apply": {
+      "titleLocal": "Application for ITBA buddies",
+      "titleExchange": "Application for exchange students",
+      "intro": "Your answers about interests and personality help us find the best match. It takes about 3 minutes.",
+      "sectionAbout": "About you",
+      "sectionMatching": "Interests & personality",
+      "phone": "WhatsApp (with country code)",
+      "institutionLocal": "Degree at ITBA",
+      "institutionExchange": "Home university",
+      "country": "Country",
+      "gender": "Gender",
+      "genders": {
+        "female": "Woman",
+        "male": "Man",
+        "nonbinary": "Non-binary",
+        "na": "Prefer not to say"
+      },
+      "genderPreference": "Preference about your buddy's gender",
+      "genderPreferences": {
+        "any": "No preference",
+        "same": "I'd prefer my same gender"
+      },
+      "languages": "Languages you speak",
+      "languageNames": {
+        "es": "Spanish",
+        "en": "English",
+        "pt": "Portuguese",
+        "fr": "French",
+        "de": "German",
+        "it": "Italian"
+      },
+      "capacity": "How many exchange students can you take?",
+      "back": "Back",
+      "success": "Thanks! We got your application. We'll email you once we have your match.",
+      "duplicate": "You've already applied to this program with this email."
+    }
   }
 }

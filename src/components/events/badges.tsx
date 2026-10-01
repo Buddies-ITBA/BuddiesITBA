@@ -1,5 +1,5 @@
 import { Clock, MapPin, Sparkles, Users } from 'lucide-react';
-import type { Event } from '@/lib/cms/types';
+import type { PublicEvent } from '@/lib/data/public';
 import { cn } from '@/lib/utils';
 import { eventDateParts, formatEventDate } from '@/lib/dates';
 
@@ -43,14 +43,14 @@ export function EventMeta({
   capacityLabel,
   className,
 }: {
-  event: Event;
+  event: Pick<PublicEvent, 'startsAt' | 'location' | 'capacity'>;
   locale: string;
   /** Shown (with the capacity) only when provided and the event has one. */
   capacityLabel?: string;
   className?: string;
 }) {
   const items = [
-    { Icon: Clock, text: `${formatEventDate(event.date, locale, 'weekdayLong')} · ${formatEventDate(event.date, locale, 'time')}` },
+    { Icon: Clock, text: `${formatEventDate(event.startsAt, locale, 'weekdayLong')} · ${formatEventDate(event.startsAt, locale, 'time')}` },
     event.location && { Icon: MapPin, text: event.location },
     capacityLabel && event.capacity && { Icon: Users, text: `${capacityLabel}: ${event.capacity}` },
   ].filter(Boolean) as Array<{ Icon: typeof Clock; text: string }>;

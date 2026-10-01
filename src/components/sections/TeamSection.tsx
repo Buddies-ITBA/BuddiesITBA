@@ -1,13 +1,13 @@
 import Image from 'next/image';
-import { Linkedin } from 'lucide-react';
-import { TeamMember } from '@/lib/cms/types';
+import { LinkedinIcon as Linkedin } from '@/components/brand/social-icons';
+import type { PublicTeamMember } from '@/lib/data/public';
 import { SectionHeading } from '@/components/ui/section-heading';
 
 type Props = {
   eyebrow: string;
   title: string;
   subtitle?: string;
-  members: Array<TeamMember & { linkedinLabel: string }>;
+  members: Array<PublicTeamMember & { linkedinLabel: string }>;
 };
 
 export function TeamSection({ eyebrow, title, subtitle, members }: Props) {
@@ -24,8 +24,8 @@ export function TeamSection({ eyebrow, title, subtitle, members }: Props) {
           {members.map((member) => (
             <li key={member.id} className="text-center">
               <div className="relative mx-auto aspect-square w-full max-w-44 overflow-hidden rounded-full bg-sky ring-4 ring-white shadow-md">
-                {member.image ? (
-                  <Image src={member.image} alt="" fill sizes="176px" className="object-cover" />
+                {member.imageUrl ? (
+                  <Image src={member.imageUrl} alt="" fill sizes="176px" className="object-cover" />
                 ) : (
                   <span aria-hidden className="grid h-full place-items-center font-heading text-5xl font-bold text-primary">
                     {member.name.charAt(0)}
@@ -36,9 +36,9 @@ export function TeamSection({ eyebrow, title, subtitle, members }: Props) {
               <p className="font-nav text-sm font-semibold text-primary">{member.role}</p>
               {member.career && <p className="text-sm text-text-muted">{member.career}</p>}
               {member.bio && <p className="mx-auto mt-2 max-w-xs text-sm text-text-muted">{member.bio}</p>}
-              {member.linkedin && (
+              {member.linkedinUrl && (
                 <a
-                  href={member.linkedin}
+                  href={member.linkedinUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={member.linkedinLabel}

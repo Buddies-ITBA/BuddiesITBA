@@ -1,17 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import { generateGoogleCalendarUrl, generateIcsContent } from './calendar';
-import { Event } from './cms/types';
+import type { CalendarEvent } from './calendar';
 
-const mockEvent: Event = {
+const mockEvent: CalendarEvent = {
   id: 'evt-123',
   title: 'Asado de bienvenida',
-  description: 'Un asado para conocernos',
-  date: new Date('2026-03-15T18:00:00Z'),
+  summary: 'Un asado para conocernos',
+  startsAt: new Date('2026-03-15T18:00:00Z'),
   location: 'ITBA Campus',
-  capacity: 50,
-  registeredCount: 20,
-  registrationType: 'forms',
-  registrationLink: 'https://example.com/register',
 };
 
 describe('generateGoogleCalendarUrl', () => {
@@ -35,9 +31,9 @@ describe('generateGoogleCalendarUrl', () => {
   });
 
   it('handles events without description or location', () => {
-    const minimalEvent: Event = {
+    const minimalEvent: CalendarEvent = {
       ...mockEvent,
-      description: '',
+      summary: '',
       location: '',
     };
 
@@ -83,9 +79,9 @@ describe('generateIcsContent', () => {
   });
 
   it('handles events without optional fields', () => {
-    const minimalEvent: Event = {
+    const minimalEvent: CalendarEvent = {
       ...mockEvent,
-      description: '',
+      summary: '',
       location: '',
     };
 

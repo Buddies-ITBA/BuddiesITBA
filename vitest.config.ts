@@ -5,13 +5,14 @@ export default defineConfig({
   test: {
     environment: 'node',
     include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
-    coverage: {
-      reporter: ['text', 'json', 'html'],
-    },
+    env: { PGLITE_DIR: 'memory' },
+    testTimeout: 20_000,
   },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      // `server-only` throws outside the React Server bundle; tests run in plain Node
+      'server-only': path.resolve(__dirname, './src/test/empty.ts'),
     },
   },
 });

@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
-import { Link } from '@/i18n/navigation';
+import Link from 'next/link';
 import { SectionHeading } from '@/components/ui/section-heading';
 import { CheckList } from '@/components/ui/check-list';
 

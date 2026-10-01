@@ -1,13 +1,13 @@
 import Image from 'next/image';
 import { NotebookPen } from 'lucide-react';
-import { BlogPost } from '@/lib/cms/types';
-import { Link } from '@/i18n/navigation';
+import type { PublicPost } from '@/lib/data/public';
+import Link from 'next/link';
 import { formatEventDate } from '@/lib/dates';
 import { EmptyState } from '@/components/feedback/EmptyState';
 import { CategoryBadge } from '@/components/ui/category-badge';
 
 type Props = {
-  posts: BlogPost[];
+  posts: PublicPost[];
   locale: string;
   translations: { empty: string; readMore: string };
 };
@@ -31,9 +31,9 @@ export function BlogListSection({ posts, locale, translations }: Props) {
             <li key={post.id}>
               <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border bg-white shadow-sm transition duration-300 focus-within:ring-2 focus-within:ring-primary hover:-translate-y-1 hover:shadow-xl">
                 <div className="relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-primary to-plane">
-                  {post.coverImage && (
+                  {post.coverUrl && (
                     <Image
-                      src={post.coverImage}
+                      src={post.coverUrl}
                       alt=""
                       fill
                       sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
