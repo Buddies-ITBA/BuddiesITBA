@@ -3,7 +3,6 @@ import { resolveLocale } from '@/i18n/server';
 import { PageTitle } from '@/components/sections/PageTitle';
 import { ContactSection } from '@/components/sections/ContactSection';
 import { pageMetadata } from '@/lib/metadata';
-import type { Locale } from '@/i18n/config';
 
 export const generateMetadata = ({ params }: PageProps<'/[locale]/contact'>) =>
   pageMetadata(params, 'contact.page');

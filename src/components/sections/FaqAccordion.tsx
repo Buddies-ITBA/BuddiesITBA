@@ -15,6 +15,7 @@ type Translations = {
   /** Contains "{query}" placeholder */
   noResults: string;
   noResultsHint: string;
+  empty: string;
 };
 
 /** `answerNode` is the answer markdown pre-rendered on the server (keeps the parser out of the client bundle). */
@@ -85,7 +86,11 @@ export function FaqAccordion({ faqs, translations: t }: Props) {
 
         <div aria-live="polite" className="mt-10 space-y-10">
           {groups.length === 0 ? (
-            <EmptyState Icon={SearchX} title={t.noResults.replace('{query}', query)} hint={t.noResultsHint} />
+            faqs.length === 0 ? (
+              <EmptyState Icon={SearchX} title={t.empty} />
+            ) : (
+              <EmptyState Icon={SearchX} title={t.noResults.replace('{query}', query)} hint={t.noResultsHint} />
+            )
           ) : (
             groups.map((group) => (
               <div key={group.name}>

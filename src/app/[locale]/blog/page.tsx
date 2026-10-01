@@ -4,7 +4,6 @@ import { PageTitle } from '@/components/sections/PageTitle';
 import { BlogListSection } from '@/components/sections/BlogListSection';
 import { cms } from '@/lib/cms';
 import { pageMetadata } from '@/lib/metadata';
-import type { Locale } from '@/i18n/config';
 
 export const generateMetadata = ({ params }: PageProps<'/[locale]/blog'>) =>
   pageMetadata(params, 'blog.page');

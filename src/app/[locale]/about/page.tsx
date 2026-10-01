@@ -6,7 +6,6 @@ import { StatsSection } from '@/components/sections/StatsSection';
 import { TeamSection } from '@/components/sections/TeamSection';
 import { cms } from '@/lib/cms';
 import { pageMetadata } from '@/lib/metadata';
-import type { Locale } from '@/i18n/config';
 
 export const generateMetadata = ({ params }: PageProps<'/[locale]/about'>) =>
   pageMetadata(params, 'about.page');

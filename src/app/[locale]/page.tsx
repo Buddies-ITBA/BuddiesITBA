@@ -7,7 +7,6 @@ import { StatsSection } from '@/components/sections/StatsSection';
 import { EventsPreviewSection } from '@/components/sections/EventsPreviewSection';
 import { CtaBand } from '@/components/sections/CtaBand';
 import { cms } from '@/lib/cms';
-import type { Locale } from '@/i18n/config';
 
 export default async function HomePage({ params }: PageProps<'/[locale]'>) {
   const locale = await resolveLocale(params);

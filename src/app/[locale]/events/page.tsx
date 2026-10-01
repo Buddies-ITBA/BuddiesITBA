@@ -4,7 +4,6 @@ import { PageTitle } from '@/components/sections/PageTitle';
 import { EventsTimeline } from '@/components/sections/EventsTimeline';
 import { cms } from '@/lib/cms';
 import { pageMetadata } from '@/lib/metadata';
-import type { Locale } from '@/i18n/config';
 
 export const generateMetadata = ({ params }: PageProps<'/[locale]/events'>) =>
   pageMetadata(params, 'events.page');

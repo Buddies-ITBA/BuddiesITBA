@@ -123,16 +123,6 @@ const posts: Array<Omit<BlogPost, 'title' | 'excerpt' | 'category'> & { title: L
   },
 ];
 
-function paragraph(id: string, text: string): NotionBlock {
-  return {
-    id,
-    type: 'paragraph',
-    paragraph: {
-      rich_text: [{ plain_text: text, href: null, annotations: { bold: false, italic: false, strikethrough: false, underline: false, code: false, color: 'default' } }],
-    },
-  };
-}
-
 export class SampleCMS implements CMSClient {
   async getFAQs(locale: Locale): Promise<FAQ[]> {
     return faqs.map((faq, index) => ({
@@ -173,11 +163,9 @@ export class SampleCMS implements CMSClient {
     return post ? this.localizePost(post, locale) : null;
   }
 
-  async getPageBlocks(pageId: string): Promise<NotionBlock[]> {
-    const source = [...events, ...posts].find((item) => item.id === pageId);
-    if (!source) return [];
-    const text = 'description' in source ? source.description.es : source.excerpt.es;
-    return [paragraph(`${pageId}-p1`, text)];
+  // No rich body content offline: pages fall back to the localized description/excerpt.
+  async getPageBlocks(): Promise<NotionBlock[]> {
+    return [];
   }
 
   private localizeEvent(event: (typeof events)[number], locale: Locale): Event {

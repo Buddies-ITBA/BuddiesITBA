@@ -77,7 +77,11 @@ export default async function BlogPostPage({ params }: Props) {
             </div>
           )}
 
-          <NotionBlockRenderer blocks={blocks} />
+          {blocks.length > 0 ? (
+            <NotionBlockRenderer blocks={blocks} />
+          ) : (
+            <p className="text-lg leading-relaxed">{post.excerpt}</p>
+          )}
 
           <div className="mt-14 border-t pt-8">
             <Link href="/blog" className="group inline-flex items-center gap-2 font-nav font-semibold text-primary">

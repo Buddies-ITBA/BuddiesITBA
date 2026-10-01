@@ -9,6 +9,6 @@ export async function getEventDetails(eventId: string): Promise<NotionBlock[]> {
         return blocks;
     } catch (error) {
         console.error('Error fetching event details:', error);
-        return [];
+        throw new Error('Could not load event details');
     }
 }

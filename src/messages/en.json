@@ -180,7 +180,8 @@
       "placeholder": "Search a question… (e.g. SUBE, visa, mate)",
       "all": "All",
       "noResults": "No questions found for “{query}”.",
-      "noResultsHint": "Try another word or email us directly."
+      "noResultsHint": "Try another word or email us directly.",
+      "empty": "There are no questions yet."
     },
     "contacts": {
       "eyebrow": "Useful contacts",

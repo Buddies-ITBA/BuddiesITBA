@@ -180,7 +180,8 @@
       "placeholder": "Buscá una pregunta… (ej. SUBE, visa, mate)",
       "all": "Todas",
       "noResults": "No encontramos preguntas para “{query}”.",
-      "noResultsHint": "Probá con otra palabra o escribinos directamente."
+      "noResultsHint": "Probá con otra palabra o escribinos directamente.",
+      "empty": "Todavía no hay preguntas cargadas."
     },
     "contacts": {
       "eyebrow": "Contactos útiles",
