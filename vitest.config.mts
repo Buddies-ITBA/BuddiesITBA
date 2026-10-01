@@ -10,9 +10,9 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      '@': path.resolve(import.meta.dirname, './src'),
       // `server-only` throws outside the React Server bundle; tests run in plain Node
-      'server-only': path.resolve(__dirname, './src/test/empty.ts'),
+      'server-only': path.resolve(import.meta.dirname, './src/test/empty.ts'),
     },
   },
 });

@@ -24,8 +24,9 @@ async function connect(): Promise<DB> {
     return drizzle({ client, schema });
   }
 
-  if (process.env.VERCEL_ENV === 'production') {
-    throw new Error('DATABASE_URL is required in production.');
+  // An embedded database in production would silently lose data on every deploy.
+  if (process.env.NODE_ENV === 'production' && !process.env.ALLOW_EMBEDDED_DB) {
+    throw new Error('DATABASE_URL is required in production (set ALLOW_EMBEDDED_DB=1 to try `next start` locally).');
   }
 
   const { PGlite } = await import('@electric-sql/pglite');

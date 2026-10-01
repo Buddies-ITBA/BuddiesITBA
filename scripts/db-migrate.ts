@@ -11,7 +11,18 @@ try {
 } catch {}
 
 const url = process.env.DATABASE_URL;
+
+// On Vercel this runs as part of `vercel-build`: only production deploys
+// migrate, so a preview of an unmerged branch never changes the real schema.
+if (process.env.VERCEL && process.env.VERCEL_ENV !== 'production') {
+  console.log('Skipping migrations on a non-production Vercel deploy.');
+  process.exit(0);
+}
 if (!url) {
+  if (process.env.VERCEL) {
+    console.error('DATABASE_URL is required in production.');
+    process.exit(1);
+  }
   console.error('DATABASE_URL is not set. (Local PGlite migrates itself on `npm run dev`.)');
   process.exit(1);
 }

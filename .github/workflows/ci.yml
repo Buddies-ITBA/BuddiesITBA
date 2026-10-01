@@ -14,19 +14,15 @@ jobs:
   check:
     name: Lint, typecheck, test & build
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+      - run: npm ci
 
       - name: Lint
         run: npm run lint
@@ -34,16 +30,19 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
+      # Unit + integration tests (an in-memory Postgres via PGlite, no service needed)
       - name: Test
         run: npm run test
 
-      # Uses Notion when secrets are available (pushes to main), otherwise the
-      # bundled sample content — so forks and PRs still get a full build check.
+      # Fails if src/db/schema.ts changed without running `npm run db:generate`
+      - name: Migrations in sync with schema
+        run: |
+          npx drizzle-kit generate --name ci-check
+          if [ -n "$(git status --porcelain drizzle)" ]; then
+            echo "::error::Schema changed but no migration was committed. Run 'npm run db:generate' and commit drizzle/."
+            git status --porcelain drizzle
+            exit 1
+          fi
+
       - name: Build
         run: npm run build
-        env:
-          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
-          NOTION_EVENTS_DB: ${{ secrets.NOTION_EVENTS_DB }}
-          NOTION_BLOG_DB: ${{ secrets.NOTION_BLOG_DB }}
-          NOTION_TEAM_DB: ${{ secrets.NOTION_TEAM_DB }}
-          NOTION_FAQ_DB: ${{ secrets.NOTION_FAQ_DB }}
