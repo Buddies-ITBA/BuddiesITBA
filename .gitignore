@@ -39,3 +39,16 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# allow the template
+!.env.example
+
+# embedded dev database (PGlite)
+/.data
+
+# Playwright
+/test-results
+/playwright-report
+
+# git bundles used as offline backups
+*.bundle

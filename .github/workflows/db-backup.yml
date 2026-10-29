@@ -1,0 +1,50 @@
+name: Database backup
+
+# Weekly encrypted pg_dump kept as a workflow artifact for 30 days.
+# The database holds personal data (emails, phones), so the dump is encrypted
+# with BACKUP_PASSPHRASE before upload. Restore:
+#   gpg -d backup.sql.gz.gpg | gunzip | psql "$DATABASE_URL"
+on:
+  schedule:
+    - cron: '17 6 * * 1' # Mondays 03:17 Buenos Aires
+  workflow_dispatch:
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Check secrets
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          BACKUP_PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+        run: |
+          if [ -z "$DATABASE_URL" ] || [ -z "$BACKUP_PASSPHRASE" ]; then
+            echo "::warning::DATABASE_URL or BACKUP_PASSPHRASE not configured; skipping backup."
+            echo "SKIP=1" >> "$GITHUB_ENV"
+          fi
+
+      - name: Install pg_dump 17
+        if: env.SKIP != '1'
+        run: |
+          sudo install -d /usr/share/postgresql-common/pgdg
+          sudo curl -fsSo /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc https://www.postgresql.org/media/keys/ACCC4CF8.asc
+          echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
+          sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client-17
+
+      - name: Dump and encrypt
+        if: env.SKIP != '1'
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          BACKUP_PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+        run: |
+          /usr/lib/postgresql/17/bin/pg_dump --no-owner --no-privileges "$DATABASE_URL" | gzip \
+            | gpg --batch --yes --symmetric --cipher-algo AES256 --passphrase "$BACKUP_PASSPHRASE" -o backup.sql.gz.gpg
+          ls -lh backup.sql.gz.gpg
+
+      - uses: actions/upload-artifact@v4
+        if: env.SKIP != '1'
+        with:
+          name: db-backup-${{ github.run_id }}
+          path: backup.sql.gz.gpg
+          retention-days: 30

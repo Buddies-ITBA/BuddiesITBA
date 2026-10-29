@@ -1,15 +1,14 @@
+import { cookies, headers } from 'next/headers';
 import { getRequestConfig } from 'next-intl/server';
-import { locales, type Locale } from './config';
+import { LOCALE_COOKIE, isLocale, negotiateLocale } from './config';
 
-export default getRequestConfig(async ({ requestLocale }) => {
-  let locale = await requestLocale;
-
-  if (!locale || !locales.includes(locale as Locale)) {
-    locale = 'es';
-  }
+// Locale comes from the visitor's choice (cookie), else their browser language.
+export default getRequestConfig(async () => {
+  const fromCookie = (await cookies()).get(LOCALE_COOKIE)?.value;
+  const locale = isLocale(fromCookie) ? fromCookie : negotiateLocale((await headers()).get('accept-language'));
 
   return {
     locale,
-    messages: (await import(`../messages/${locale}.json`)).default
+    messages: (await import(`../messages/${locale}.json`)).default,
   };
 });

@@ -1,17 +1,13 @@
 import { describe, it, expect } from 'vitest';
-import { generateGoogleCalendarUrl, generateIcsContent } from './calendar';
-import { Event } from './cms/types';
+import { escapeIcsText, generateGoogleCalendarUrl, generateIcsCalendar, generateIcsContent } from './calendar';
+import type { CalendarEvent } from './calendar';
 
-const mockEvent: Event = {
+const mockEvent: CalendarEvent = {
   id: 'evt-123',
   title: 'Asado de bienvenida',
-  description: 'Un asado para conocernos',
-  date: new Date('2026-03-15T18:00:00Z'),
+  summary: 'Un asado para conocernos',
+  startsAt: new Date('2026-03-15T18:00:00Z'),
   location: 'ITBA Campus',
-  capacity: 50,
-  registeredCount: 20,
-  registrationType: 'form',
-  registrationUrl: 'https://example.com/register',
 };
 
 describe('generateGoogleCalendarUrl', () => {
@@ -35,10 +31,10 @@ describe('generateGoogleCalendarUrl', () => {
   });
 
   it('handles events without description or location', () => {
-    const minimalEvent: Event = {
+    const minimalEvent: CalendarEvent = {
       ...mockEvent,
-      description: undefined,
-      location: undefined,
+      summary: '',
+      location: '',
     };
 
     const url = generateGoogleCalendarUrl(minimalEvent);
@@ -83,10 +79,10 @@ describe('generateIcsContent', () => {
   });
 
   it('handles events without optional fields', () => {
-    const minimalEvent: Event = {
+    const minimalEvent: CalendarEvent = {
       ...mockEvent,
-      description: undefined,
-      location: undefined,
+      summary: '',
+      location: '',
     };
 
     const ics = generateIcsContent(minimalEvent);
@@ -94,5 +90,25 @@ describe('generateIcsContent', () => {
     expect(ics).toContain('DESCRIPTION:');
     expect(ics).toContain('LOCATION:');
     expect(ics).not.toContain('undefined');
+  });
+});
+
+
+describe('ICS escaping and feeds', () => {
+  it('escapes commas, semicolons and newlines', () => {
+    expect(escapeIcsText('Asado, mate; y\nmás')).toBe('Asado\\, mate\\; y\\nmás');
+  });
+
+  it('builds a feed with one VEVENT per event', () => {
+    const feed = generateIcsCalendar(
+      [
+        { id: 'a', title: 'Uno', summary: '', startsAt: new Date('2026-03-15T18:00:00Z'), location: '', url: 'https://x.test/events/uno' },
+        { id: 'b', title: 'Dos', summary: '', startsAt: new Date('2026-03-16T18:00:00Z'), location: '' },
+      ],
+      'Buddies ITBA'
+    );
+    expect(feed.match(/BEGIN:VEVENT/g)).toHaveLength(2);
+    expect(feed).toContain('X-WR-CALNAME:Buddies ITBA');
+    expect(feed).toContain('URL:https://x.test/events/uno');
   });
 });

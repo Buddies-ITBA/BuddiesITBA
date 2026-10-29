@@ -1,19 +1,52 @@
 {
+  "meta": {
+    "title": "Buddies ITBA",
+    "description": "We connect ITBA students with exchange students in Buenos Aires: events, tours and a buddy who has your back from before you land."
+  },
   "nav": {
     "home": "Home",
-    "about": "About Us",
+    "about": "About us",
     "events": "Events",
     "blog": "Blog",
     "faq": "FAQ",
-    "contact": "Contact"
+    "contact": "Contact",
+    "menu": "Open menu",
+    "skipToContent": "Skip to content",
+    "language": "Language",
+    "breadcrumb": "Breadcrumb",
+    "close": "Close",
+    "buddies": "Buddy program"
   },
   "home": {
     "hero": {
+      "eyebrow": "Exchange at ITBA · Buenos Aires",
       "title": "Welcome to Buddies, your home away from home",
       "subtitle": "We help you connect, explore, and make lifelong friends during your time in Buenos Aires.",
-      "imageAlt": "Buddies ITBA tour group"
+      "primaryCta": "See upcoming events",
+      "secondaryCta": "How it works",
+      "imageAlt": "Buddies group at the Obelisco"
+    },
+    "steps": {
+      "eyebrow": "How it works",
+      "title": "Your buddy, from before you land",
+      "subtitle": "Three steps to get your exchange off to a great start.",
+      "items": [
+        {
+          "title": "Get matched with a buddy",
+          "description": "Before you arrive we pair you with an ITBA student who reaches out, answers your questions and welcomes you."
+        },
+        {
+          "title": "Join the events",
+          "description": "Asados, city tours, mate afternoons and trips to meet every exchange student of the semester."
+        },
+        {
+          "title": "Live Buenos Aires",
+          "description": "With your buddy and the community you discover the city like a local, from the classics to the hidden gems."
+        }
+      ]
     },
     "about": {
+      "eyebrow": "Community",
       "title": "Join Buddies. Feel at home, wherever you are",
       "subtitle": "At Buddies, we bring together students from all around the world, creating a space where cultures blend, friendships grow, and every moment becomes unforgettable.",
       "highlights": [
@@ -21,30 +54,47 @@
         "Explore Buenos Aires together, from hidden gems to cultural landmarks.",
         "Participate in activities and events that make your experience unique."
       ],
-      "cta": "See our FAQ",
+      "cta": "Learn more about us",
       "imageAlt": "Buddies mate gathering"
     },
-    "stats": {
-      "items": [
-        { "value": "100", "label": "Students per semester" },
-        { "value": "34", "label": "Nationalities" },
-        { "value": "120", "label": "Argentinian buddies" },
-        { "value": "5000", "label": "Mates!" }
-      ]
-    },
     "events": {
+      "eyebrow": "What's on",
       "title": "Our events",
-      "subtitle": "Join us and create unforgettable memories"
-    }
+      "subtitle": "Join us and create unforgettable memories",
+      "viewAll": "See all events"
+    },
+    "cta": {
+      "title": "Arriving this semester?",
+      "description": "Follow us on Instagram to hear about every event, or email us with any question before you travel.",
+      "instagram": "Follow us on Instagram",
+      "contact": "Email us"
+    },
+    "countries": {
+      "eyebrow": "International community",
+      "title": "Students from {count, plural, one {# country} other {# countries}}",
+      "subtitle": "Every semester students arrive from all over the world. Here are some stamps in our passport."
+    },
+    "testimonials": {
+      "eyebrow": "Testimonials",
+      "title": "Stories from people who've been here",
+      "subtitle": "Exchange students and buddies who lived the experience."
+    },
+    "gallery": {
+      "eyebrow": "Moments",
+      "title": "What Buddies feels like",
+      "instagram": "More photos on Instagram"
+    },
+    "whatsapp": "Join the WhatsApp community"
   },
   "about": {
     "page": {
       "title": "About us",
-      "description": "Buddies is all about making friends, exploring Buenos Aires, and having a great time together. We are here to help you feel at home and create memories you will never forget.",
-      "breadcrumb": "About"
+      "description": "Buddies is all about making friends, exploring Buenos Aires, and having a great time together. We are here to help you feel at home and create memories you will never forget."
     },
     "intro": {
-      "intro": "Buddies is a student organization from ITBA aimed at helping incoming students adapt to both the university and Buenos Aires. Each exchange student is paired with an Argentinian student from ITBA, their Buddy, to provide guidance and support during their stay.",
+      "eyebrow": "Who we are",
+      "title": "A student organization at ITBA",
+      "intro": "Buddies helps incoming students adapt to both the university and Buenos Aires. Each exchange student is paired with an Argentinian student from ITBA, their buddy, to provide guidance and support during their stay.",
       "points": [
         "Create lifelong friendships between local and international students.",
         "Offer cultural events, city tours, and networking opportunities.",
@@ -53,56 +103,88 @@
       "closing": "The program provides both Argentinian and exchange students the opportunity to meet people from all over the world, fostering an environment of cultural exchange and mutual growth.",
       "imageAlt": "Buddies group photo"
     },
-    "stats": {
-      "items": [
-        { "value": "100", "label": "Students per semester" },
-        { "value": "34", "label": "Nationalities" },
-        { "value": "120", "label": "Argentinian buddies" },
-        { "value": "5000", "label": "Mates!" }
-      ]
-    },
     "team": {
+      "eyebrow": "Team",
       "title": "Our team",
-      "subtitle": "The people behind Buddies"
+      "subtitle": "The people behind Buddies",
+      "linkedin": "{name} on LinkedIn"
     }
   },
   "events": {
     "page": {
       "title": "Events & activities",
-      "description": "Join cultural and social activities to make friends and explore Buenos Aires together.",
-      "breadcrumb": "Events"
+      "description": "Join cultural and social activities to make friends and explore Buenos Aires together."
     },
     "timeline": {
       "empty": "No upcoming events",
-      "capacity": "Capacity:",
-      "whatsappNote": "Registration via Buddies WhatsApp group",
+      "emptyHint": "Follow us on Instagram to hear as soon as we announce the next one.",
+      "capacity": "Capacity",
       "register": "Register",
-      "exchangeOnly": "Exchange students only"
+      "exchangeOnly": "Exchange students only",
+      "details": "See details"
+    },
+    "calendar": {
+      "add": "Add to calendar",
+      "google": "Google Calendar",
+      "ics": "Download .ics"
+    },
+    "detail": {
+      "back": "Back to events",
+      "registration": "Registration",
+      "spotsLeft": "{count, plural, one {# spot left} other {# spots left}}",
+      "full": "This event is full: if you sign up you'll be on the waitlist.",
+      "closed": "Registration for this event is closed.",
+      "deadline": "Registration open until {date}.",
+      "whatsapp": "Registration is through the Buddies WhatsApp group.",
+      "external": "Register",
+      "noRegistration": "No registration needed — see you there!",
+      "whatsappJoin": "Join the WhatsApp group"
+    },
+    "cancel": {
+      "title": "Cancel registration",
+      "description": "Are you sure you want to give up your spot at {event}?",
+      "confirm": "Yes, cancel my registration",
+      "done": "Done — your registration is cancelled. Thanks for letting us know!",
+      "invalid": "This cancellation link is invalid or the registration was already cancelled.",
+      "keep": "No, keep my spot"
+    },
+    "availability": {
+      "open": "Registration open",
+      "lastSpots": "{count, plural, one {Last spot!} other {Last # spots}}",
+      "full": "Full · waitlist",
+      "closed": "Registration closed"
+    },
+    "subscribe": {
+      "label": "Subscribe to the calendar",
+      "hint": "Add every Buddies event to Google Calendar, Apple or Outlook. It updates automatically."
     }
   },
   "contact": {
     "page": {
       "title": "We are here to help",
-      "description": "If you need information about our events, activities, or living in Buenos Aires, feel free to reach out.",
-      "breadcrumb": "Contact"
+      "description": "If you need information about our events, activities, or living in Buenos Aires, feel free to reach out."
     },
     "section": {
-      "addressTitle": "Address",
+      "addressTitle": "Where we are",
       "addressLines": [
-        "Iguazu 341",
+        "Iguazú 341",
         "Parque Patricios, Buenos Aires",
         "Argentina"
       ],
+      "directions": "Get directions",
       "emailTitle": "Email us",
-      "email": "buddies@itba.edu.ar",
-      "emailButton": "Send email"
+      "emailDescription": "We usually reply within one or two business days.",
+      "emailButton": "Send email",
+      "instagramTitle": "Instagram",
+      "instagramDescription": "The fastest way to hear about our events.",
+      "instagramButton": "Open Instagram",
+      "mapTitle": "Map of the ITBA campus in Parque Patricios"
     }
   },
   "blog": {
     "page": {
       "title": "Blog",
-      "description": "Stories, tips and news from the Buddies community.",
-      "breadcrumb": "Blog"
+      "description": "Stories, tips and news from the Buddies community."
     },
     "list": {
       "empty": "No posts yet",
@@ -116,16 +198,35 @@
   "faq": {
     "page": {
       "title": "Frequently asked questions",
-      "description": "Find answers to common questions about studying at ITBA, exploring Buenos Aires, and making the most of your experience.",
-      "breadcrumb": "FAQ"
+      "description": "Find answers to common questions about studying at ITBA, exploring Buenos Aires, and making the most of your experience."
+    },
+    "search": {
+      "label": "Search the FAQ",
+      "placeholder": "Search a question… (e.g. SUBE, visa, mate)",
+      "all": "All",
+      "noResults": "No questions found for “{query}”.",
+      "noResultsHint": "Try another word or email us directly.",
+      "empty": "There are no questions yet."
     },
     "contacts": {
-      "title": "Contacts",
-      "subtitle": "Useful information",
+      "eyebrow": "Useful contacts",
+      "title": "Didn't find your answer?",
+      "subtitle": "These ITBA offices can help too.",
       "items": [
-        "Vida Universitaria: experiencia@itba.edu.ar",
-        "ITBA exchange organization: relacionesinternacionales@itba.edu.ar (@itbaglobal)",
-        "CEITBA: ceitba@itba.edu.ar (@ceitba)"
+        {
+          "name": "Student Life",
+          "email": "experiencia@itba.edu.ar"
+        },
+        {
+          "name": "International Relations",
+          "email": "relacionesinternacionales@itba.edu.ar",
+          "instagram": "itbaglobal"
+        },
+        {
+          "name": "CEITBA",
+          "email": "ceitba@itba.edu.ar",
+          "instagram": "ceitba"
+        }
       ]
     }
   },
@@ -133,11 +234,157 @@
     "title": "Something went wrong",
     "description": "There was a problem loading this page. Please try again.",
     "retry": "Try again",
+    "home": "Go to home",
+    "errorId": "Error ID: {id}"
+  },
+  "notFound": {
+    "title": "This page got lost on the trip",
+    "description": "We couldn't find what you were looking for. The link may be broken or the page may have moved.",
     "home": "Go to home"
   },
   "footer": {
     "tagline": "Connecting ITBA students with exchange students since 2015.",
+    "explore": "Explore",
     "contact": "Contact",
     "rights": "All rights reserved"
+  },
+  "forms": {
+    "name": "Full name",
+    "email": "Email",
+    "submit": "Submit",
+    "submitting": "Sending…",
+    "required": "Required",
+    "optional": "optional",
+    "invalid": "Please check this field",
+    "errorSummary": "Please check the highlighted fields.",
+    "duplicate": "There's already a registration with this email.",
+    "success": "Done! You're registered.",
+    "successWaitlist": "The event is full: you're on the waitlist. We'll let you know if a spot opens up.",
+    "genericError": "We couldn't save your answer. Please try again.",
+    "selectPlaceholder": "Choose an option",
+    "consent": "I agree that Buddies ITBA may use this data to organize its activities."
+  },
+  "buddies": {
+    "page": {
+      "title": "Buddy program",
+      "description": "We pair you with an ITBA student based on your interests and personality, so your exchange starts with someone who gets you."
+    },
+    "closed": {
+      "title": "Applications are closed",
+      "description": "We open applications a few weeks before each semester. Follow us on Instagram to hear about it."
+    },
+    "choose": {
+      "title": "How do you want to take part?",
+      "subtitle": "Choose your profile to fill in the application."
+    },
+    "roles": {
+      "local": {
+        "title": "I'm an ITBA student",
+        "description": "I want to be a buddy and welcome exchange students.",
+        "cta": "Become a buddy"
+      },
+      "exchange": {
+        "title": "I'm an exchange student",
+        "description": "I want a buddy to help me settle in Buenos Aires.",
+        "cta": "Get a buddy"
+      }
+    },
+    "apply": {
+      "titleLocal": "Application for ITBA buddies",
+      "titleExchange": "Application for exchange students",
+      "intro": "Your answers about interests and personality help us find the best match. It takes about 3 minutes.",
+      "sectionAbout": "About you",
+      "sectionMatching": "Interests & personality",
+      "phone": "WhatsApp (with country code)",
+      "institutionLocal": "Degree at ITBA",
+      "institutionExchange": "Home university",
+      "country": "Country",
+      "gender": "Gender",
+      "genders": {
+        "female": "Woman",
+        "male": "Man",
+        "nonbinary": "Non-binary",
+        "na": "Prefer not to say"
+      },
+      "genderPreference": "Preference about your buddy's gender",
+      "genderPreferences": {
+        "any": "No preference",
+        "same": "I'd prefer my same gender"
+      },
+      "languages": "Languages you speak",
+      "languageNames": {
+        "es": "Spanish",
+        "en": "English",
+        "pt": "Portuguese",
+        "fr": "French",
+        "de": "German",
+        "it": "Italian"
+      },
+      "capacity": "How many exchange students can you take?",
+      "back": "Back",
+      "success": "Thanks! We got your application. We'll email you once we have your match.",
+      "duplicate": "You've already applied to this program with this email."
+    },
+    "how": {
+      "eyebrow": "Matching",
+      "title": "How do we pick your buddy?",
+      "subtitle": "It's not random: we cross what you tell us in the form so you connect with someone like you.",
+      "items": [
+        {
+          "title": "Shared interests",
+          "description": "We compare your interests and what you want from the program: sports, music, going out, travel, culture…"
+        },
+        {
+          "title": "Personality and pace",
+          "description": "How outgoing you are, how much you like going out and how much time you have, so expectations line up."
+        },
+        {
+          "title": "Languages and preferences",
+          "description": "We prioritize a shared language and respect it if you'd prefer a buddy of your same gender."
+        },
+        {
+          "title": "Human review",
+          "description": "The team reviews every proposal before introducing you by email. Then it's time to meet!"
+        }
+      ]
+    }
+  },
+  "emails": {
+    "footer": "Buddies ITBA · Iguazú 341, Buenos Aires · buddies@itba.edu.ar",
+    "greeting": "Hi {name},",
+    "when": "When",
+    "where": "Where",
+    "registration": {
+      "confirmedSubject": "You're registered: {event}",
+      "confirmedHeading": "See you at {event}!",
+      "confirmedBody": "Your registration is confirmed.",
+      "waitlistSubject": "Waitlist: {event}",
+      "waitlistHeading": "You're on the waitlist",
+      "waitlistBody": "{event} is full. If a spot opens up, we'll let you know by email.",
+      "promotedSubject": "A spot opened up! You're registered for {event}",
+      "promotedHeading": "You've got a spot at {event}!",
+      "promotedBody": "A spot opened up and your registration is now confirmed.",
+      "viewEvent": "View the event",
+      "cancelHint": "Can't make it? Free up your spot so someone else can go.",
+      "cancel": "Cancel my registration",
+      "reminderSubject": "Reminder: {event} · {when}",
+      "reminderHeading": "See you soon at {event}!",
+      "reminderBody": "Just a reminder that you're registered. If you can't make it after all, reply to this email so we can free up your spot."
+    },
+    "buddies": {
+      "receivedSubject": "We got your Buddy program application",
+      "receivedHeading": "Thanks for joining!",
+      "receivedBody": "We received your application for {program}. Once we have your match, we'll email you your buddy's details.",
+      "introSubjectExchange": "Meet your buddy: {name}",
+      "introSubjectLocal": "Your exchange student: {name}",
+      "introHeadingExchange": "Meet your buddy",
+      "introHeadingLocal": "Meet your exchange student",
+      "introBodyExchange": "{buddy} is your ITBA buddy. Reach out and say hi — they'll help you settle into Buenos Aires and university life.",
+      "introBodyLocal": "{student} is coming from {origin}. Reach out and welcome them!",
+      "name": "Name",
+      "email": "Email",
+      "phone": "WhatsApp",
+      "replyHint": "Replying to this email writes directly to your buddy."
+    }
   }
 }

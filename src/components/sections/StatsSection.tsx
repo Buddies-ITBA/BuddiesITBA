@@ -1,79 +1,61 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
-import { motion, useInView, useSpring, useTransform } from "framer-motion";
+import { useEffect, useMemo, useRef } from 'react';
+import { useLocale } from 'next-intl';
 
-type StatItem = {
-  value: string;
-  label: string;
-};
+type StatItem = { value: number; label: string };
 
-function AnimatedNumber({ value, inView }: { value: number; inView: boolean }) {
-  const spring = useSpring(0, { duration: 2000, bounce: 0 });
-  const rounded = useTransform(spring, (latest) => Math.round(latest));
-  const [displayValue, setDisplayValue] = useState(0);
-
-  useEffect(() => {
-    if (inView) {
-      spring.set(value);
-    }
-  }, [inView, spring, value]);
-
-  useEffect(() => {
-    const unsubscribe = rounded.on("change", (latest) => {
-      setDisplayValue(latest);
-    });
-    return () => unsubscribe();
-  }, [rounded]);
-
-  return <>{displayValue}</>;
-}
-
-function parseStatValue(value: string): { number: number; suffix: string } {
-  const match = value.match(/^(\d+)(.*)$/);
-  if (match) {
-    return { number: parseInt(match[1], 10), suffix: match[2] };
-  }
-  return { number: 0, suffix: value };
-}
+const DURATION_MS = 1600;
 
 export function StatsSection({ stats }: { stats: StatItem[] }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const locale = useLocale();
+  const format = useMemo(() => new Intl.NumberFormat(locale).format, [locale]);
+  const ref = useRef<HTMLDListElement>(null);
+
+  // Numbers are rendered final on the server (no-JS / screenshots never show 0).
+  // When the band first scrolls into view we count up by writing textContent
+  // directly — no re-renders, no animation library.
+  useEffect(() => {
+    const list = ref.current;
+    if (!list || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const nodes = [...list.querySelectorAll<HTMLElement>('[data-count]')];
+    let frame = 0;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        observer.disconnect();
+        const start = performance.now();
+        const tick = (now: number) => {
+          const progress = Math.min((now - start) / DURATION_MS, 1);
+          const eased = 1 - (1 - progress) ** 3;
+          for (const node of nodes) node.textContent = format(Math.round(Number(node.dataset.count) * eased));
+          if (progress < 1) frame = requestAnimationFrame(tick);
+        };
+        frame = requestAnimationFrame(tick);
+      },
+      { rootMargin: '-80px' }
+    );
+    observer.observe(list);
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(frame);
+    };
+  }, [format]);
 
   return (
-    <section className="bg-background/80">
-      <div className="container mx-auto px-4 py-16">
-        <div
-          ref={ref}
-          className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
-        >
-          {stats.map((stat, index) => {
-            const { number, suffix } = parseStatValue(stat.value);
-
-            return (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, y: 20 }}
-                animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                transition={{
-                  duration: 0.5,
-                  delay: index * 0.1,
-                  ease: "easeOut",
-                }}
-                className="rounded-2xl bg-surface px-6 py-8 text-center shadow-sm"
-              >
-                <p className="text-3xl font-heading font-bold text-primary">
-                  <AnimatedNumber value={number} inView={isInView} />
-                  {suffix}
-                </p>
-                <p className="mt-2 text-sm font-medium text-text-muted">
-                  {stat.label}
-                </p>
-              </motion.div>
-            );
-          })}
-        </div>
+    <section className="bg-primary text-white">
+      <div className="container-page py-14 md:py-16">
+        <dl ref={ref} className="grid grid-cols-2 gap-y-10 md:grid-cols-4">
+          {stats.map((stat) => (
+            <div key={stat.label} className="flex flex-col-reverse items-center text-center">
+              <dt className="mt-1 text-sm font-medium text-white/80">{stat.label}</dt>
+              <dd data-count={stat.value} className="font-heading text-4xl font-extrabold tabular-nums md:text-5xl">
+                {format(stat.value)}
+              </dd>
+            </div>
+          ))}
+        </dl>
       </div>
     </section>
   );
